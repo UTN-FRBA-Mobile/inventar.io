@@ -1,0 +1,95 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.4.5'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'ar.edu.utn.frba'
+version = '0.1.0-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'jakarta.validation:jakarta.validation-api:3.1.1'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'org.postgresql:postgresql'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+class ContainerizeTask extends DefaultTask {
+    @TaskAction
+    void action() {
+        // Buscar el primer .jar en build/libs
+        def buildLibs = project.layout.buildDirectory.dir("libs").get().asFile
+        def jarFile = buildLibs.listFiles().find { it.name.endsWith('.jar') }
+
+        if (jarFile == null) {
+            throw new GradleException("❌ No se encontró ningún archivo JAR en build/libs")
+        }
+
+        // Crear carpeta de destino si no existe
+        def destDir = new File("src/main/docker")
+        if (!destDir.exists()) {
+            throw new GradleException("❌ No se encontró la carpeta de docker")
+        }
+
+        // Eliminar cualquier .jar existente en la carpeta de destino
+        def existingJars = destDir.listFiles().findAll { it.name.endsWith('.jar') }
+        existingJars.each { file ->
+            if (file.delete()) {
+                println "🗑️ Eliminado jar viejo: ${file.name}"
+            } else {
+                println "⚠️ No se pudo eliminar: ${file.name}"
+            }
+        }
+
+        // Copiar el archivo
+        def destFile = new File(destDir, jarFile.name)
+        jarFile.withInputStream { is ->
+            destFile.withOutputStream { os ->
+                os << is
+            }
+        }
+
+        println "✅ Copiado: ${jarFile.name} a src/main/docker/"
+    }
+}
+
+tasks.register('containerize', ContainerizeTask) {
+    dependsOn tasks.named('bootJar')
+}
+
+tasks.register('dockerComposeUp', Exec) {
+    commandLine 'docker', 'compose', 'up', '--build', '-d'
+    workingDir = new File('src/main/docker')
+    dependsOn tasks.named('containerize')
+
+    doLast {
+        println "✅ docker compose up ejecutado satisfactoriamente."
+    }
+}
