@@ -6,10 +6,13 @@ import ar.edu.utn.frba.inventariobackend.dto.response.LocationResponse;
 import ar.edu.utn.frba.inventariobackend.model.Location;
 import ar.edu.utn.frba.inventariobackend.repository.LocationRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Service layer for managing {@link Location} entities.
@@ -35,24 +38,27 @@ public class LocationService {
     }
 
     /**
-     * Retrieves a list of locations based on a given position request.
+     * Retrieves an optional location based on a given position request.
      *
      * @param locationGetRequest the request containing position data (e.g., coordinates)
-     * @return a list of {@link LocationResponse} entities with details of the matching locations
+     * @return an Optional of {@link LocationResponse} which will provide the location or none if not available.
      */
-    public List<LocationResponse> getLocationsByPosition(LocationGetRequest locationGetRequest) {
+    public Optional<LocationResponse> getLocationByPosition(LocationGetRequest locationGetRequest) {
         return locationRepository.findAll()
             .stream()
-            .filter(location -> {
+            .map(location -> {
                 double distanceToReference = calculateDistance(
-                        Objects.requireNonNull(locationGetRequest.latitude()),
-                        Objects.requireNonNull(locationGetRequest.longitude()),
-                        location.getLatitude(),
-                        location.getLongitude());
-                return distanceToReference <= location.getRadius();
+                    Objects.requireNonNull(locationGetRequest.latitude()),
+                    Objects.requireNonNull(locationGetRequest.longitude()),
+                    location.getLatitude(),
+                    location.getLongitude());
+
+                return Pair.of(location, distanceToReference);
             })
-            .map(LocationResponse::fromLocation)
-            .toList();
+            .filter(pair -> pair.getValue() <= pair.getKey().getRadius())
+            .sorted(Comparator.comparingDouble(Pair::getValue))
+            .map(pair -> LocationResponse.fromLocation(pair.getKey()))
+            .findFirst();
     }
 
     /**
