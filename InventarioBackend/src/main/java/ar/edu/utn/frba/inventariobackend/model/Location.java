@@ -1,6 +1,5 @@
 package ar.edu.utn.frba.inventariobackend.model;
 
-import ar.edu.utn.frba.inventariobackend.dto.request.LocationCreationRequest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;

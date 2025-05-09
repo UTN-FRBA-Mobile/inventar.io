@@ -1,16 +1,18 @@
 package ar.edu.utn.frba.inventariobackend.controller;
 
+import ar.edu.utn.frba.inventariobackend.auth.AuthenticationDetails;
 import ar.edu.utn.frba.inventariobackend.dto.request.LocationCreationRequest;
-import ar.edu.utn.frba.inventariobackend.dto.request.LocationGetRequest;
+import ar.edu.utn.frba.inventariobackend.dto.request.VerifySelfRequest;
 import ar.edu.utn.frba.inventariobackend.dto.response.LocationResponse;
 import ar.edu.utn.frba.inventariobackend.model.Location;
 import ar.edu.utn.frba.inventariobackend.service.LocationService;
-import jakarta.annotation.Nullable;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -18,26 +20,41 @@ import java.util.Optional;
 
 /**
  * REST controller for managing locations.
- * Handles HTTP requests related to the {@link Location} entity.
+ * Handles HTTP requests related to the {@link Location} entity and performs actions such as retrieving,
+ * creating, and verifying user locations.
  */
 @RestController
 @RequestMapping("/api/v1/location")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class LocationController {
     private final LocationService locationService;
 
     /**
-     * Retrieves a location based in a certain position.
+     * Retrieves the location of the authenticated user (self) using the location ID stored in the authentication details.
      *
-     * @param locationGetRequest the location details used to get the locations.
-     * @return a {@link LocationResponse} entity or it throws an exception if not available.
+     * @return the {@link LocationResponse} representing the location of the authenticated user
+     * @throws ResponseStatusException if the authentication details are not found or invalid (HTTP 403 Forbidden)
      */
-    @GetMapping
-    public LocationResponse getLocations(@Valid @NotNull LocationGetRequest locationGetRequest) {
-        Optional<LocationResponse> possibleLocation = locationService.getLocationByPosition(locationGetRequest);
-        return possibleLocation.orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No está ubicado en ningun depósito"));
+    @GetMapping("/self")
+    public LocationResponse getSelfLocation() {
+        return locationService.getLocationById(getLocationIdFromToken());
     }
+
+    /**
+     * Verifies if the provided latitude and longitude match the location of the authenticated user.
+     *
+     * @param verifySelfRequest the request containing latitude and longitude to be verified
+     * @return {@code true} if the provided coordinates match the authenticated user's location, {@code false} otherwise
+     */
+    @GetMapping("/verify")
+    public boolean verifySelfLocation(@Valid @NotNull VerifySelfRequest verifySelfRequest) {
+        Optional<LocationResponse> location =
+                locationService.getLocationByPosition(verifySelfRequest.latitude(), verifySelfRequest.longitude());
+
+        return location.isPresent() && getLocationIdFromToken().equals(location.get().id());
+    }
+
     /**
      * Creates a new location based on the provided request.
      *
@@ -47,5 +64,20 @@ public class LocationController {
     @PostMapping()
     public LocationResponse createLocation(@RequestBody LocationCreationRequest locationCreationRequest) {
         return locationService.createLocation(locationCreationRequest);
+    }
+
+    /**
+     * Extracts the location ID from the authentication details of the current user.
+     *
+     * @return the location ID associated with the authenticated user
+     * @throws ResponseStatusException if authentication details are not found or invalid (HTTP 403 Forbidden)
+     */
+    private Long getLocationIdFromToken() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !(authentication.getDetails() instanceof AuthenticationDetails)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No se puede obtener el usuario/location");
+        }
+
+        return ((AuthenticationDetails) authentication.getDetails()).locationId();
     }
 }
