@@ -8,5 +8,5 @@ import jakarta.validation.constraints.NotNull;
  * @param latitude the latitude component of the geographic location.
  * @param longitude the longitude component of the geographic location.
  */
-public record LocationGetRequest(@NotNull Double latitude, @NotNull Double longitude) {
+public record VerifySelfRequest(@NotNull Double latitude, @NotNull Double longitude) {
 }

@@ -1,7 +1,7 @@
 package ar.edu.utn.frba.inventariobackend.service;
 
 import ar.edu.utn.frba.inventariobackend.dto.request.LocationCreationRequest;
-import ar.edu.utn.frba.inventariobackend.dto.request.LocationGetRequest;
+import ar.edu.utn.frba.inventariobackend.dto.request.VerifySelfRequest;
 import ar.edu.utn.frba.inventariobackend.dto.response.LocationResponse;
 import ar.edu.utn.frba.inventariobackend.model.Location;
 import ar.edu.utn.frba.inventariobackend.repository.LocationRepository;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -40,16 +41,17 @@ public class LocationService {
     /**
      * Retrieves an optional location based on a given position request.
      *
-     * @param locationGetRequest the request containing position data (e.g., coordinates)
+     * @param latitude the latitude of the coordinate.
+     * @param longitude the longitude of the coordinate.
      * @return an Optional of {@link LocationResponse} which will provide the location or none if not available.
      */
-    public Optional<LocationResponse> getLocationByPosition(LocationGetRequest locationGetRequest) {
+    public Optional<LocationResponse> getLocationByPosition(Double latitude, Double longitude) {
         return locationRepository.findAll()
             .stream()
             .map(location -> {
                 double distanceToReference = calculateDistance(
-                    Objects.requireNonNull(locationGetRequest.latitude()),
-                    Objects.requireNonNull(locationGetRequest.longitude()),
+                    Objects.requireNonNull(latitude),
+                    Objects.requireNonNull(longitude),
                     location.getLatitude(),
                     location.getLongitude());
 
@@ -59,6 +61,17 @@ public class LocationService {
             .sorted(Comparator.comparingDouble(Pair::getValue))
             .map(pair -> LocationResponse.fromLocation(pair.getKey()))
             .findFirst();
+    }
+
+    /**
+     * Retrieves a location by its ID and returns it as a {@link LocationResponse}.
+     *
+     * @param locationId the unique identifier of the location to retrieve
+     * @return the {@link LocationResponse} representing the location with the specified ID
+     * @throws NoSuchElementException if no location with the given ID is found
+     */
+    public LocationResponse getLocationById(Long locationId) {
+        return LocationResponse.fromLocation(locationRepository.findById(locationId).orElseThrow());
     }
 
     /**
