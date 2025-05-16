@@ -6,6 +6,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ar.edu.utn.frba.inventario.screens.Home
 import ar.edu.utn.frba.inventario.screens.Login
+import ar.edu.utn.frba.inventario.screens.Orders
+import ar.edu.utn.frba.inventario.screens.User
 
 @Composable
 fun AppNavigation() {
@@ -15,7 +17,13 @@ fun AppNavigation() {
             Login(navController = navController)
         }
         composable("home") {
-            Home()
+            Home(navController = navController)
+        }
+        composable("orders") {
+            Orders(navController = navController)
+        }
+        composable("user") {
+            User(navController = navController)
         }
     }
 }
