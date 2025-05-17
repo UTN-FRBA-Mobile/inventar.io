@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.inventario.viewmodels
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -22,7 +23,7 @@ class LoginViewModel:ViewModel() {
     }
 
     fun login(user:String, pass:String, navController:NavController){
-        println("{$user} - {$pass}")
+        Log.d("LoginViewModel","Llegaron User: $user, Pass: $pass")
         if(existLoginUser(user, pass)){
             navController.navigate(route = "home")
         }else{
