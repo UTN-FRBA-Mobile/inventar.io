@@ -2,7 +2,9 @@ package ar.edu.utn.frba.inventario.api.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import javax.inject.Singleton
 
+@Singleton
 class TokenManager(context: Context) {
     private val sharedPreferences: SharedPreferences =
         context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
