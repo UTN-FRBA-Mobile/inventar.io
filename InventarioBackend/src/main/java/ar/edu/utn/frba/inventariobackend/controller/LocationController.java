@@ -23,7 +23,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/location")
 @RequiredArgsConstructor
-@SecurityRequirement(name = "bearerAuth")
 public class LocationController {
     private final LocationService locationService;
     private final TokenUtils tokenUtils;
@@ -34,6 +33,7 @@ public class LocationController {
      * @return the {@link LocationResponse} representing the location of the authenticated user
      * @throws ResponseStatusException if the authentication details are not found or invalid (HTTP 403 Forbidden)
      */
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/self")
     public LocationResponse getSelfLocation() {
         return locationService.getLocationById(tokenUtils.getLocationIdFromToken());
@@ -45,6 +45,7 @@ public class LocationController {
      * @param verifySelfRequest the request containing latitude and longitude to be verified
      * @return {@code true} if the provided coordinates match the authenticated user's location, {@code false} otherwise
      */
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/verify")
     public boolean verifySelfLocation(@Valid @NotNull VerifySelfRequest verifySelfRequest) {
         Optional<LocationResponse> location =

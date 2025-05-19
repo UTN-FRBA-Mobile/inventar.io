@@ -30,7 +30,7 @@ public class UserController {
      * @param addUserRequest the request containing user details such as username, password, name, and optional image
      * @return a {@link ResponseEntity} with HTTP 201 Created status if the user was successfully added
      */
-    @PostMapping("/add")
+    @PostMapping()
     public ResponseEntity<?> addUser(@Valid @RequestBody AddUserRequest addUserRequest) {
         userService.addUser(addUserRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
