@@ -8,10 +8,11 @@ import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
+import javax.inject.Provider
 
 class TokenRefreshAuthenticator constructor(
     private val tokenManager: TokenManager,
-    private val apiService: ApiService
+    private val apiService: Provider<ApiService>
 ) : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {
@@ -34,7 +35,7 @@ class TokenRefreshAuthenticator constructor(
 
                 val refreshResult: NetworkResult<LoginResponse> = runBlocking {
                     try {
-                        val apiResponse = apiService.refreshToken(refreshToken)
+                        val apiResponse = apiService.get().refreshToken(refreshToken)
                         if (apiResponse.isSuccessful && apiResponse.body() != null) {
                             NetworkResult.Success(apiResponse.body()!!)
                         } else {
