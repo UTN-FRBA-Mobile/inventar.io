@@ -20,14 +20,12 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.viewmodels.LoginViewModel
 
-
-
 @Composable
-fun Login(viewModel: LoginViewModel = viewModel(), navController: NavController){
+fun Login(viewModel: LoginViewModel = hiltViewModel(), navController: NavController){
     val passwordFocusRequester = remember { FocusRequester() }
     val loginButtonFocusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current

@@ -9,12 +9,14 @@ import ar.edu.utn.frba.inventario.api.utils.TokenRefreshAuthenticator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Provider
 import javax.inject.Singleton
 
 @Module
@@ -24,7 +26,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideTokenManager(context: Context): TokenManager {
+    fun provideTokenManager(@ApplicationContext context: Context): TokenManager {
         return TokenManager(context)
     }
 
@@ -44,7 +46,7 @@ object NetworkModule {
     @Singleton
     fun provideTokenRefreshAuthenticator(
         tokenManager: TokenManager,
-        apiService: ApiService
+        apiService: Provider<ApiService>
     ): TokenRefreshAuthenticator {
         return TokenRefreshAuthenticator(tokenManager, apiService)
     }
