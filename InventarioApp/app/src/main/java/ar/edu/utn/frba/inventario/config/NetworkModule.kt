@@ -18,11 +18,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Provider
 import javax.inject.Singleton
+import ar.edu.utn.frba.inventario.BuildConfig
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    private const val BASE_URL = "http://192.168.0.97:8080"
+    const val API_BASE_URL: String = BuildConfig.API_BASE_URL
 
     @Provides
     @Singleton
@@ -71,8 +72,14 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+        if (API_BASE_URL.isEmpty() || API_BASE_URL == "http://default-url") {
+            throw IllegalArgumentException("Please set API_BASE_URL=http://192.168.XXX.XXX:8080 in local.properties (root project folder)")
+        } else {
+            println("API_BASE_URL: $API_BASE_URL")
+        }
+
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(API_BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
