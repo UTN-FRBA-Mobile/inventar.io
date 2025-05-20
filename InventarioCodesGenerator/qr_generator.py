@@ -3,13 +3,13 @@ import os
 import qrcode
 
 # Fixed prefix for identifying QR codes
-PREFIX = "test-prefix-123-"
+PREFIX = "inv_T3eI5QJ868z40lY_"
 
 
 # Function to get alphanumeric input (not a URL anymore)
 def get_alphanumeric_input():
     while True:
-        data = input("Enter alphanumeric data (letters and numbers only): ")
+        data = input("Enter string data: ")
 
         # Check if data is empty
         if data:
@@ -31,9 +31,13 @@ try:
 
     # Generate QR code
     qr = qrcode.QRCode(
-        version=1,
-        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        # Version 1-40, higher means more data can be stored
+        version=10,
+        # Error correction level, higher means more damage can be tolerated
+        error_correction=qrcode.constants.ERROR_CORRECT_H,
+        # Size of the box
         box_size=10,
+        # Size of the outside border
         border=4,
     )
 
@@ -41,7 +45,8 @@ try:
     qr.make(fit=True)
 
     # Create an image from the QR Code instance
-    img = qr.make_image(fill='black', back_color='white')
+    # Colors are accepted as: '#RRGGBB', '(R, G, B)', or color names
+    img = qr.make_image(fill_color="black", back_color='white')
 
     # Generate a filename with timestamp
     timestamp = datetime.datetime.now().strftime("%Y.%m.%d-%H.%M.%S")
