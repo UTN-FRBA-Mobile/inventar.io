@@ -1,10 +1,7 @@
-# QR-CodeGenerator-Python
+# inventar.io
+Proyecto cuatrimestral de desarrollo de apps moviles. UTN FRBA.
 
-Simple scripts for generating QR codes and Barcodes.
-
-Just install the necessary deps:
-```
-pip install qrcode[pil] python-barcode pillow
-```
-
-Then just run the code you need and insert the input. The output image will be generated in `output/qrcode/qrcode_<timestamp>.png` and `output/barcode/barcode_<timestamp>.png`
+Proyectos:
+- InventarioApp: **Frontend** Kotlin Android Native
+- InventarioBackend: **Backend** Java Spring Boot
+- InventarioCodesGenerator: **Scripts** Python para generar Barcodes y QR
