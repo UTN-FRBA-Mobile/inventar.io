@@ -22,7 +22,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    private const val BASE_URL = "http://192.168.1.101:8080"
+    private const val BASE_URL = "http://192.168.0.97:8080"
 
     @Provides
     @Singleton
@@ -62,9 +62,9 @@ object NetworkModule {
             .addInterceptor(loggingInterceptor)
             .addInterceptor(authInterceptor)
             .authenticator(tokenRefreshAuthenticator)
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(10, TimeUnit.SECONDS)
+            .writeTimeout(10, TimeUnit.SECONDS)
             .build()
     }
 

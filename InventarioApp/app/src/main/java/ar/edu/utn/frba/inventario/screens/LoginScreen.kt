@@ -45,7 +45,7 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
     navController: NavController
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackBarHostState = remember { SnackbarHostState() }
     val user by viewModel.user.collectAsStateWithLifecycle()
     val password by viewModel.password.collectAsStateWithLifecycle()
 
@@ -76,12 +76,12 @@ fun LoginScreen(
 
     LaunchedEffect(Unit) {
         viewModel.snackbarMessage.collect { message ->
-            snackbarHostState.showSnackbar(message)
+            snackBarHostState.showSnackbar(message)
         }
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        snackbarHost = { SnackbarHost(snackBarHostState) }
     ) { paddingValues ->
         Column(
             modifier = Modifier

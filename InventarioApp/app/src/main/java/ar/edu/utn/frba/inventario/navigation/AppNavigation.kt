@@ -4,10 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import ar.edu.utn.frba.inventario.screens.Home
+import ar.edu.utn.frba.inventario.screens.HomeScreen
 import ar.edu.utn.frba.inventario.screens.LoginScreen
-import ar.edu.utn.frba.inventario.screens.Orders
-import ar.edu.utn.frba.inventario.screens.User
+import ar.edu.utn.frba.inventario.screens.OrdersScreen
+import ar.edu.utn.frba.inventario.screens.UserScreen
 import ar.edu.utn.frba.inventario.utils.Screen
 
 @Composable
@@ -19,13 +19,13 @@ fun AppNavigation() {
             LoginScreen(navController = navController)
         }
         composable(Screen.Home.route) {
-            Home(navController = navController)
+            HomeScreen(navController = navController)
         }
         composable(Screen.Orders.route) {
-            Orders(navController = navController)
+            OrdersScreen(navController = navController)
         }
         composable(Screen.User.route) {
-            User(navController = navController)
+            UserScreen(navController = navController)
         }
     }
 }
