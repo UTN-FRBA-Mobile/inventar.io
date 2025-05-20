@@ -22,7 +22,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    private const val BASE_URL = "http://localhost:8080"
+    private const val BASE_URL = "http://192.168.1.101:8080"
 
     @Provides
     @Singleton
@@ -46,7 +46,7 @@ object NetworkModule {
     @Singleton
     fun provideTokenRefreshAuthenticator(
         tokenManager: TokenManager,
-        apiService: Provider<ApiService>
+        apiService: Provider<ApiService>,
     ): TokenRefreshAuthenticator {
         return TokenRefreshAuthenticator(tokenManager, apiService)
     }
@@ -56,7 +56,7 @@ object NetworkModule {
     fun provideOkHttpClient(
         loggingInterceptor: HttpLoggingInterceptor,
         authInterceptor: AuthInterceptor,
-        tokenRefreshAuthenticator: TokenRefreshAuthenticator
+        tokenRefreshAuthenticator: TokenRefreshAuthenticator,
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
