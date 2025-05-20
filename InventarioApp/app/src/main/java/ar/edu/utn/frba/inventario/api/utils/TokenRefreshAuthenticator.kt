@@ -31,7 +31,8 @@ class TokenRefreshAuthenticator constructor(
                         .build()
                 }
 
-                val refreshToken = tokenManager.getRefreshToken() ?: return null // No hay refresh token, no se puede continuar
+                val refreshToken = tokenManager.getRefreshToken()
+                    ?: return null // No hay refresh token, no se puede continuar
 
                 val refreshResult: NetworkResult<LoginResponse> = runBlocking {
                     try {
@@ -39,7 +40,10 @@ class TokenRefreshAuthenticator constructor(
                         if (apiResponse.isSuccessful && apiResponse.body() != null) {
                             NetworkResult.Success(apiResponse.body()!!)
                         } else {
-                            NetworkResult.Error(apiResponse.code(), apiResponse.errorBody()?.string() ?: apiResponse.message())
+                            NetworkResult.Error(
+                                apiResponse.code(),
+                                apiResponse.errorBody()?.string() ?: apiResponse.message()
+                            )
                         }
                     } catch (e: Exception) {
                         NetworkResult.Exception(e)
@@ -49,12 +53,16 @@ class TokenRefreshAuthenticator constructor(
                 return when (refreshResult) {
                     is NetworkResult.Success -> {
                         val newLoginResponse = refreshResult.data
-                        tokenManager.saveTokens(newLoginResponse.accessToken, newLoginResponse.refreshToken)
+                        tokenManager.saveTokens(
+                            newLoginResponse.accessToken,
+                            newLoginResponse.refreshToken
+                        )
 
                         response.request.newBuilder()
                             .header("Authorization", "Bearer ${newLoginResponse.accessToken}")
                             .build()
                     }
+
                     is NetworkResult.Error, is NetworkResult.Exception -> {
                         // El refresh falló (ej. refresh token inválido o expirado)
                         tokenManager.clearAllTokens()
