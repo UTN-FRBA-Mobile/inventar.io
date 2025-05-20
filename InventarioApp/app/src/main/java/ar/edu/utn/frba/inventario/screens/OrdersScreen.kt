@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 
 @Composable
-fun Orders(navController: NavController) {
+fun OrdersScreen(navController: NavController) {
     Scaffold(bottomBar = { BottomNavigationBar(navController) }
     ) { innerPadding ->
         OrdersBodyContent(innerPadding)

@@ -28,7 +28,7 @@ import java.util.concurrent.Executors
 
 
 @Composable
-fun Scan(navController: NavController) {
+fun ScanScreen(navController: NavController) {
     Scaffold(
         bottomBar = { BottomNavigationBar(navController) }
     ) { innerPadding ->
