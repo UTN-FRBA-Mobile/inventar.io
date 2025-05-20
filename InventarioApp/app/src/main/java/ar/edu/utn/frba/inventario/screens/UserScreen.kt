@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 
 @Composable
-fun User(navController: NavController) {
+fun UserScreen(navController: NavController) {
     Scaffold(bottomBar = { BottomNavigationBar(navController) }
     ) { innerPadding ->
         UserBodyContent(innerPadding)

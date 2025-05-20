@@ -1,3 +1,6 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +8,7 @@ plugins {
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
 }
+
 
 android {
     namespace = "ar.edu.utn.frba.inventario"
@@ -18,6 +22,18 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Load API_BASE_URL from local.properties
+        val localPropertiesFile = rootProject.file("local.properties")
+        val apiBaseUrl = if (localPropertiesFile.exists()) {
+            val properties = Properties()
+            properties.load(FileInputStream(localPropertiesFile))
+            properties.getProperty("API_BASE_URL", "http://default-url")
+        } else {
+            "http://default-url"
+        }
+
+        buildConfigField("String", "API_BASE_URL", "\"$apiBaseUrl\"")
     }
 
     buildTypes {
@@ -38,6 +54,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 

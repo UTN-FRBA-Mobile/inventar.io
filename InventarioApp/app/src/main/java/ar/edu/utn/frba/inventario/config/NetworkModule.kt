@@ -18,11 +18,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Provider
 import javax.inject.Singleton
+import ar.edu.utn.frba.inventario.BuildConfig
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    private const val BASE_URL = "http://localhost:8080"
+    const val API_BASE_URL: String = BuildConfig.API_BASE_URL
 
     @Provides
     @Singleton
@@ -46,7 +47,7 @@ object NetworkModule {
     @Singleton
     fun provideTokenRefreshAuthenticator(
         tokenManager: TokenManager,
-        apiService: Provider<ApiService>
+        apiService: Provider<ApiService>,
     ): TokenRefreshAuthenticator {
         return TokenRefreshAuthenticator(tokenManager, apiService)
     }
@@ -56,23 +57,29 @@ object NetworkModule {
     fun provideOkHttpClient(
         loggingInterceptor: HttpLoggingInterceptor,
         authInterceptor: AuthInterceptor,
-        tokenRefreshAuthenticator: TokenRefreshAuthenticator
+        tokenRefreshAuthenticator: TokenRefreshAuthenticator,
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .addInterceptor(authInterceptor)
             .authenticator(tokenRefreshAuthenticator)
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(10, TimeUnit.SECONDS)
+            .writeTimeout(10, TimeUnit.SECONDS)
             .build()
     }
 
     @Provides
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+        if (API_BASE_URL.isEmpty() || API_BASE_URL == "http://default-url") {
+            throw IllegalArgumentException("Please set API_BASE_URL=http://192.168.XXX.XXX:8080 in local.properties (root project folder)")
+        } else {
+            println("API_BASE_URL: $API_BASE_URL")
+        }
+
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(API_BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
