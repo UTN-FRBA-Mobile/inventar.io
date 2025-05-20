@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import ar.edu.utn.frba.inventario.screens.Home
 import ar.edu.utn.frba.inventario.screens.Login
 import ar.edu.utn.frba.inventario.screens.Orders
+import ar.edu.utn.frba.inventario.screens.Scan
 import ar.edu.utn.frba.inventario.screens.User
 import ar.edu.utn.frba.inventario.utils.Screen
 
@@ -25,6 +26,9 @@ fun AppNavigation() {
         }
         composable(Screen.User.route) {
             User(navController = navController)
+        }
+        composable(Screen.Scan.route) {
+            Scan(navController = navController)
         }
     }
 }

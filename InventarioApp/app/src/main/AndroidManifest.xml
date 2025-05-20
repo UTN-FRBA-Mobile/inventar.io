@@ -3,6 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="ar.edu.utn.frba.inventario">
 
+    <!-- Camera hardware requirement -->
+    <uses-feature android:name="android.hardware.camera.any" />
+
+    <!-- Camera permissions -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+
     <application
         android:name=".InventarioApplication"
         android:allowBackup="true"
