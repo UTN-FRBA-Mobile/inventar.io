@@ -13,22 +13,22 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 
 @Composable
-fun User(navController: NavController){
-    Scaffold(bottomBar ={ BottomNavigationBar(navController) }
+fun User(navController: NavController) {
+    Scaffold(bottomBar = { BottomNavigationBar(navController) }
     ) { innerPadding ->
         UserBodyContent(innerPadding)
     }
 }
 
 @Composable
-fun UserBodyContent(innerPadding: PaddingValues){
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(innerPadding),
+fun UserBodyContent(innerPadding: PaddingValues) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally) {
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Text("User")
-
     }
-
 }

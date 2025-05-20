@@ -8,6 +8,7 @@ import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
 import ar.edu.utn.frba.inventario.api.repository.AuthRepository
 import ar.edu.utn.frba.inventario.api.utils.TokenManager
 import ar.edu.utn.frba.inventario.events.NavigationEvent
+import ar.edu.utn.frba.inventario.utils.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -73,7 +74,7 @@ class LoginViewModel @Inject constructor(
             when (loginResult) {
                 is NetworkResult.Success -> {
                     Log.d("LoginViewModel", "Login exitoso")
-                    _navigationEvent.value = NavigationEvent.NavigateTo("home")
+                    _navigationEvent.value = NavigationEvent.NavigateTo(Screen.Home.route)
                     tokenManager.saveTokens(
                         loginResult.data.accessToken,
                         loginResult.data.refreshToken

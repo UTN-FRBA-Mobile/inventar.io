@@ -8,21 +8,23 @@ import ar.edu.utn.frba.inventario.screens.Home
 import ar.edu.utn.frba.inventario.screens.LoginScreen
 import ar.edu.utn.frba.inventario.screens.Orders
 import ar.edu.utn.frba.inventario.screens.User
+import ar.edu.utn.frba.inventario.utils.Screen
 
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "loginScreen") {
-        composable("loginScreen") {
+
+    NavHost(navController = navController, startDestination = Screen.Login.route) {
+        composable(Screen.Login.route) {
             LoginScreen(navController = navController)
         }
-        composable("home") {
+        composable(Screen.Home.route) {
             Home(navController = navController)
         }
-        composable("orders") {
+        composable(Screen.Orders.route) {
             Orders(navController = navController)
         }
-        composable("user") {
+        composable(Screen.User.route) {
             User(navController = navController)
         }
     }

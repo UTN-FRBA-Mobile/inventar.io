@@ -13,23 +13,22 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 
 @Composable
-fun Home(navController: NavController){
-    Scaffold(bottomBar ={ BottomNavigationBar(navController) }
+fun Home(navController: NavController) {
+    Scaffold(bottomBar = { BottomNavigationBar(navController) }
     ) { innerPadding ->
         HomeBodyContent(innerPadding)
     }
-
 }
 
 @Composable
-fun HomeBodyContent(innerPadding: PaddingValues){
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(innerPadding),
+fun HomeBodyContent(innerPadding: PaddingValues) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally) {
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Text("Home")
-
     }
-
 }

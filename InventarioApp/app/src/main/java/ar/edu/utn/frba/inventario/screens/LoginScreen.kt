@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -71,7 +70,6 @@ fun LoginScreen(
                     }
                     viewModel.onNavigationHandled()
                 }
-
                 null -> { /* No es de navegación */ }
             }
         }
@@ -90,9 +88,6 @@ fun LoginScreen(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
-            //    .padding(16.dp),
-            //verticalArrangement = Arrangement.Center,
-            //horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Column(
                 modifier = Modifier
