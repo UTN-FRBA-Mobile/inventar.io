@@ -33,8 +33,8 @@ class LoginViewModel @Inject constructor(
     private val _snackbarMessage = MutableSharedFlow<String>()
     val snackbarMessage = _snackbarMessage.asSharedFlow()
 
-    private val _navigationEvent = MutableStateFlow<NavigationEvent?>(null)
-    val navigationEvent = _navigationEvent.asStateFlow()
+    private val _navigationEvent = MutableSharedFlow<NavigationEvent?>()
+    val navigationEvent = _navigationEvent.asSharedFlow()
 
     fun changeUser(newUser: String) {
         _user.value = newUser
@@ -42,10 +42,6 @@ class LoginViewModel @Inject constructor(
 
     fun changePassword(newPass: String) {
         _password.value = newPass
-    }
-
-    fun onNavigationHandled() {
-        _navigationEvent.value = null
     }
 
     fun doLogin() {
@@ -74,7 +70,7 @@ class LoginViewModel @Inject constructor(
             when (loginResult) {
                 is NetworkResult.Success -> {
                     Log.d("LoginViewModel", "Login exitoso")
-                    _navigationEvent.value = NavigationEvent.NavigateTo(Screen.Home.route)
+                    _navigationEvent.emit(NavigationEvent.NavigateTo(Screen.Home.route))
                     tokenManager.saveTokens(
                         loginResult.data.accessToken,
                         loginResult.data.refreshToken

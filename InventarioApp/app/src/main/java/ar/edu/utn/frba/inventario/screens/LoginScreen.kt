@@ -68,9 +68,8 @@ fun LoginScreen(
                         // Asi el user no puede volver al login yendo para atras
                         popUpTo(navController.graph.startDestinationId) { inclusive = true }
                     }
-                    viewModel.onNavigationHandled()
                 }
-                null -> { /* No es de navegación */ }
+                null -> { /* No op */ }
             }
         }
     }
