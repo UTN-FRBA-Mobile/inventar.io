@@ -1,4 +1,4 @@
-# QR-CodeGenerator-Python
+# InventarioCodesGenerator
 
 Simple scripts for generating QR codes and Barcodes.
 
