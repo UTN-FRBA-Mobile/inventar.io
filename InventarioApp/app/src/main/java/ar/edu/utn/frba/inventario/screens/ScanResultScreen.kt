@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.inventario.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -92,6 +93,10 @@ fun ScanResultBodyContent(
 
         Button(onClick = { navController.popBackStack() }) {
             Text("Reintentar")
+        }
+
+        Button(onClick = { Log.d("[ScanResultScreen]", "#ToDo, navigate to next page with result: $result") }) {
+            Text("Continuar")
         }
     }
 }

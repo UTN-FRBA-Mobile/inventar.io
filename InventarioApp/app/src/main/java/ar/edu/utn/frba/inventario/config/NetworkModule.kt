@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.inventario.config
 
 import android.content.Context
+import ar.edu.utn.frba.inventario.BuildConfig
 import ar.edu.utn.frba.inventario.api.ApiService
 import ar.edu.utn.frba.inventario.api.interceptor.AuthInterceptor
 import ar.edu.utn.frba.inventario.api.interceptor.LoggingInterceptor
@@ -18,7 +19,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Provider
 import javax.inject.Singleton
-import ar.edu.utn.frba.inventario.BuildConfig
 
 @Module
 @InstallIn(SingletonComponent::class)

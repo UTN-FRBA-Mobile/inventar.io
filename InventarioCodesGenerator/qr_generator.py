@@ -3,7 +3,7 @@ import os
 import qrcode
 
 # Fixed prefix for identifying QR codes
-PREFIX = "inv_jorge_el_curioso_"
+PREFIX = "inv_T3eI5QJ868z40lY_"
 
 
 # Function to get alphanumeric input (not a URL anymore)

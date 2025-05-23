@@ -1,17 +1,16 @@
 package ar.edu.utn.frba.inventario.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import ar.edu.utn.frba.inventario.screens.LoginScreen
 import ar.edu.utn.frba.inventario.screens.HomeScreen
+import ar.edu.utn.frba.inventario.screens.LoginScreen
 import ar.edu.utn.frba.inventario.screens.OrdersScreen
 import ar.edu.utn.frba.inventario.screens.ScanResultScreen
-import ar.edu.utn.frba.inventario.screens.UserScreen
 import ar.edu.utn.frba.inventario.screens.ScanScreen
+import ar.edu.utn.frba.inventario.screens.UserScreen
 import ar.edu.utn.frba.inventario.utils.Screen
 
 @Composable
