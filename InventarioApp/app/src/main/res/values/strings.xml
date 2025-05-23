@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Inventario</string>
+
+    <plurals name="products_and_date_template">
+        <item quantity="one">%1$d producto • Solicitado %2$s</item>
+        <item quantity="other">%1$d productos • Solicitado %2$s</item>
+    </plurals>
 </resources>

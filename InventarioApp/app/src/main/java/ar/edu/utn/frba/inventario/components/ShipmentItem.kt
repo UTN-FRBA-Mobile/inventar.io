@@ -1,6 +1,7 @@
-package ar.edu.utn.frba.inventario.screens
+package ar.edu.utn.frba.inventario.components
 
 import Shipment
+import ShipmentStatus
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -23,63 +24,21 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import ar.edu.utn.frba.inventario.R
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import ar.edu.utn.frba.inventario.utils.format
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import ar.edu.utn.frba.inventario.components.ShipmentItem
 import ar.edu.utn.frba.inventario.viewmodels.HomeViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-
-@Composable
-fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navController: NavController) {
-    Scaffold(bottomBar = { BottomNavigationBar(navController) }
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.secondaryContainer ) // Fondo del contenido
-        )
-        HomeBodyContent(
-            innerPadding = innerPadding,
-            shipments = viewModel.getSortedShipments()
-        )
-    }
-}
-
-@Composable
-fun HomeBodyContent(innerPadding: PaddingValues, shipments: List<Shipment>) {
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)
-    ) {
-        Text(
-            text = "Envíos",
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(16.dp)
-        )
-
-        LazyColumn(
-            modifier = Modifier.weight(1f)
-        ) {
-            itemsIndexed(shipments) { _, shipment ->
-                ShipmentItem(shipment = shipment)
-            }
-        }
-    }
-}
-
 /*
-@SuppressLint("ResourceType")
 @Composable
 fun ShipmentItem(shipment: Shipment) {
     Card(
@@ -93,15 +52,13 @@ fun ShipmentItem(shipment: Shipment) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp),  // Padding vertical para la card
-            verticalAlignment = Alignment.CenterVertically  // Alineación vertical central
+                .padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            // Contenedor del ícono (izquierda)
             Box(
                 modifier = Modifier
                     .width(56.dp)
-                    .padding(start = 8.dp)
-                                      ,
+                    .padding(start = 8.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Image(
@@ -112,11 +69,11 @@ fun ShipmentItem(shipment: Shipment) {
                 )
             }
 
-                   // Contenido de texto (derecha)
+            // Contenido de texto (derecha)
             Column(
                 modifier = Modifier
                     .padding(8.dp)  // Padding ajustado
-                  //  .weight(1f)
+                //  .weight(1f)
             ) {
                 Text(
                     text = shipment.status.displayName,
@@ -146,10 +103,93 @@ fun ShipmentItem(shipment: Shipment) {
         }
     }
 }
-// Extensión para formatear la fecha
-fun LocalDateTime.format(): String {
-    val formatter = DateTimeFormatter.ofPattern("EEE d 'de' MMM HH:mm", Locale("es"))
-    return this.format(formatter)
-}
+
+
 */
 
+@Composable
+fun ShipmentItem(shipment: Shipment) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(6.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
+    ) {
+        ShipmentContent(shipment)
+    }
+}
+
+@Composable
+private fun ShipmentContent(shipment: Shipment) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        StatusIcon(shipment.status)
+        ShipmentTextContent(shipment)
+    }
+}
+
+@Composable
+private fun StatusIcon(status: ShipmentStatus) {
+    Box(
+        modifier = Modifier
+            .width(56.dp)
+            .padding(start = 8.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            painter = painterResource(id = status.iconResourceId),
+            contentDescription = "Ícono de estado",
+            modifier = Modifier.fillMaxSize(0.9f),
+            contentScale = ContentScale.Fit
+        )
+    }
+}
+
+@Composable
+private fun ShipmentTextContent(shipment: Shipment) {
+    Column(modifier = Modifier.padding(8.dp)) {
+        StatusText(shipment.status.displayName, shipment.status.color)
+        ShipmentDetails(shipment.number, shipment.customerName)
+        ProductsAndDate(shipment.products.size, shipment.creationDate)
+    }
+}
+
+@Composable
+private fun StatusText(text: String, color: Color) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.titleMedium,
+        fontWeight = FontWeight.Bold,
+        color = color
+    )
+}
+
+@Composable
+private fun ShipmentDetails(number: String, customer: String) {
+    Text(
+        text = "$number • $customer",
+        style = MaterialTheme.typography.bodyMedium,
+        fontWeight = FontWeight.SemiBold,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis
+    )
+}
+
+@Composable
+private fun ProductsAndDate(count: Int, date: LocalDateTime) {
+    Text(
+        text = pluralStringResource(
+            id = R.plurals.products_and_date_template,
+            count = count,
+            count,
+            date.format()
+        ),
+        style = MaterialTheme.typography.bodySmall
+    )
+}
