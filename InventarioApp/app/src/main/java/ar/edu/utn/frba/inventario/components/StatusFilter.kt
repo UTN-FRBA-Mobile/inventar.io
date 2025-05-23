@@ -1,0 +1,64 @@
+package ar.edu.utn.frba.inventario.components
+
+import ShipmentStatus
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import ar.edu.utn.frba.inventario.R
+import ar.edu.utn.frba.inventario.ui.theme.Purple40
+
+@Composable
+fun StatusFilter(
+    statuses: List<ShipmentStatus>,//cuando armemos la parte de pedidos esto podría soportar un Status general y serviría para ambos
+    selectedStatuses: Set<ShipmentStatus>,
+    onStatusSelected: (ShipmentStatus) -> Unit,
+    onClearFilters: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val scrollState = rememberScrollState()
+
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .horizontalScroll(scrollState),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        FilterChip(
+            selected = selectedStatuses.isEmpty(),
+            onClick = onClearFilters,
+            label = { Text(stringResource(R.string.all_status_selected)) },
+            colors = FilterChipDefaults.filterChipColors(
+                selectedContainerColor = Purple40.copy(alpha = 0.2f),
+                selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        )
+        //Filter chips por estado
+        statuses.forEach { status ->
+            val isSelected = status in selectedStatuses
+            FilterChip(
+                selected = isSelected,
+                onClick = { onStatusSelected(status) },
+                label = { Text(status.displayName) },
+                colors = FilterChipDefaults.filterChipColors(
+                    selectedContainerColor = status.color.copy(alpha = 0.2f),
+                    selectedLabelColor = Color.Black
+                )
+            )
+        }
+    }
+}
