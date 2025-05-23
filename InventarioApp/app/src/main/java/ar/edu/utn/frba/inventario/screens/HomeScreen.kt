@@ -1,66 +1,56 @@
 package ar.edu.utn.frba.inventario.screens
 
 import Shipment
-import android.annotation.SuppressLint
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import ar.edu.utn.frba.inventario.R
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.components.ShipmentItem
+import ar.edu.utn.frba.inventario.components.StatusFilter
 import ar.edu.utn.frba.inventario.viewmodels.HomeViewModel
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navController: NavController) {
     Scaffold(bottomBar = { BottomNavigationBar(navController) }
     ) { innerPadding ->
-        Box(
+        Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.secondaryContainer ) // Fondo del contenido
-        )
-        HomeBodyContent(
-            innerPadding = innerPadding,
-            shipments = viewModel.getSortedShipments()
-        )
+                .background(MaterialTheme.colorScheme.secondaryContainer)
+        ) {
+            StatusFilter(
+                statuses = ShipmentStatus.values().toList(),
+                selectedStatuses = viewModel.selectedStatuses.value,
+                onStatusSelected = { viewModel.updateSelectedStatuses(it) },
+                onClearFilters = { viewModel.clearFilters() }
+            )
+            HomeBodyContent(
+                shipments = viewModel.getFilteredShipments(),
+                modifier = Modifier.weight(1f)
+            )
+        }
     }
 }
 
 @Composable
-fun HomeBodyContent(innerPadding: PaddingValues, shipments: List<Shipment>) {
-
+fun HomeBodyContent(
+    shipments: List<Shipment>,
+    modifier: Modifier = Modifier
+    ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(innerPadding)
     ) {
         Text(
             text = "Envíos",
@@ -77,79 +67,3 @@ fun HomeBodyContent(innerPadding: PaddingValues, shipments: List<Shipment>) {
         }
     }
 }
-
-/*
-@SuppressLint("ResourceType")
-@Composable
-fun ShipmentItem(shipment: Shipment) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(6.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),  // Padding vertical para la card
-            verticalAlignment = Alignment.CenterVertically  // Alineación vertical central
-        ) {
-            // Contenedor del ícono (izquierda)
-            Box(
-                modifier = Modifier
-                    .width(56.dp)
-                    .padding(start = 8.dp)
-                                      ,
-                contentAlignment = Alignment.Center
-            ) {
-                Image(
-                    painter = painterResource(id = shipment.status.iconResourceId ),
-                    contentDescription = "Ícono de estado",
-                    modifier = Modifier.fillMaxSize(0.9f),
-                    contentScale = ContentScale.Fit
-                )
-            }
-
-                   // Contenido de texto (derecha)
-            Column(
-                modifier = Modifier
-                    .padding(8.dp)  // Padding ajustado
-                  //  .weight(1f)
-            ) {
-                Text(
-                    text = shipment.status.displayName,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = shipment.status.color
-                )
-
-                Text(
-                    text = "${shipment.number} • ${shipment.customerName}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis  // agrega ... al final si se trunca
-                )
-
-                Text(
-                    text = pluralStringResource(
-                        id = R.plurals.products_and_date_template,
-                        count = shipment.products.size,
-                        shipment.products.size,
-                        shipment.creationDate.format()
-                    ),
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
-        }
-    }
-}
-// Extensión para formatear la fecha
-fun LocalDateTime.format(): String {
-    val formatter = DateTimeFormatter.ofPattern("EEE d 'de' MMM HH:mm", Locale("es"))
-    return this.format(formatter)
-}
-*/
-

@@ -2,7 +2,9 @@ package ar.edu.utn.frba.inventario.viewmodels
 
 import Product
 import Shipment
+import ShipmentStatus
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,6 +14,7 @@ import java.time.LocalDateTime
 @HiltViewModel
 class HomeViewModel @Inject constructor() : ViewModel() {
 
+    //Creo lista con productos random para poder visualizar las cards
     val shipments: SnapshotStateList<Shipment> = mutableStateListOf<Shipment>().apply {
         addAll(listOf(
             Shipment(
@@ -106,10 +109,38 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         ))
     }
 
-    fun getSortedShipments(): List<Shipment> {
+    private val _selectedStatuses = mutableStateOf<Set<ShipmentStatus>>(emptySet())
+    val selectedStatuses: androidx.compose.runtime.State<Set<ShipmentStatus>>
+        get() = _selectedStatuses
+
+    fun getFilteredShipments(): List<Shipment> {
+        return if (_selectedStatuses.value.isEmpty()) {
+            shipments.sortedWith(
+                compareBy<Shipment> { it.status.ordinal }
+                    .thenBy { it.creationDate }
+            )
+        } else {
+            getSortedShipments(shipments
+                .filter { it.status in _selectedStatuses.value})
+        }
+    }
+
+    fun updateSelectedStatuses(status: ShipmentStatus) {
+        _selectedStatuses.value = _selectedStatuses.value.toMutableSet().apply {
+            if (contains(status)) remove(status) else add(status)
+        }
+    }
+
+    fun clearFilters() {
+        _selectedStatuses.value = emptySet()
+    }
+
+
+    fun getSortedShipments(shipments: List<Shipment>): List<Shipment> {
         return shipments.sortedWith(
             compareBy<Shipment> { it.status.ordinal }
                 .thenBy { it.creationDate }  // se ordena desde el más antiguo al más nuevo. Tiene sentido para los completados?
         )
     }
 }
+
