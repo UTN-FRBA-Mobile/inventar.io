@@ -1,12 +1,12 @@
 package ar.edu.utn.frba.inventario.viewmodels
 
-import Product
-import Shipment
-import ShipmentStatus
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
+import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
+import ar.edu.utn.frba.inventario.api.model.shipment.Product
+import ar.edu.utn.frba.inventario.api.model.shipment.Shipment
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import java.time.LocalDateTime
@@ -21,7 +21,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
                 id = "S01-1",
                 number = "ENV-0001",
                 customerName = "Este es un nombre tan largo que no debería entrar",
-                status = ShipmentStatus.COMPLETED,
+                status = ItemStatus.COMPLETED,
                 products = listOf(
                     Product("P-101", "AAAA", 1),
                     Product("P-102", "BBBB", 2)
@@ -32,7 +32,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
                 id = "S01-1",
                 number = "ENV-0010",
                 customerName = "Dibu Martínez",
-                status = ShipmentStatus.BLOCKED,
+                status = ItemStatus.BLOCKED,
                 products = listOf(
                     Product("P-101", "AAAA", 1),
                     Product("P-102", "BBBB", 2)
@@ -43,7 +43,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
                 id = "S01-1",
                 number = "ENV-0001",
                 customerName = "Enzo Fernández",
-                status = ShipmentStatus.PENDING,
+                status = ItemStatus.PENDING,
                 products = listOf(
                     Product("P-101", "AAAA", 1)
                 ),
@@ -53,7 +53,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
                 id = "S01-2",
                 number = "ENV-0002",
                 customerName = "Lionel Messi",
-                status = ShipmentStatus.IN_PROGRESS,
+                status = ItemStatus.IN_PROGRESS,
                 products = listOf(
                     Product("P-201", "Monitor", 1),
                     Product("P-202", "Teclado", 1)
@@ -64,7 +64,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
                 id = "S01-3",
                 number = "ENV-0003",
                 customerName = "UTN FRBA",
-                status = ShipmentStatus.PENDING,
+                status = ItemStatus.PENDING,
                 products = listOf(
                     Product("P-301", "ASDADS", 1),
                     Product("P-302", "ADADASD", 3),
@@ -87,7 +87,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
                 id = "S01-4",
                 number = "ENV-0004",
                 customerName = "Julián Álvarez",
-                status = ShipmentStatus.COMPLETED,
+                status = ItemStatus.COMPLETED,
                 products = listOf(
                     Product("P-401", "Tablet", 2),
                     Product("P-402", "Fundas", 2)
@@ -98,7 +98,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
                 id = "S01-5",
                 number = "ENV-0005",
                 customerName = "Juan Pérez",
-                status = ShipmentStatus.IN_PROGRESS,
+                status = ItemStatus.IN_PROGRESS,
                 products = listOf(
                     Product("P-501", "adasd", 1),
                     Product("P-502", "aaaaaaa", 1)
@@ -109,8 +109,8 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         ))
     }
 
-    private val _selectedStatuses = mutableStateOf<Set<ShipmentStatus>>(emptySet())
-    val selectedStatuses: androidx.compose.runtime.State<Set<ShipmentStatus>>
+    private val _selectedStatuses = mutableStateOf<Set<ItemStatus>>(emptySet())
+    val selectedStatuses: androidx.compose.runtime.State<Set<ItemStatus>>
         get() = _selectedStatuses
 
     fun getFilteredShipments(): List<Shipment> {
@@ -125,7 +125,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun updateSelectedStatuses(status: ShipmentStatus) {
+    fun updateSelectedStatuses(status: ItemStatus) {
         _selectedStatuses.value = _selectedStatuses.value.toMutableSet().apply {
             if (contains(status)) remove(status) else add(status)
         }

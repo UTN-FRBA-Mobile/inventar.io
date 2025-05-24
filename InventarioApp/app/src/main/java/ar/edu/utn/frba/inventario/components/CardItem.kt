@@ -1,7 +1,5 @@
 package ar.edu.utn.frba.inventario.components
 
-import Shipment
-import ShipmentStatus
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,27 +8,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import ar.edu.utn.frba.inventario.R
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import ar.edu.utn.frba.inventario.utils.format
-import java.time.LocalDateTime
-
+import ar.edu.utn.frba.inventario.api.model.item.Item
+import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 
 @Composable
-fun ShipmentItem(shipment: Shipment) {
+fun CardItem(item: Item) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -39,25 +35,37 @@ fun ShipmentItem(shipment: Shipment) {
             containerColor = MaterialTheme.colorScheme.surface
         )
     ) {
-        ShipmentContent(shipment)
+        CardContent(item)
     }
 }
 
 @Composable
-private fun ShipmentContent(shipment: Shipment) {
+private fun CardContent(item: Item) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        StatusIcon(shipment.status)
-        ShipmentTextContent(shipment)
+        StatusIcon(item.status)
+        CardText(item)
     }
 }
 
 @Composable
-private fun StatusIcon(status: ShipmentStatus) {
+private fun CardText(item: Item) {
+    val context = LocalContext.current
+
+    Column(modifier = Modifier.padding(8.dp)) {
+        StatusTitle(item.status.displayName, item.status.color)
+        CardItemTitle(item.getDisplayName())
+        CardItemDetail(item.getCardDetail(context))
+
+    }
+}
+
+@Composable
+private fun StatusIcon(status: ItemStatus) {
     Box(
         modifier = Modifier
             .width(56.dp)
@@ -74,16 +82,7 @@ private fun StatusIcon(status: ShipmentStatus) {
 }
 
 @Composable
-private fun ShipmentTextContent(shipment: Shipment) {
-    Column(modifier = Modifier.padding(8.dp)) {
-        StatusTitle(shipment.status.displayName, shipment.status.color)
-        ShipmentTitle(shipment.number, shipment.customerName)
-        ProductsAndDate(shipment.products.size, shipment.creationDate)
-    }
-}
-
-@Composable
-private fun StatusTitle(text: String, color: Color) {
+private fun StatusTitle(text: String, color: Color) { //ok
     Text(
         text = text,
         style = MaterialTheme.typography.titleMedium,
@@ -93,9 +92,9 @@ private fun StatusTitle(text: String, color: Color) {
 }
 
 @Composable
-private fun ShipmentTitle(number: String, customer: String) {
+private fun CardItemTitle(displayName: String) {
     Text(
-        text = "$number • $customer",
+        text = displayName,
         style = MaterialTheme.typography.bodyMedium,
         fontWeight = FontWeight.SemiBold,
         maxLines = 1,
@@ -104,14 +103,9 @@ private fun ShipmentTitle(number: String, customer: String) {
 }
 
 @Composable
-private fun ProductsAndDate(count: Int, date: LocalDateTime) {
+private fun CardItemDetail(detail: String) {
     Text(
-        text = pluralStringResource(
-            id = R.plurals.products_and_date_template,
-            count = count,
-            count,
-            date.format()
-        ),
+        text = detail,
         style = MaterialTheme.typography.bodySmall
     )
 }
