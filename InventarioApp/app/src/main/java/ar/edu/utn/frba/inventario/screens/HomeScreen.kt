@@ -43,14 +43,14 @@ fun HomeScreen(
             )
             StatusFilter(
                 statusList = ItemStatus.values().toList(),
-                selectedStatusList = viewModel.selectedStatuses.value,
-                onStatusSelected = { viewModel.updateSelectedStatuses(it) },
+                selectedStatusList = viewModel.selectedStatusList.value,
+                onStatusSelected = { viewModel.updateSelectedStatusList(it) },
                 onClearFilters = { viewModel.clearFilters() },
                 modifier = Modifier
                     .fillMaxWidth()
             )
             HomeBodyContent(
-                shipments = viewModel.getFilteredShipments(),
+                shipments = viewModel.getFilteredItems(),
                 modifier = Modifier.weight(1f)
             )
         }

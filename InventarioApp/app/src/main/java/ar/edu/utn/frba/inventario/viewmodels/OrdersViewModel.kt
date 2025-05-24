@@ -1,22 +1,25 @@
 package ar.edu.utn.frba.inventario.viewmodels
 
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.SavedStateHandle
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import ar.edu.utn.frba.inventario.api.model.order.Order
 import ar.edu.utn.frba.inventario.api.model.shipment.Product
-import ar.edu.utn.frba.inventario.api.model.shipment.Shipment
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import java.time.LocalDateTime
 
 @HiltViewModel
-class OrdersViewModel @Inject constructor() : ViewModel() {
+class OrdersViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle
+) : BaseItemViewModel<Order>(
+    savedStateHandle = savedStateHandle,
+    filterKey = "orders_filter"
+) {
 
     // Lista de órdenes con datos de ejemplo
-    val orders: SnapshotStateList<Order> = mutableStateListOf<Order>().apply {
+    override val items: SnapshotStateList<Order> = mutableStateListOf<Order>().apply {
         addAll(listOf(
             Order(
                 id = "ORD-001",
@@ -73,37 +76,7 @@ class OrdersViewModel @Inject constructor() : ViewModel() {
         ))
     }
 
-    private val _selectedStatuses = mutableStateOf<Set<ItemStatus>>(emptySet())
-    val selectedStatuses: androidx.compose.runtime.State<Set<ItemStatus>>
-        get() = _selectedStatuses
+    override fun getStatus(item: Order) = item.status
+    override fun getFilterDate(item: Order) = item.creationDate //Uso creationDate pero deberíamos evaluar cómo ordenamos
 
-    fun getFilteredOrders(): List<Order> {
-        return if (_selectedStatuses.value.isEmpty()) {
-            orders.sortedWith(
-                compareBy<Order> { it.status.ordinal }
-                    .thenBy { it.creationDate }
-            )
-        } else {
-            getSortedOrders(orders
-                .filter { it.status in _selectedStatuses.value})
-        }
-    }
-
-    fun updateSelectedStatuses(status: ItemStatus) {
-        _selectedStatuses.value = _selectedStatuses.value.toMutableSet().apply {
-            if (contains(status)) remove(status) else add(status)
-        }
-    }
-
-    fun clearFilters() {
-        _selectedStatuses.value = emptySet()
-    }
-
-
-    fun getSortedOrders(orders: List<Order>): List<Order> {
-        return orders.sortedWith(
-            compareBy<Order> { it.status.ordinal }
-                .thenBy { it.creationDate }  // se ordena desde el más antiguo al más nuevo. Tiene sentido para los completados?
-        )
-    }
 }
