@@ -2,6 +2,11 @@
     <string name="app_name">Inventario</string>
     <string name="all_status_selected">Todos</string>
     <string name="branch_name">Sucursal %s</string>
+    <string name="unknown_date">Fecha desconocida</string>
+    <string name="received_on">Recepción confirmada: %1$s</string>
+    <string name="cancelled_on">Fecha cancelación: %1$s</string>
+    <string name="pending_reception">Recepción estimada: %1$s</string>
+    <string name="created_date">Fecha creación: %1$s</string>
 
     <plurals name="products_and_date_template">
         <item quantity="one">%1$d producto • Solicitado %2$s</item>

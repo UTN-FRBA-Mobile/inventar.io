@@ -1,6 +1,5 @@
 package ar.edu.utn.frba.inventario.screens
 
-import Shipment
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,8 +15,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
+import ar.edu.utn.frba.inventario.api.model.shipment.Shipment
 import ar.edu.utn.frba.inventario.components.BranchLocationBar
-import ar.edu.utn.frba.inventario.components.ShipmentItem
+import ar.edu.utn.frba.inventario.components.CardItem
 import ar.edu.utn.frba.inventario.components.StatusFilter
 import ar.edu.utn.frba.inventario.viewmodels.HomeViewModel
 
@@ -41,7 +42,7 @@ fun HomeScreen(
                     .padding(top = 12.dp)
             )
             StatusFilter(
-                statusList = ShipmentStatus.values().toList(),
+                statusList = ItemStatus.values().toList(),
                 selectedStatusList = viewModel.selectedStatuses.value,
                 onStatusSelected = { viewModel.updateSelectedStatuses(it) },
                 onClearFilters = { viewModel.clearFilters() },
@@ -75,7 +76,7 @@ fun HomeBodyContent(
             modifier = Modifier.weight(1f)
         ) {
             itemsIndexed(shipments) { _, shipment ->
-                ShipmentItem(shipment = shipment)
+                CardItem(item = shipment)
             }
         }
     }
