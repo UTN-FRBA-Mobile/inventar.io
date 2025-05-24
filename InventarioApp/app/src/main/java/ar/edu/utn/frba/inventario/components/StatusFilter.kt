@@ -16,14 +16,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.ui.theme.Purple40
 
 @Composable
 fun StatusFilter(
-    statuses: List<ShipmentStatus>,//cuando armemos la parte de pedidos esto podría soportar un Status general y serviría para ambos
-    selectedStatuses: Set<ShipmentStatus>,
+    statusList: List<ShipmentStatus>,//cuando armemos la parte de pedidos esto podría soportar un Status general y serviría para ambos
+    selectedStatusList: Set<ShipmentStatus>,
     onStatusSelected: (ShipmentStatus) -> Unit,
     onClearFilters: () -> Unit,
     modifier: Modifier = Modifier
@@ -33,13 +34,13 @@ fun StatusFilter(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = 16.dp, vertical = 2.dp)
             .horizontalScroll(scrollState),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         FilterChip(
-            selected = selectedStatuses.isEmpty(),
+            selected = selectedStatusList.isEmpty(),
             onClick = onClearFilters,
             label = { Text(stringResource(R.string.all_status_selected)) },
             colors = FilterChipDefaults.filterChipColors(
@@ -48,8 +49,8 @@ fun StatusFilter(
             )
         )
         //Filter chips por estado
-        statuses.forEach { status ->
-            val isSelected = status in selectedStatuses
+        statusList.forEach { status ->
+            val isSelected = status in selectedStatusList
             FilterChip(
                 selected = isSelected,
                 onClick = { onStatusSelected(status) },

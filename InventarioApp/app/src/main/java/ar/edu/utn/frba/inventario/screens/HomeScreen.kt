@@ -4,6 +4,7 @@ import Shipment
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -15,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import ar.edu.utn.frba.inventario.components.BranchLocationBar
 import ar.edu.utn.frba.inventario.components.ShipmentItem
 import ar.edu.utn.frba.inventario.components.StatusFilter
 import ar.edu.utn.frba.inventario.viewmodels.HomeViewModel
@@ -29,11 +31,19 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navController: NavCon
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.secondaryContainer)
         ) {
+            BranchLocationBar(
+                branchName = "Centro", //Harcodeado, luego deberíamos obtenerlo a partir del dato del usuario
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp)
+            )
             StatusFilter(
-                statuses = ShipmentStatus.values().toList(),
-                selectedStatuses = viewModel.selectedStatuses.value,
+                statusList = ShipmentStatus.values().toList(),
+                selectedStatusList = viewModel.selectedStatuses.value,
                 onStatusSelected = { viewModel.updateSelectedStatuses(it) },
-                onClearFilters = { viewModel.clearFilters() }
+                onClearFilters = { viewModel.clearFilters() },
+                modifier = Modifier
+                    .fillMaxWidth()
             )
             HomeBodyContent(
                 shipments = viewModel.getFilteredShipments(),
