@@ -1,7 +1,9 @@
 package ar.edu.utn.frba.inventario.viewmodels
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
@@ -48,13 +50,34 @@ class ShipmentViewModel @Inject constructor():ViewModel(){
     }
 
     private fun loadProductToScanList(products:List<Product>){
-        products.forEach { p->productToScanList.add(ProductToScan(id = p.id, requiredQuantity = p.quantity, loadedQuantity = 0)) }
+        products.forEach { p->productToScanList.add(ProductToScan(id = p.id, requiredQuantity = p.quantity)) }
     }
 
     fun getLoadedQuantityProduct(id:String):Int{
-        return productToScanList.first { ps -> ps.id == id }.loadedQuantity
+        return productToScanList.first { ps -> ps.id == id }.loadedQuantity.value
     }
 
+    fun setLoadedQuantityProduct(id:String, newValue: Int){
+        Log.d("ShipmentViewModel", "Se inicia con la actualizacion valor de loadedQuantity del producto $id")
+        productToScanList.forEach { p-> if (p.id==id)
+        {
+            p.loadedQuantity.value = newValue
+            Log.d("ShipmentViewModel", "Se actualizo el valor de loadedQuantity a ${p.loadedQuantity.value} del producto $id")
+
+        }
+        }
+    }
+    fun isProductCompleted(id:String):Boolean{
+        val prodToScan = productToScanList.first { ps -> ps.id == id }
+        val isCompletedProduct = prodToScan.requiredQuantity == prodToScan.loadedQuantity.value
+        return isCompletedProduct
+    }
+
+    data class ProductToScan(
+        val id: String,
+        val requiredQuantity: Int,
+        val loadedQuantity: MutableState<Int> = mutableStateOf(0)
+    )
 
     //Para pruebas, hasta que este el endponit
     private fun shipmentRepositoryMock(id: Int):Shipment{
@@ -179,11 +202,6 @@ data class Product(
     val quantity: Int
 )
 
-data class ProductToScan(
-    val id: String,
-    val requiredQuantity: Int,
-    val loadedQuantity: Int
-)
 
 //enum class ShipmentStatus(
 //    val color: Color,

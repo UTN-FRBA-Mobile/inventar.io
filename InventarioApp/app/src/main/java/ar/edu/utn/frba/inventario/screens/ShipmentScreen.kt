@@ -20,6 +20,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -39,13 +40,14 @@ import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import ar.edu.utn.frba.inventario.viewmodels.Product
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ShipmentScreen(viewModel:ShipmentViewModel = hiltViewModel(), navController: NavController, id:Int){
-    Scaffold(bottomBar = {ButtonBox()}){
+    Scaffold(bottomBar = {ButtonBox(viewModel,navController)}){
         innerPadding ->
         ShipmentBodyContent(viewModel, id,innerPadding)
     }
@@ -93,16 +95,19 @@ fun ShipmentBodyContent(viewModel:ShipmentViewModel, id:Int, innerPadding: Paddi
 
 @Composable
 fun ProductItem(viewModel:ShipmentViewModel,product:Product){
-    ElevatedCard(modifier = Modifier
+    val isComplete = viewModel.isProductCompleted(product.id)
+    val backgroundColor = if (isComplete) Color(0xFFB2FF59) else {CardDefaults.elevatedCardColors().containerColor}
+    ElevatedCard(colors = CardDefaults.elevatedCardColors(containerColor = backgroundColor)
+        ,modifier = Modifier
         .fillMaxSize()
         .padding(2.dp)){
         Column(modifier = Modifier
             .padding(15.dp)){
-            Text(product.name)
+            Text(text = product.name, fontWeight = FontWeight.Bold, fontSize = 15.sp,)
             Spacer(modifier = Modifier
                 .height(10.dp))
             Row {
-                Text("${product.quantity} Requeridos")
+                Text(text = "${product.quantity} Requeridos")
                 Spacer(modifier = Modifier.width(25.dp)
                     .weight(2f))
                 Box(contentAlignment = Alignment.CenterEnd,
@@ -116,7 +121,7 @@ fun ProductItem(viewModel:ShipmentViewModel,product:Product){
 }
 
 @Composable
-fun ButtonBox(){
+fun ButtonBox(viewModel:ShipmentViewModel, navController: NavController){
     Column {
         Box(contentAlignment = Alignment.Center, modifier = Modifier
             .fillMaxWidth()
@@ -131,7 +136,7 @@ fun ButtonBox(){
                     Text(text = "Siguiente", color = Color.Black, fontSize = 25.sp,
                         fontWeight = FontWeight.Bold)
                 }
-                Button(onClick = {}, modifier = Modifier
+                Button(onClick = { }, modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)
                 ){
@@ -171,6 +176,6 @@ fun vistaProd(){
             }
         }
     }
-    ButtonBox()
+
 }
 
