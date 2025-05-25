@@ -2,8 +2,8 @@ package ar.edu.utn.frba.inventario.api.utils
 
 import android.content.Context
 import android.content.SharedPreferences
-import javax.inject.Singleton
 import androidx.core.content.edit
+import javax.inject.Singleton
 
 @Singleton
 class TokenManager(context: Context) {

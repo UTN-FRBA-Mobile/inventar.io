@@ -11,7 +11,7 @@ abstract class Repository {
             try {
                 val response = apiCall()
                 if (response.isSuccessful) {
-                    // Un body vcacio tambien es valido
+                    // Un body vacío también es válido
                     @Suppress("UNCHECKED_CAST")
                     NetworkResult.Success(response.body() as T)
                 } else {

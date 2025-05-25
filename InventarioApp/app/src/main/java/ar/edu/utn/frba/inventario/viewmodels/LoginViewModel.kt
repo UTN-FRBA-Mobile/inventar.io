@@ -50,19 +50,18 @@ class LoginViewModel @Inject constructor(
     }
 
     fun doLogin() {
-        _isLoading.value = true
-
         val currentUser = _user.value
         val currentPassword = _password.value
 
         // Ambos capos deben tener valor
         if (currentUser.isBlank() || currentPassword.isBlank()) {
             viewModelScope.launch {
-                _snackbarMessage.emit("Usuario y contraseña no pueden estar vacíos")
-                _isLoading.value = false
+                _snackbarMessage.emit("Debe completar ambos campos")
             }
             return
         }
+
+        _isLoading.value = true
 
         viewModelScope.launch(Dispatchers.Default) {
             try {
@@ -100,16 +99,16 @@ class LoginViewModel @Inject constructor(
                         Log.d("LoginViewModel", "Error: code=${loginResult.code}, message=${loginResult.message}")
 
                         val message = when {
-                            loginResult.code == 401 && loginResult.message == "wrong credentials" -> "Usuario o contraseña inválidos"
+                            loginResult.code == 401 && loginResult.message == "wrong credentials" -> "Credenciales inválidas"
                             loginResult.code == 401 && loginResult.message == "no location" -> "Muy alejado de una ubicación válida"
-                            else -> "Error de login: ${loginResult.message ?: "desconocido"}"
+                            else -> "Error desconocido. Intente nuevamente más tarde"
                         }
 
                         _snackbarMessage.emit(message)
                     }
                     is NetworkResult.Exception -> {
                         Log.d("LoginViewModel", "Error crítico: ${loginResult.e.message}")
-                        _snackbarMessage.emit("Error crítico: ${loginResult.e.message}")
+                        _snackbarMessage.emit("Ha ocurrido un error. Revise su conexión a internet")
                     }
                 }
             } finally {
