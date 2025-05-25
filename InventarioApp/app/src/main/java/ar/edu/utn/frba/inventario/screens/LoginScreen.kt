@@ -50,8 +50,8 @@ import ar.edu.utn.frba.inventario.viewmodels.LoginViewModel
 
 @Composable
 fun LoginScreen(
+    navController: NavController,
     loginViewModel: LoginViewModel = hiltViewModel(),
-    navController: NavController
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
     val user by loginViewModel.user.collectAsStateWithLifecycle()

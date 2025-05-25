@@ -53,7 +53,7 @@ class TokenRefreshAuthenticator constructor(
                 return when (refreshResult) {
                     is NetworkResult.Success -> {
                         val newLoginResponse = refreshResult.data
-                        tokenManager.saveTokens(
+                        tokenManager.saveSession(
                             newLoginResponse.accessToken,
                             newLoginResponse.refreshToken
                         )
@@ -65,7 +65,7 @@ class TokenRefreshAuthenticator constructor(
 
                     is NetworkResult.Error, is NetworkResult.Exception -> {
                         // El refresh falló (ej. refresh token inválido o expirado)
-                        tokenManager.clearAllTokens()
+                        tokenManager.clearSession()
                         null // No se puede autenticar, abortar
                     }
                 }

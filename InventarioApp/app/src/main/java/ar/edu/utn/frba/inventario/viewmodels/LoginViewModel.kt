@@ -26,6 +26,9 @@ class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val tokenManager: TokenManager
 ) : ViewModel() {
+    private val _navigationEvent = MutableSharedFlow<NavigationEvent?>()
+    val navigationEvent = _navigationEvent.asSharedFlow()
+
     private val _user = MutableStateFlow("")
     val user = _user.asStateFlow()
 
@@ -34,9 +37,6 @@ class LoginViewModel @Inject constructor(
 
     private val _snackbarMessage = MutableSharedFlow<String>()
     val snackbarMessage = _snackbarMessage.asSharedFlow()
-
-    private val _navigationEvent = MutableSharedFlow<NavigationEvent?>()
-    val navigationEvent = _navigationEvent.asSharedFlow()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
@@ -84,11 +84,17 @@ class LoginViewModel @Inject constructor(
                 when (loginResult) {
                     is NetworkResult.Success -> {
                         Log.d("LoginViewModel", "Login exitoso")
-                        _navigationEvent.emit(NavigationEvent.NavigateTo(Screen.Home.route))
-                        tokenManager.saveTokens(
+
+                        tokenManager.saveSession(
                             loginResult.data.accessToken,
                             loginResult.data.refreshToken
                         )
+
+                        _user.value = ""
+                        _password.value = ""
+
+                        _navigationEvent.emit(NavigationEvent.NavigateTo(Screen.Home.route))
+
                     }
                     is NetworkResult.Error -> {
                         Log.d("LoginViewModel", "Error: code=${loginResult.code}, message=${loginResult.message}")
