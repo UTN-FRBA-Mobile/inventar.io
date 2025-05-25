@@ -13,6 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -37,6 +38,9 @@ class LoginViewModel @Inject constructor(
     private val _navigationEvent = MutableSharedFlow<NavigationEvent?>()
     val navigationEvent = _navigationEvent.asSharedFlow()
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
     fun changeUser(newUser: String) {
         _user.value = newUser
     }
@@ -45,59 +49,65 @@ class LoginViewModel @Inject constructor(
         _password.value = newPass
     }
 
-    fun doLogin(uiStateViewModel: UiStateViewModel) {
-        // Verifico que haya completado los campos
+    fun doLogin() {
+        _isLoading.value = true
+
         val currentUser = _user.value
         val currentPassword = _password.value
 
+        // Ambos capos deben tener valor
         if (currentUser.isBlank() || currentPassword.isBlank()) {
             viewModelScope.launch {
                 _snackbarMessage.emit("Usuario y contraseña no pueden estar vacíos")
+                _isLoading.value = false
             }
             return
         }
 
         viewModelScope.launch(Dispatchers.Default) {
-            // Formato de contraseña: sha256({pass}{user})
-            val hashedPassword = sha256(currentPassword + currentUser)
-            // TODO: obtener desde la API de geolocalización
-            val latitude = -34.6297674
-            val longitude = -58.4521302
+            try {
+                // Formato de contraseña: sha256({pass}{user})
+                val hashedPassword = sha256(currentPassword + currentUser)
 
-            uiStateViewModel.startLoading()
-            Log.d("LoginViewModel", "Iniciando login con backend para usuario: $currentUser")
+                // TODO: obtener desde la API de geolocalización
+                val latitude = -34.6297674
+                val longitude = -58.4521302
 
-            val loginResult = withContext(Dispatchers.Default) {
-                authRepository.login(LoginRequest(currentUser, hashedPassword, latitude, longitude))
-            }
+                Log.d("LoginViewModel", "Iniciando login con backend para usuario: $currentUser")
 
-            uiStateViewModel.stopLoading()
-            Log.d("LoginViewModel", "Login ejecutado")
-
-            when (loginResult) {
-                is NetworkResult.Success -> {
-                    Log.d("LoginViewModel", "Login exitoso")
-                    _navigationEvent.emit(NavigationEvent.NavigateTo(Screen.Home.route))
-                    tokenManager.saveTokens(
-                        loginResult.data.accessToken,
-                        loginResult.data.refreshToken
-                    )
+                val loginResult = withContext(Dispatchers.Default) {
+                    authRepository.login(LoginRequest(currentUser, hashedPassword, latitude, longitude))
                 }
-                is NetworkResult.Error -> {
-                    Log.d("LoginViewModel", "Error: code=${loginResult.code}, message=${loginResult.message}")
 
-                    val message = when {
-                        loginResult.code == 401 && loginResult.message == "wrong credentials" -> "Usuario o contraseña inválidos"
-                        loginResult.code == 401 && loginResult.message == "no location" -> "Muy alejado de una ubicación válida"
-                        else -> "Error de login: ${loginResult.message ?: "desconocido"}"
+                Log.d("LoginViewModel", "Login ejecutado")
+
+                when (loginResult) {
+                    is NetworkResult.Success -> {
+                        Log.d("LoginViewModel", "Login exitoso")
+                        _navigationEvent.emit(NavigationEvent.NavigateTo(Screen.Home.route))
+                        tokenManager.saveTokens(
+                            loginResult.data.accessToken,
+                            loginResult.data.refreshToken
+                        )
                     }
+                    is NetworkResult.Error -> {
+                        Log.d("LoginViewModel", "Error: code=${loginResult.code}, message=${loginResult.message}")
 
-                    _snackbarMessage.emit(message)
+                        val message = when {
+                            loginResult.code == 401 && loginResult.message == "wrong credentials" -> "Usuario o contraseña inválidos"
+                            loginResult.code == 401 && loginResult.message == "no location" -> "Muy alejado de una ubicación válida"
+                            else -> "Error de login: ${loginResult.message ?: "desconocido"}"
+                        }
+
+                        _snackbarMessage.emit(message)
+                    }
+                    is NetworkResult.Exception -> {
+                        Log.d("LoginViewModel", "Error crítico: ${loginResult.e.message}")
+                        _snackbarMessage.emit("Error crítico: ${loginResult.e.message}")
+                    }
                 }
-                is NetworkResult.Exception -> {
-                    Log.d("LoginViewModel", "Error crítico: ${loginResult.e.message}")
-                    _snackbarMessage.emit("Error crítico: ${loginResult.e.message}")
-                }
+            } finally {
+                _isLoading.value = false
             }
         }
     }

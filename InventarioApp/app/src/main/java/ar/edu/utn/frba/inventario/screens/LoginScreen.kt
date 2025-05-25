@@ -3,11 +3,15 @@ package ar.edu.utn.frba.inventario.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
@@ -25,9 +29,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -38,13 +45,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.events.NavigationEvent
+import ar.edu.utn.frba.inventario.utils.Spinner
 import ar.edu.utn.frba.inventario.viewmodels.LoginViewModel
-import ar.edu.utn.frba.inventario.viewmodels.UiStateViewModel
 
 @Composable
 fun LoginScreen(
     loginViewModel: LoginViewModel = hiltViewModel(),
-    uiStateViewModel: UiStateViewModel = hiltViewModel(),
     navController: NavController
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
@@ -52,14 +58,17 @@ fun LoginScreen(
     val password by loginViewModel.password.collectAsStateWithLifecycle()
 
     val focusManager = LocalFocusManager.current
-
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+
+    val isLoading by loginViewModel.isLoading.collectAsStateWithLifecycle()
 
     val logoResourceId = if (isSystemInDarkTheme()) {
         R.drawable.logo_dark
     } else {
         R.drawable.logo_white
     }
+
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     LaunchedEffect(Unit) {
         loginViewModel.navigationEvent.collect { event ->
@@ -85,72 +94,90 @@ fun LoginScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackBarHostState) }
     ) { paddingValues ->
-        Column(
+        Box(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
+                .padding(WindowInsets.ime.asPaddingValues())
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
+                    .padding(paddingValues)
+                    .fillMaxSize()
             ) {
-                Image(
-                    painter = painterResource(id = logoResourceId),
-                    contentDescription = "Logo",
+                Column(
                     modifier = Modifier
-                        .size(screenWidth * 0.8f),
-                    contentScale = ContentScale.Fit
-                )
-            }
+                        .fillMaxWidth()
+                        .weight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Image(
+                        painter = painterResource(id = logoResourceId),
+                        contentDescription = "Logo",
+                        modifier = Modifier
+                            .size(screenWidth * 0.8f),
+                        contentScale = ContentScale.Fit
+                    )
+                }
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(2f),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                OutlinedTextField(
-                    value = user,
-                    onValueChange = { loginViewModel.changeUser(it) },
-                    label = { Text("Usuario") },
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Next
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onNext = {
-                            focusManager.moveFocus(FocusDirection.Down)
-                        }
-                    ),
-                    singleLine = true,
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                OutlinedTextField(
-                    value = password,
-                    onValueChange = { loginViewModel.changePassword(it) },
-                    label = { Text("Contraseña") },
-                    visualTransformation = PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            focusManager.clearFocus()
-                            loginViewModel.doLogin(uiStateViewModel)
-                        }
-                    ),
-                    singleLine = true,
-                )
-                Spacer(modifier = Modifier.height(32.dp))
-                Button(onClick = { loginViewModel.doLogin(uiStateViewModel) }) {
-                    Text("Login")
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(2f),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    OutlinedTextField(
+                        value = user,
+                        onValueChange = { loginViewModel.changeUser(it) },
+                        label = { Text("Usuario") },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = {
+                                focusManager.moveFocus(FocusDirection.Down)
+                            }
+                        ),
+                        singleLine = true,
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    OutlinedTextField(
+                        value = password,
+                        onValueChange = { loginViewModel.changePassword(it) },
+                        label = { Text("Contraseña") },
+                        visualTransformation = PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                executeLogin(loginViewModel, keyboardController, focusManager)
+                            }
+                        ),
+                        singleLine = true,
+                    )
+                    Spacer(modifier = Modifier.height(32.dp))
+                    Button(onClick = { executeLogin(loginViewModel, keyboardController, focusManager) }) {
+                        Text("Login")
+                    }
                 }
             }
         }
+
+        Spinner(isLoading)
     }
+}
+
+fun executeLogin(
+    loginViewModel: LoginViewModel,
+    keyboardController: SoftwareKeyboardController?,
+    focusManager: FocusManager
+) {
+    focusManager.clearFocus()
+    keyboardController?.hide()
+    loginViewModel.doLogin()
 }
