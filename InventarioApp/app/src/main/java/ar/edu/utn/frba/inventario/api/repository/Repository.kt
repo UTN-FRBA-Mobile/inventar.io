@@ -6,14 +6,14 @@ import kotlinx.coroutines.withContext
 import retrofit2.Response
 
 abstract class Repository {
-    suspend fun <T : Any> safeApiCall(apiCall: suspend () -> Response<T>): NetworkResult<T> {
+    suspend fun <T : Any?> safeApiCall(apiCall: suspend () -> Response<T>): NetworkResult<T> {
         return withContext(Dispatchers.IO) {
             try {
                 val response = apiCall()
                 if (response.isSuccessful) {
-                    response.body()?.let { body ->
-                        NetworkResult.Success(body)
-                    } ?: NetworkResult.Error(response.code(), "Cuerpo de respuesta vacío o nulo")
+                    // Un body vcacio tambien es valido
+                    @Suppress("UNCHECKED_CAST")
+                    NetworkResult.Success(response.body() as T)
                 } else {
                     val errorBody = response.errorBody()?.string()
                     NetworkResult.Error(response.code(), errorBody ?: response.message())
@@ -24,3 +24,4 @@ abstract class Repository {
         }
     }
 }
+

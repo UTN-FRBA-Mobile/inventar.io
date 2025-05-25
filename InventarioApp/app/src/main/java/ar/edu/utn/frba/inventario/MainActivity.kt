@@ -4,9 +4,21 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.hilt.navigation.compose.hiltViewModel
 import ar.edu.utn.frba.inventario.navigation.AppNavigation
 import ar.edu.utn.frba.inventario.ui.theme.InventarioTheme
+import ar.edu.utn.frba.inventario.viewmodels.UiStateViewModel
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -15,8 +27,28 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             InventarioTheme {
-                AppNavigation()
+                val uiStateViewModel: UiStateViewModel = hiltViewModel()
+                val isLoading by uiStateViewModel.isLoading
+
+                Box(modifier = Modifier.fillMaxSize()) {
+                    AppNavigation()
+
+                    if (isLoading)
+                        Spinner()
+                }
             }
         }
+    }
+}
+
+@Composable
+fun Spinner() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.5f)),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(color = Color.White)
     }
 }

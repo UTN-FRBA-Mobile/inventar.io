@@ -39,15 +39,17 @@ import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.events.NavigationEvent
 import ar.edu.utn.frba.inventario.viewmodels.LoginViewModel
+import ar.edu.utn.frba.inventario.viewmodels.UiStateViewModel
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel = hiltViewModel(),
+    loginViewModel: LoginViewModel = hiltViewModel(),
+    uiStateViewModel: UiStateViewModel = hiltViewModel(),
     navController: NavController
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
-    val user by viewModel.user.collectAsStateWithLifecycle()
-    val password by viewModel.password.collectAsStateWithLifecycle()
+    val user by loginViewModel.user.collectAsStateWithLifecycle()
+    val password by loginViewModel.password.collectAsStateWithLifecycle()
 
     val focusManager = LocalFocusManager.current
 
@@ -60,7 +62,7 @@ fun LoginScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.navigationEvent.collect { event ->
+        loginViewModel.navigationEvent.collect { event ->
             when (event) {
                 is NavigationEvent.NavigateTo -> {
                     navController.navigate(event.route) {
@@ -75,7 +77,7 @@ fun LoginScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.snackbarMessage.collect { message ->
+        loginViewModel.snackbarMessage.collect { message ->
             snackBarHostState.showSnackbar(message)
         }
     }
@@ -113,7 +115,7 @@ fun LoginScreen(
             ) {
                 OutlinedTextField(
                     value = user,
-                    onValueChange = { viewModel.changeUser(it) },
+                    onValueChange = { loginViewModel.changeUser(it) },
                     label = { Text("Usuario") },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Text,
@@ -129,7 +131,7 @@ fun LoginScreen(
                 Spacer(modifier = Modifier.height(16.dp))
                 OutlinedTextField(
                     value = password,
-                    onValueChange = { viewModel.changePassword(it) },
+                    onValueChange = { loginViewModel.changePassword(it) },
                     label = { Text("Contraseña") },
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -139,13 +141,13 @@ fun LoginScreen(
                     keyboardActions = KeyboardActions(
                         onDone = {
                             focusManager.clearFocus()
-                            viewModel.doLogin()
+                            loginViewModel.doLogin(uiStateViewModel)
                         }
                     ),
                     singleLine = true,
                 )
                 Spacer(modifier = Modifier.height(32.dp))
-                Button(onClick = { viewModel.doLogin() }) {
+                Button(onClick = { loginViewModel.doLogin(uiStateViewModel) }) {
                     Text("Login")
                 }
             }

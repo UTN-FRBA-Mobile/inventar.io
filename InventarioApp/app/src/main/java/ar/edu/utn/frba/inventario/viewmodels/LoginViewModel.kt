@@ -16,13 +16,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.security.MessageDigest
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val tokenManager: TokenManager,
+    private val tokenManager: TokenManager
 ) : ViewModel() {
     private val _user = MutableStateFlow("")
     val user = _user.asStateFlow()
@@ -44,7 +45,7 @@ class LoginViewModel @Inject constructor(
         _password.value = newPass
     }
 
-    fun doLogin() {
+    fun doLogin(uiStateViewModel: UiStateViewModel) {
         // Verifico que haya completado los campos
         val currentUser = _user.value
         val currentPassword = _password.value
@@ -63,8 +64,14 @@ class LoginViewModel @Inject constructor(
             val latitude = -34.6297674
             val longitude = -58.4521302
 
+            uiStateViewModel.startLoading()
             Log.d("LoginViewModel", "Iniciando login con backend para usuario: $currentUser")
-            val loginResult = authRepository.login(LoginRequest(currentUser, hashedPassword, latitude, longitude))
+
+            val loginResult = withContext(Dispatchers.Default) {
+                authRepository.login(LoginRequest(currentUser, hashedPassword, latitude, longitude))
+            }
+
+            uiStateViewModel.stopLoading()
             Log.d("LoginViewModel", "Login ejecutado")
 
             when (loginResult) {
