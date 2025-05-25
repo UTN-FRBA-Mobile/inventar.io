@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.inventario.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -13,8 +14,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import ar.edu.utn.frba.inventario.api.model.order.Order
 import ar.edu.utn.frba.inventario.components.BranchLocationBar
@@ -39,16 +45,27 @@ fun OrdersScreen(viewModel: OrdersViewModel = hiltViewModel(), navController: Na
                     .fillMaxWidth()
                     .padding(top = 12.dp)
             )
+            val selectedStatusListVM by viewModel.selectedStatusList.collectAsStateWithLifecycle()
+
+            LaunchedEffect(selectedStatusListVM) {
+                Log.d("FILTER_DEBUG", "Filtros actuales: $selectedStatusListVM")
+            }
+
             StatusFilter(
                 statusList = ItemStatus.values().toList(),
-                selectedStatusList = viewModel.selectedStatusList.value,
+                selectedStatusList = selectedStatusListVM,
                 onStatusSelected = { viewModel.updateSelectedStatusList(it) },
                 onClearFilters = { viewModel.clearFilters() },
                 modifier = Modifier
                     .fillMaxWidth()
             )
-            HomeBodyContent(
-                orders = viewModel.getFilteredItems(),
+
+            val filteredOrders by remember(viewModel.getFilteredItems()) {
+                derivedStateOf { viewModel.getFilteredItems() }
+            }
+
+            OrderBodyContent(
+                orders = filteredOrders,
                 modifier = Modifier.weight(1f)
             )
         }
@@ -56,7 +73,7 @@ fun OrdersScreen(viewModel: OrdersViewModel = hiltViewModel(), navController: Na
 }
 
 @Composable
-fun HomeBodyContent(
+fun OrderBodyContent(
     orders: List<Order>,
     modifier: Modifier = Modifier
 ) {
@@ -65,7 +82,7 @@ fun HomeBodyContent(
             .fillMaxSize()
     ) {
         Text(
-            text = "Envíos",
+            text = "Pedidos",
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(16.dp)
         )

@@ -1,11 +1,14 @@
 package ar.edu.utn.frba.inventario.viewmodels
 
-import androidx.compose.runtime.mutableStateOf
+import android.util.Log
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
-import androidx.compose.runtime.State
 import androidx.lifecycle.SavedStateHandle
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import java.time.LocalDateTime
 
 abstract class BaseItemViewModel<T>(
@@ -15,11 +18,27 @@ abstract class BaseItemViewModel<T>(
 
     protected abstract val items: SnapshotStateList<T>
 
-    private val _selectedStatusList = mutableStateOf<Set<ItemStatus>>(
-        savedStateHandle.get<Array<ItemStatus>>(filterKey)?.toSet() ?: emptySet()
+    private val _selectedStatusList = MutableStateFlow<Set<ItemStatus>>(
+        restoreFiltersFromSavedState()
     )
+    val selectedStatusList: StateFlow<Set<ItemStatus>> = _selectedStatusList.asStateFlow()
 
-    val selectedStatusList: State<Set<ItemStatus>> get() = _selectedStatusList
+    private fun restoreFiltersFromSavedState(): Set<ItemStatus> {
+        return savedStateHandle.get<List<String>>(filterKey)
+            ?.mapNotNull { statusName ->
+                try {
+                    ItemStatus.valueOf(statusName)
+                } catch (e: IllegalArgumentException) {
+                    null
+                }
+            }
+            ?.toSet() ?: emptySet()
+    }
+
+    init {
+        Log.d("VIEWMODEL_INIT", "Filtros iniciales: ${_selectedStatusList.value}")
+        Log.d("VIEWMODEL_INIT", "SavedState: ${savedStateHandle.get<List<String>>(filterKey)}")
+    }
 
     abstract fun getStatus(item: T): ItemStatus
     abstract fun getFilterDate(item: T): LocalDateTime
@@ -32,24 +51,27 @@ abstract class BaseItemViewModel<T>(
         }
     }
 
-    fun getSortedItems(items: List<T>): List<T> {
+    fun updateSelectedStatusList(status: ItemStatus) {
+        _selectedStatusList.update { currentSet ->
+            val newSet = currentSet.toMutableSet().apply {
+                if (!add(status)) remove(status)
+            }
+            savedStateHandle[filterKey] = newSet.map { it.name }
+            newSet
+        }
+    }
+
+    fun clearFilters() {
+        Log.d("FILTER_UPDATE", "clearFilter antes : ${_selectedStatusList.value}")
+        _selectedStatusList.value = emptySet()
+        savedStateHandle[filterKey] = emptyList<String>()
+        Log.d("FILTER_UPDATE", "clearFilter después : ${savedStateHandle.get<List<String>>(filterKey)}")
+    }
+
+    private fun getSortedItems(items: List<T>): List<T> {
         return items.sortedWith(
             compareBy<T> { getStatus(it).ordinal }
                 .thenBy { getFilterDate(it) }
         )
-    }
-
-    fun updateSelectedStatusList(status: ItemStatus) {
-        _selectedStatusList.value = _selectedStatusList.value.toMutableSet().apply {
-            if (contains(status)) remove(status) else add(status)
-        }.also { newValue ->
-            savedStateHandle[filterKey] = newValue.toTypedArray()
-        }
-    }
-
-
-    fun clearFilters() {
-        _selectedStatusList.value = emptySet()
-        savedStateHandle.remove<Array<ItemStatus>>(filterKey)
     }
 }
