@@ -77,6 +77,7 @@ fun ScanBodyContent(innerPadding: PaddingValues, navController: NavController) {
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { granted ->
             hasCameraPermission.value = granted
+
             if (!granted) {
                 Toast.makeText(context, "Camera permission is required", Toast.LENGTH_LONG).show()
             }

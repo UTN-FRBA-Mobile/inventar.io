@@ -91,7 +91,7 @@ fun ScanResultBodyContent(
 
         Spacer(Modifier.height(32.dp))
 
-        Button(onClick = { navController.popBackStack() }) {
+        Button(onClick = { navController.navigate("scan") }) {
             Text("Reintentar")
         }
 
