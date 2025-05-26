@@ -46,21 +46,21 @@ import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.events.NavigationEvent
 import ar.edu.utn.frba.inventario.utils.Spinner
-import ar.edu.utn.frba.inventario.viewmodels.LoginViewModel
+import ar.edu.utn.frba.inventario.viewmodels.LoginScreenViewModel
 
 @Composable
 fun LoginScreen(
     navController: NavController,
-    loginViewModel: LoginViewModel = hiltViewModel(),
+    loginScreenViewModel: LoginScreenViewModel = hiltViewModel(),
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
-    val user by loginViewModel.user.collectAsStateWithLifecycle()
-    val password by loginViewModel.password.collectAsStateWithLifecycle()
+    val user by loginScreenViewModel.user.collectAsStateWithLifecycle()
+    val password by loginScreenViewModel.password.collectAsStateWithLifecycle()
 
     val focusManager = LocalFocusManager.current
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
-    val isLoading by loginViewModel.isLoading.collectAsStateWithLifecycle()
+    val isLoading by loginScreenViewModel.isLoading.collectAsStateWithLifecycle()
 
     val logoResourceId = if (isSystemInDarkTheme()) {
         R.drawable.logo_dark
@@ -71,7 +71,7 @@ fun LoginScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     LaunchedEffect(Unit) {
-        loginViewModel.navigationEvent.collect { event ->
+        loginScreenViewModel.navigationEvent.collect { event ->
             when (event) {
                 is NavigationEvent.NavigateTo -> {
                     navController.navigate(event.route) {
@@ -86,7 +86,7 @@ fun LoginScreen(
     }
 
     LaunchedEffect(Unit) {
-        loginViewModel.snackbarMessage.collect { message ->
+        loginScreenViewModel.snackbarMessage.collect { message ->
             snackBarHostState.showSnackbar(message)
         }
     }
@@ -130,7 +130,7 @@ fun LoginScreen(
                 ) {
                     OutlinedTextField(
                         value = user,
-                        onValueChange = { loginViewModel.changeUser(it) },
+                        onValueChange = { loginScreenViewModel.changeUser(it) },
                         label = { Text("Usuario") },
                         keyboardOptions = KeyboardOptions.Default.copy(
                             keyboardType = KeyboardType.Text,
@@ -146,7 +146,7 @@ fun LoginScreen(
                     Spacer(modifier = Modifier.height(16.dp))
                     OutlinedTextField(
                         value = password,
-                        onValueChange = { loginViewModel.changePassword(it) },
+                        onValueChange = { loginScreenViewModel.changePassword(it) },
                         label = { Text("Contraseña") },
                         visualTransformation = PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions.Default.copy(
@@ -155,13 +155,13 @@ fun LoginScreen(
                         ),
                         keyboardActions = KeyboardActions(
                             onDone = {
-                                executeLogin(loginViewModel, keyboardController, focusManager)
+                                executeLogin(loginScreenViewModel, keyboardController, focusManager)
                             }
                         ),
                         singleLine = true,
                     )
                     Spacer(modifier = Modifier.height(32.dp))
-                    Button(onClick = { executeLogin(loginViewModel, keyboardController, focusManager) }) {
+                    Button(onClick = { executeLogin(loginScreenViewModel, keyboardController, focusManager) }) {
                         Text("Login")
                     }
                 }
@@ -173,11 +173,11 @@ fun LoginScreen(
 }
 
 fun executeLogin(
-    loginViewModel: LoginViewModel,
+    loginScreenViewModel: LoginScreenViewModel,
     keyboardController: SoftwareKeyboardController?,
     focusManager: FocusManager
 ) {
     focusManager.clearFocus()
     keyboardController?.hide()
-    loginViewModel.doLogin()
+    loginScreenViewModel.doLogin()
 }

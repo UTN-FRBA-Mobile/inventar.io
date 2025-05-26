@@ -22,7 +22,7 @@ import java.security.MessageDigest
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(
+class LoginScreenViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val tokenManager: TokenManager
 ) : ViewModel() {

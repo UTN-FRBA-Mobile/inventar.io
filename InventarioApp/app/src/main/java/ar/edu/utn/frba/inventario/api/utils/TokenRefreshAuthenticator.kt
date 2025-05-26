@@ -1,9 +1,7 @@
 package ar.edu.utn.frba.inventario.api.utils
 
-import ar.edu.utn.frba.inventario.api.ApiService
-import ar.edu.utn.frba.inventario.api.model.auth.LoginResponse
 import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
-import kotlinx.coroutines.runBlocking
+import ar.edu.utn.frba.inventario.api.repository.AuthRepository
 import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
@@ -12,7 +10,7 @@ import javax.inject.Provider
 
 class TokenRefreshAuthenticator constructor(
     private val tokenManager: TokenManager,
-    private val apiService: Provider<ApiService>
+    private val authRepository: Provider<AuthRepository>,
 ) : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {
@@ -34,23 +32,7 @@ class TokenRefreshAuthenticator constructor(
                 val refreshToken = tokenManager.getRefreshToken()
                     ?: return null // No hay refresh token, no se puede continuar
 
-                val refreshResult: NetworkResult<LoginResponse> = runBlocking {
-                    try {
-                        val apiResponse = apiService.get().refreshToken(refreshToken)
-                        if (apiResponse.isSuccessful && apiResponse.body() != null) {
-                            NetworkResult.Success(apiResponse.body()!!)
-                        } else {
-                            NetworkResult.Error(
-                                apiResponse.code(),
-                                apiResponse.errorBody()?.string() ?: apiResponse.message()
-                            )
-                        }
-                    } catch (e: Exception) {
-                        NetworkResult.Exception(e)
-                    }
-                }
-
-                return when (refreshResult) {
+                when (val refreshResult = authRepository.get().refreshToken(refreshToken)) {
                     is NetworkResult.Success -> {
                         val newLoginResponse = refreshResult.data
                         tokenManager.saveSession(
@@ -58,19 +40,19 @@ class TokenRefreshAuthenticator constructor(
                             newLoginResponse.refreshToken
                         )
 
-                        response.request.newBuilder()
+                        return response.request.newBuilder()
                             .header("Authorization", "Bearer ${newLoginResponse.accessToken}")
                             .build()
                     }
-
                     is NetworkResult.Error, is NetworkResult.Exception -> {
                         // El refresh falló (ej. refresh token inválido o expirado)
                         tokenManager.clearSession()
-                        null // No se puede autenticar, abortar
+                        return null
                     }
                 }
             }
         }
+
         return null
     }
 }

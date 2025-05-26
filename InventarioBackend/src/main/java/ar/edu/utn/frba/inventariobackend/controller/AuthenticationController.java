@@ -1,7 +1,6 @@
 package ar.edu.utn.frba.inventariobackend.controller;
 
 import ar.edu.utn.frba.inventariobackend.auth.JwtUtil;
-import ar.edu.utn.frba.inventariobackend.dto.request.AddUserRequest;
 import ar.edu.utn.frba.inventariobackend.dto.request.LoginRequest;
 import ar.edu.utn.frba.inventariobackend.dto.request.TokenResponse;
 import ar.edu.utn.frba.inventariobackend.dto.response.LocationResponse;
@@ -67,9 +66,11 @@ public class AuthenticationController {
      *         otherwise, returns HTTP 401 Unauthorized
      */
     @PostMapping("/refresh")
-    public ResponseEntity<?> refresh(@Valid @RequestBody String refreshToken) {
+    public ResponseEntity<?> refresh(@Valid @RequestBody String originalRefreshToken) {
+        // Needs to create a custom payload apparently to support this from working fine.
+        String refreshToken = originalRefreshToken.replace("\"", "");
         if (!jwtUtil.isTokenValid(refreshToken, "refresh")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
         return ResponseEntity.ok(

@@ -16,20 +16,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.api.utils.TokenManager
 import ar.edu.utn.frba.inventario.utils.Screen
+import ar.edu.utn.frba.inventario.viewmodels.UserScreenViewModel
 
 @Composable
-fun UserScreen(navController: NavController) {
+fun UserScreen(
+    navController: NavController,
+    userScreenViewModel: UserScreenViewModel = hiltViewModel()
+) {
     Scaffold(bottomBar = { BottomNavigationBar(navController) }
     ) { innerPadding ->
-        UserBodyContent(innerPadding, navController)
+        UserBodyContent(innerPadding, navController, userScreenViewModel)
     }
 }
 
 @Composable
-fun UserBodyContent(innerPadding: PaddingValues, navController: NavController) {
+fun UserBodyContent(
+    innerPadding: PaddingValues,
+    navController: NavController,
+    userScreenViewModel: UserScreenViewModel
+) {
     val context = LocalContext.current
     val tokenManager = remember { TokenManager(context) }
 
@@ -42,8 +51,11 @@ fun UserBodyContent(innerPadding: PaddingValues, navController: NavController) {
     ) {
         Text("User")
         Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = { userScreenViewModel.getUser() }) {
+            Text("Test get user")
+        }
         Button(onClick = {
-            tokenManager.clearSession()
+            userScreenViewModel.doLogout()
             navController.navigate(Screen.Login.route) {
                 popUpTo(0) { inclusive = true } // clears entire back stack
                 launchSingleTop = true
