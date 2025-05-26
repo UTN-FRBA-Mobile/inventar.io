@@ -35,7 +35,7 @@ fun HomeScreen(
                 .background(MaterialTheme.colorScheme.secondaryContainer)
         ) {
             BranchLocationBar(
-                branchName = "Centro", //Harcodeado, luego deberíamos obtenerlo a partir del dato del usuario
+                branchName = "Centro", //TODO Harcodeado, luego deberíamos obtenerlo a partir del dato del usuario
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 12.dp)
@@ -60,7 +60,7 @@ fun HomeScreen(
 fun HomeBodyContent(
     shipments: List<Shipment>,
     modifier: Modifier = Modifier
-    ) {
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
