@@ -1,13 +1,17 @@
 package ar.edu.utn.frba.inventario.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import ar.edu.utn.frba.inventario.api.utils.TokenManager
 import androidx.navigation.navArgument
 import ar.edu.utn.frba.inventario.screens.HomeScreen
 import ar.edu.utn.frba.inventario.screens.LoginScreen
 import ar.edu.utn.frba.inventario.screens.OrdersScreen
+import ar.edu.utn.frba.inventario.screens.SessionCheckerScreen
 import ar.edu.utn.frba.inventario.screens.ScanResultScreen
 import ar.edu.utn.frba.inventario.screens.ScanScreen
 import ar.edu.utn.frba.inventario.screens.UserScreen
@@ -16,22 +20,26 @@ import ar.edu.utn.frba.inventario.utils.Screen
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
+    val tokenManager = rememberTokenManager()
 
-    NavHost(navController = navController, startDestination = Screen.Login.route) {
+    NavHost(navController = navController, startDestination = Screen.SessionChecker.route) {
         composable(Screen.Login.route) {
-            LoginScreen(navController = navController)
+            LoginScreen(navController)
         }
         composable(Screen.Home.route) {
-            HomeScreen(navController = navController)
+            HomeScreen(navController)
         }
         composable(Screen.Orders.route) {
-            OrdersScreen(navController = navController)
+            OrdersScreen(navController)
         }
         composable(Screen.User.route) {
-            UserScreen(navController = navController)
+            UserScreen(navController)
+        }
+        composable(Screen.SessionChecker.route) {
+            SessionCheckerScreen(navController, tokenManager)
         }
         composable(Screen.Scan.route) {
-            ScanScreen(navController = navController)
+            ScanScreen(navController)
         }
         composable(
             "scan_result?result={result}&errorMessage={errorMessage}&codeType={codeType}",
@@ -49,4 +57,10 @@ fun AppNavigation() {
             )
         }
     }
+}
+
+@Composable
+fun rememberTokenManager(): TokenManager {
+    val context = LocalContext.current
+    return remember { TokenManager(context.applicationContext) }
 }

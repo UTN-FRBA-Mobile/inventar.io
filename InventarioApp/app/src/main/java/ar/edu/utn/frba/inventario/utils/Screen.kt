@@ -5,5 +5,6 @@ enum class Screen(val route: String) {
     Home("home"),
     Orders("orders"),
     User("user"),
-    Scan("scan")
+    Scan("scan"),
+    SessionChecker("session_checker"),
 }
