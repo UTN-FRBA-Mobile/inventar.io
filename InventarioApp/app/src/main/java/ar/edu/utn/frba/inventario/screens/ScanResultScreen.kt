@@ -60,7 +60,6 @@ fun ScanResultBodyContent(
             Text(
                 errorMessage,
                 fontSize = 18.sp,
-                color = Color.Red
             )
         } else {
             val codeTypeText = when (codeType) {
@@ -85,7 +84,6 @@ fun ScanResultBodyContent(
             Text(
                 "Valor: $result",
                 fontSize = 18.sp,
-                color = Color(0xFF388E3C)
             )
         }
 
@@ -95,9 +93,10 @@ fun ScanResultBodyContent(
             Text("Reintentar")
         }
 
-        Button(onClick = { Log.d("[ScanResultScreen]", "#ToDo, navigate to next page with result: $result") }) {
-            Text("Continuar")
+        if (errorMessage == null) {
+            Button(onClick = { Log.d("[ScanResultScreen]", "#ToDo, navigate to next page with result: $result") }) {
+                Text("Continuar")
+            }
         }
     }
 }
-
