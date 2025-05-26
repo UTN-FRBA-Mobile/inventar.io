@@ -13,17 +13,22 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.security.MessageDigest
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val tokenManager: TokenManager,
+    private val tokenManager: TokenManager
 ) : ViewModel() {
+    private val _navigationEvent = MutableSharedFlow<NavigationEvent?>()
+    val navigationEvent = _navigationEvent.asSharedFlow()
+
     private val _user = MutableStateFlow("")
     val user = _user.asStateFlow()
 
@@ -33,8 +38,8 @@ class LoginViewModel @Inject constructor(
     private val _snackbarMessage = MutableSharedFlow<String>()
     val snackbarMessage = _snackbarMessage.asSharedFlow()
 
-    private val _navigationEvent = MutableSharedFlow<NavigationEvent?>()
-    val navigationEvent = _navigationEvent.asSharedFlow()
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
     fun changeUser(newUser: String) {
         _user.value = newUser
@@ -45,52 +50,69 @@ class LoginViewModel @Inject constructor(
     }
 
     fun doLogin() {
-        // Verifico que haya completado los campos
         val currentUser = _user.value
         val currentPassword = _password.value
 
+        // Ambos capos deben tener valor
         if (currentUser.isBlank() || currentPassword.isBlank()) {
             viewModelScope.launch {
-                _snackbarMessage.emit("Usuario y contraseña no pueden estar vacíos")
+                _snackbarMessage.emit("Debe completar ambos campos")
             }
             return
         }
 
+        _isLoading.value = true
+
         viewModelScope.launch(Dispatchers.Default) {
-            // Formato de contraseña: sha256({pass}{user})
-            val hashedPassword = sha256(currentPassword + currentUser)
-            // TODO: obtener desde la API de geolocalización
-            val latitude = -34.6297674
-            val longitude = -58.4521302
+            try {
+                // Formato de contraseña: sha256({pass}{user})
+                val hashedPassword = sha256(currentPassword + currentUser)
 
-            Log.d("LoginViewModel", "Iniciando login con backend para usuario: $currentUser")
-            val loginResult = authRepository.login(LoginRequest(currentUser, hashedPassword, latitude, longitude))
-            Log.d("LoginViewModel", "Login ejecutado")
+                // TODO: obtener desde la API de geolocalización
+                val latitude = -34.6297674
+                val longitude = -58.4521302
 
-            when (loginResult) {
-                is NetworkResult.Success -> {
-                    Log.d("LoginViewModel", "Login exitoso")
-                    _navigationEvent.emit(NavigationEvent.NavigateTo(Screen.Home.route))
-                    tokenManager.saveTokens(
-                        loginResult.data.accessToken,
-                        loginResult.data.refreshToken
-                    )
+                Log.d("LoginViewModel", "Iniciando login con backend para usuario: $currentUser")
+
+                val loginResult = withContext(Dispatchers.Default) {
+                    authRepository.login(LoginRequest(currentUser, hashedPassword, latitude, longitude))
                 }
-                is NetworkResult.Error -> {
-                    Log.d("LoginViewModel", "Error: code=${loginResult.code}, message=${loginResult.message}")
 
-                    val message = when {
-                        loginResult.code == 401 && loginResult.message == "wrong credentials" -> "Usuario o contraseña inválidos"
-                        loginResult.code == 401 && loginResult.message == "no location" -> "Muy alejado de una ubicación válida"
-                        else -> "Error de login: ${loginResult.message ?: "desconocido"}"
+                Log.d("LoginViewModel", "Login ejecutado")
+
+                when (loginResult) {
+                    is NetworkResult.Success -> {
+                        Log.d("LoginViewModel", "Login exitoso")
+
+                        tokenManager.saveSession(
+                            loginResult.data.accessToken,
+                            loginResult.data.refreshToken
+                        )
+
+                        _user.value = ""
+                        _password.value = ""
+
+                        _navigationEvent.emit(NavigationEvent.NavigateTo(Screen.Home.route))
+
                     }
+                    is NetworkResult.Error -> {
+                        Log.d("LoginViewModel", "Error: code=${loginResult.code}, message=${loginResult.message}")
 
-                    _snackbarMessage.emit(message)
+                        val message = when {
+                            loginResult.code == 401 && loginResult.message == "wrong credentials" -> "Credenciales inválidas"
+                            loginResult.code == 401 && loginResult.message == "no location" -> "Muy alejado de una ubicación válida"
+                            else -> "Error desconocido. Intente nuevamente más tarde"
+                        }
+
+                        _snackbarMessage.emit(message)
+                    }
+                    is NetworkResult.Exception -> {
+                        Log.d("LoginViewModel", "Error crítico: ${loginResult.e.message}")
+                        _snackbarMessage.emit("Ha ocurrido un error. Revise su conexión a internet")
+                    }
                 }
-                is NetworkResult.Exception -> {
-                    Log.d("LoginViewModel", "Error crítico: ${loginResult.e.message}")
-                    _snackbarMessage.emit("Error crítico: ${loginResult.e.message}")
-                }
+            } finally {
+                _isLoading.value = false
             }
         }
     }
