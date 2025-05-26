@@ -4,17 +4,27 @@ import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import retrofit2.Call
 import retrofit2.Response
 
 abstract class Repository {
     suspend fun <T : Any?> safeApiCall(apiCall: suspend () -> Response<T>): NetworkResult<T> {
         return withContext(Dispatchers.IO) {
-            doCall(apiCall)
+            val response = apiCall()
+            postCall(response)
         }
     }
 
-    private suspend fun <T : Any?> doCall(apiCall: suspend () -> Response<T>): NetworkResult<T> = try {
-        val response = apiCall()
+    // Sólo lo utilizamos para REFRESH - porque corre sobre un dispatchers IO - así que
+    // si bloqueamos temporalmente ese thread no hay problema.
+    fun <T : Any?> blockingApiCall(apiCall: () -> Call<T>): NetworkResult<T> {
+        return runBlocking {
+            val response = apiCall().execute()
+            postCall(response)
+        }
+    }
+
+    private fun <T : Any?> postCall(response: Response<T>): NetworkResult<T> = try {
         if (response.isSuccessful) {
             @Suppress("UNCHECKED_CAST")
             NetworkResult.Success(response.body() as T)
