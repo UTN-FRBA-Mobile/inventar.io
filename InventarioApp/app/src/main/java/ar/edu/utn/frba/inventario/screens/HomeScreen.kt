@@ -22,7 +22,10 @@ import ar.edu.utn.frba.inventario.components.StatusFilter
 import ar.edu.utn.frba.inventario.viewmodels.HomeViewModel
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navController: NavController) {
+fun HomeScreen(
+    navController: NavController,
+    viewModel: HomeViewModel = hiltViewModel()
+) {
     Scaffold(bottomBar = { BottomNavigationBar(navController) }
     ) { innerPadding ->
         Column(

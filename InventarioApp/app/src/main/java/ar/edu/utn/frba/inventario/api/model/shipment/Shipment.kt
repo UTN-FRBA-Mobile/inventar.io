@@ -10,11 +10,12 @@ data class Shipment(
     val customerName: String,
     val status: ShipmentStatus,
     val products: List<Product> = listOf(
+        //TODO remover una vez que se obtenga la pegada al back
         Product("P-001", "Producto Ejemplo 1", 1),
         Product("P-002", "Producto Ejemplo 2", 2)
     ),
     val creationDate: LocalDateTime = LocalDateTime.now(), // esto variaría según fecha de creación
-    val responsible: String? = "Sin responsable"
+    val userIdAssigned: String? = "Sin responsable"
 )
 
 data class Product(
