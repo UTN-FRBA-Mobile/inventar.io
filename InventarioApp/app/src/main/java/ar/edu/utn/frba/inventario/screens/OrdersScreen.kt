@@ -15,9 +15,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -30,7 +32,18 @@ import ar.edu.utn.frba.inventario.viewmodels.OrdersViewModel
 
 
 @Composable
-fun OrdersScreen(viewModel: OrdersViewModel = hiltViewModel(), navController: NavController) {
+fun OrdersScreen(
+    viewModel: OrdersViewModel = hiltViewModel(),
+    navController: NavController
+) {
+    val selectedStatusList by viewModel.selectedStatusList.collectAsStateWithLifecycle()
+
+    // Usa rememberUpdatedState para el estado que podría cambiar durante la recomposición
+    val currentStatusList by rememberUpdatedState(selectedStatusList)
+
+    LaunchedEffect(currentStatusList) {
+        Log.d("FILTER_DEBUG", "Filtros actualizados: ${viewModel.savedStateHandle.get<List<String>>("orders_filter")}")
+    }
     Scaffold(bottomBar = { BottomNavigationBar(navController) }
     ) { innerPadding ->
         Column(
@@ -45,24 +58,23 @@ fun OrdersScreen(viewModel: OrdersViewModel = hiltViewModel(), navController: Na
                     .fillMaxWidth()
                     .padding(top = 12.dp)
             )
-            val selectedStatusListVM by viewModel.selectedStatusList.collectAsStateWithLifecycle()
 
-            LaunchedEffect(selectedStatusListVM) {
-                Log.d("FILTER_DEBUG", "Filtros actuales: $selectedStatusListVM")
+
+
+            val filteredOrders by viewModel.selectedStatusList.collectAsStateWithLifecycle().let { state ->
+                derivedStateOf { viewModel.getFilteredItems() }
             }
 
             StatusFilter(
                 statusList = ItemStatus.values().toList(),
-                selectedStatusList = selectedStatusListVM,
+                selectedStatusList = selectedStatusList,
                 onStatusSelected = { viewModel.updateSelectedStatusList(it) },
                 onClearFilters = { viewModel.clearFilters() },
                 modifier = Modifier
                     .fillMaxWidth()
             )
 
-            val filteredOrders by remember(viewModel.getFilteredItems()) {
-                derivedStateOf { viewModel.getFilteredItems() }
-            }
+
 
             OrderBodyContent(
                 orders = filteredOrders,

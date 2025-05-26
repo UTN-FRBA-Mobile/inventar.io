@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.inventario.viewmodels
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.SavedStateHandle
@@ -14,9 +15,13 @@ import java.time.LocalDateTime
 class OrdersViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : BaseItemViewModel<Order>(
-    savedStateHandle = savedStateHandle,
-    filterKey = "orders_filter"
+     savedStateHandle,
+     "orders_filter"
 ) {
+
+    init {
+        Log.d("ORDERS_VM", "Filtros iniciales: ${savedStateHandle.get<List<String>>("orders_filter")}")
+    }
 
     // Lista de órdenes con datos de ejemplo
     override val items: SnapshotStateList<Order> = mutableStateListOf<Order>().apply {

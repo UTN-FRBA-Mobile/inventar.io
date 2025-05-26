@@ -1,10 +1,12 @@
 package ar.edu.utn.frba.inventario.viewmodels
 
 import android.util.Log
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,18 +14,20 @@ import kotlinx.coroutines.flow.update
 import java.time.LocalDateTime
 
 abstract class BaseItemViewModel<T>(
-    private val savedStateHandle: SavedStateHandle,
+    internal val savedStateHandle: SavedStateHandle,
     private val filterKey: String
 ) : ViewModel() {
 
     protected abstract val items: SnapshotStateList<T>
 
     private val _selectedStatusList = MutableStateFlow<Set<ItemStatus>>(
-        restoreFiltersFromSavedState()
+        savedStateHandle.get<List<String>>(filterKey)?.toItemStatusSet() ?: emptySet()
+
     )
     val selectedStatusList: StateFlow<Set<ItemStatus>> = _selectedStatusList.asStateFlow()
 
     private fun restoreFiltersFromSavedState(): Set<ItemStatus> {
+        Log.d("FILTER_DEBUG", "Filtros: ${savedStateHandle.get<List<String>>(filterKey)}")
         return savedStateHandle.get<List<String>>(filterKey)
             ?.mapNotNull { statusName ->
                 try {
@@ -62,10 +66,13 @@ abstract class BaseItemViewModel<T>(
     }
 
     fun clearFilters() {
-        Log.d("FILTER_UPDATE", "clearFilter antes : ${_selectedStatusList.value}")
+        Log.d("VIEWMODEL_INIT", "clearFilter antes : ${_selectedStatusList.value}")
         _selectedStatusList.value = emptySet()
         savedStateHandle[filterKey] = emptyList<String>()
-        Log.d("FILTER_UPDATE", "clearFilter después : ${savedStateHandle.get<List<String>>(filterKey)}")
+        Log.d(
+            "VIEWMODEL_INIT",
+            "clearFilter después : ${savedStateHandle.get<List<String>>(filterKey)}"
+        )
     }
 
     private fun getSortedItems(items: List<T>): List<T> {
@@ -74,4 +81,16 @@ abstract class BaseItemViewModel<T>(
                 .thenBy { getFilterDate(it) }
         )
     }
+
+    private fun List<String>?.toItemStatusSet(): Set<ItemStatus> {
+        return this?.mapNotNull { name ->
+            try {
+                ItemStatus.valueOf(name)
+            } catch (e: IllegalArgumentException) {
+                null
+            }
+        }?.toSet() ?: emptySet()
+    }
+
+
 }
