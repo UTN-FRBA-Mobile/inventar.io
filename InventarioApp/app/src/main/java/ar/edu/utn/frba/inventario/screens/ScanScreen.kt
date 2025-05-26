@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.OptIn
@@ -79,26 +78,18 @@ fun ScanBodyContent(innerPadding: PaddingValues, navController: NavController) {
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
-        onResult = { granted ->
-            hasCameraPermission.value = granted
-
-            if (!granted) {
-                Toast.makeText(context, "Camera permission is required", Toast.LENGTH_LONG).show()
-            }
-        }
+        onResult = { hasCameraPermission.value = it }
     )
 
     LaunchedEffect(Unit) {
-        if (!hasCameraPermission.value) {
+        if (!hasCameraPermission.value)
             permissionLauncher.launch(Manifest.permission.CAMERA)
-        }
     }
 
-    if (hasCameraPermission.value) {
+    if (hasCameraPermission.value)
         ScanCameraContent(innerPadding, navController)
-    } else {
+    else
         PermissionDeniedContent(innerPadding)
-    }
 }
 
 @OptIn(ExperimentalGetImage::class)
@@ -211,7 +202,7 @@ fun ScanCameraContent(innerPadding: PaddingValues, navController: NavController)
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Escaneá un QR or Código de barras",
+                    text = "Escanee un QR or Código de barras",
                     color = Color.White,
                     fontSize = 18.sp,
                     modifier = Modifier
