@@ -1,7 +1,6 @@
 package ar.edu.utn.frba.inventariobackend.controller;
 
 import ar.edu.utn.frba.inventariobackend.auth.JwtUtil;
-import ar.edu.utn.frba.inventariobackend.dto.request.AddUserRequest;
 import ar.edu.utn.frba.inventariobackend.dto.request.LoginRequest;
 import ar.edu.utn.frba.inventariobackend.dto.request.TokenResponse;
 import ar.edu.utn.frba.inventariobackend.dto.response.LocationResponse;
