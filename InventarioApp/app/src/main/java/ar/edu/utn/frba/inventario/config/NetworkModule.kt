@@ -5,6 +5,7 @@ import ar.edu.utn.frba.inventario.BuildConfig
 import ar.edu.utn.frba.inventario.api.ApiService
 import ar.edu.utn.frba.inventario.api.interceptor.AuthInterceptor
 import ar.edu.utn.frba.inventario.api.interceptor.LoggingInterceptor
+import ar.edu.utn.frba.inventario.api.repository.AuthRepository
 import ar.edu.utn.frba.inventario.api.utils.TokenManager
 import ar.edu.utn.frba.inventario.api.utils.TokenRefreshAuthenticator
 import dagger.Module
@@ -47,9 +48,9 @@ object NetworkModule {
     @Singleton
     fun provideTokenRefreshAuthenticator(
         tokenManager: TokenManager,
-        apiService: Provider<ApiService>,
+        authRepository: Provider<AuthRepository>,
     ): TokenRefreshAuthenticator {
-        return TokenRefreshAuthenticator(tokenManager, apiService)
+        return TokenRefreshAuthenticator(tokenManager, authRepository)
     }
 
     @Provides
