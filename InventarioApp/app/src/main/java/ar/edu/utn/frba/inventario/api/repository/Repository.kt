@@ -10,8 +10,7 @@ import retrofit2.Response
 abstract class Repository {
     suspend fun <T : Any?> safeApiCall(apiCall: suspend () -> Response<T>): NetworkResult<T> {
         return withContext(Dispatchers.IO) {
-            val response = apiCall()
-            postCall(response)
+            doCall(apiCall)
         }
     }
 
@@ -19,12 +18,12 @@ abstract class Repository {
     // si bloqueamos temporalmente ese thread no hay problema.
     fun <T : Any?> blockingApiCall(apiCall: () -> Call<T>): NetworkResult<T> {
         return runBlocking {
-            val response = apiCall().execute()
-            postCall(response)
+            doCall { apiCall.invoke().execute() }
         }
     }
 
-    private fun <T : Any?> postCall(response: Response<T>): NetworkResult<T> = try {
+    private suspend fun <T : Any?> doCall(apiCall: suspend () -> Response<T>): NetworkResult<T> = try {
+        val response = apiCall()
         if (response.isSuccessful) {
             @Suppress("UNCHECKED_CAST")
             NetworkResult.Success(response.body() as T)
