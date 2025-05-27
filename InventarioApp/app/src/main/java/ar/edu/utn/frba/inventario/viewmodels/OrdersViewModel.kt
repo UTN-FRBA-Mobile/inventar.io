@@ -71,7 +71,128 @@ class OrdersViewModel @Inject constructor(
                     Product("P-50${index+1}", "Producto ${index+1}", index+1)
                 },
                 cancellationDate = LocalDateTime.now().plusDays(3)
-            )
+            ),
+            Order(
+                id = "ORD-003",
+                number = "P-9092",
+                sender = "Cliente VIP",
+                status = ItemStatus.COMPLETED,
+                products = listOf(
+                    Product("P-301", "Producto D", 1),
+                    Product("P-302", "Producto E", 2)
+                ),
+                confirmedReceiptDate = LocalDateTime.now().minusDays(1)
+            ),
+            Order(
+                id = "ORD-003",
+                number = "P-9092",
+                sender = "Cliente VIP",
+                status = ItemStatus.COMPLETED,
+                products = listOf(
+                    Product("P-301", "Producto D", 1),
+                    Product("P-302", "Producto E", 2)
+                ),
+                confirmedReceiptDate = LocalDateTime.now().minusDays(1)
+            ),
+            Order(
+                id = "ORD-003",
+                number = "P-9092",
+                sender = "Cliente VIP",
+                status = ItemStatus.COMPLETED,
+                products = listOf(
+                    Product("P-301", "Producto D", 1),
+                    Product("P-302", "Producto E", 2)
+                ),
+                confirmedReceiptDate = LocalDateTime.now().minusDays(1)
+            ),
+            Order(
+                id = "ORD-003",
+                number = "P-9092",
+                sender = "Cliente VIP",
+                status = ItemStatus.COMPLETED,
+                products = listOf(
+                    Product("P-301", "Producto D", 1),
+                    Product("P-302", "Producto E", 2)
+                ),
+                confirmedReceiptDate = LocalDateTime.now().minusDays(1)
+            ),
+            Order(
+                id = "ORD-003",
+                number = "P-9092",
+                sender = "Cliente VIP",
+                status = ItemStatus.COMPLETED,
+                products = listOf(
+                    Product("P-301", "Producto D", 1),
+                    Product("P-302", "Producto E", 2)
+                ),
+                confirmedReceiptDate = LocalDateTime.now().minusDays(1)
+            ),
+            Order(
+                id = "ORD-003",
+                number = "P-9092",
+                sender = "Cliente VIP",
+                status = ItemStatus.COMPLETED,
+                products = listOf(
+                    Product("P-301", "Producto D", 1),
+                    Product("P-302", "Producto E", 2)
+                ),
+                confirmedReceiptDate = LocalDateTime.now().minusDays(1)
+            ),
+            Order(
+                id = "ORD-003",
+                number = "P-9092",
+                sender = "Cliente VIP",
+                status = ItemStatus.COMPLETED,
+                products = listOf(
+                    Product("P-301", "Producto D", 1),
+                    Product("P-302", "Producto E", 2)
+                ),
+                confirmedReceiptDate = LocalDateTime.now().minusDays(1)
+            ),
+            Order(
+                id = "ORD-003",
+                number = "P-9092",
+                sender = "Cliente VIP",
+                status = ItemStatus.COMPLETED,
+                products = listOf(
+                    Product("P-301", "Producto D", 1),
+                    Product("P-302", "Producto E", 2)
+                ),
+                confirmedReceiptDate = LocalDateTime.now().minusDays(1)
+            ),
+            Order(
+                id = "ORD-003",
+                number = "P-9092",
+                sender = "Cliente VIP",
+                status = ItemStatus.COMPLETED,
+                products = listOf(
+                    Product("P-301", "Producto D", 1),
+                    Product("P-302", "Producto E", 2)
+                ),
+                confirmedReceiptDate = LocalDateTime.now().minusDays(1)
+            ),
+            Order(
+                id = "ORD-003",
+                number = "P-9092",
+                sender = "Cliente VIP",
+                status = ItemStatus.COMPLETED,
+                products = listOf(
+                    Product("P-301", "Producto D", 1),
+                    Product("P-302", "Producto E", 2)
+                ),
+                confirmedReceiptDate = LocalDateTime.now().minusDays(1)
+            ),
+            Order(
+                id = "ORD-003",
+                number = "P-9092",
+                sender = "Cliente VIP",
+                status = ItemStatus.COMPLETED,
+                products = listOf(
+                    Product("P-301", "Producto D", 1),
+                    Product("P-302", "Producto E", 2)
+                ),
+                confirmedReceiptDate = LocalDateTime.now().minusDays(1)
+            ),
         ))
     }
 

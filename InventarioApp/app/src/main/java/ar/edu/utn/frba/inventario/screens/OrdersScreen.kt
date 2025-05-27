@@ -1,31 +1,28 @@
 package ar.edu.utn.frba.inventario.screens
 
 import android.annotation.SuppressLint
-import android.util.Log
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import ar.edu.utn.frba.inventario.api.model.order.Order
 import ar.edu.utn.frba.inventario.components.BranchLocationBar
@@ -58,7 +55,7 @@ fun OrdersScreen(
                     .padding(top = 12.dp)
             )
             StatusFilter(
-                statusList = ItemStatus.values().toList(),
+                statusList = ItemStatus.entries,
                 selectedStatusList = selectedStatusList,
                 onStatusSelected = { viewModel.updateSelectedStatusList(it) },
                 onClearFilters = { viewModel.clearFilters() },
@@ -66,8 +63,9 @@ fun OrdersScreen(
                     .fillMaxWidth()
             )
             OrderBodyContent(
-                orders = viewModel.getFilteredItems(),
-                modifier = Modifier.weight(1f)
+                navController,
+                viewModel.getFilteredItems(),
+                Modifier.weight(1f)
             )
         }
     }
@@ -75,25 +73,45 @@ fun OrdersScreen(
 
 @Composable
 fun OrderBodyContent(
+    navController: NavController,
     orders: List<Order>,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        Text(
-            text = "Pedidos",
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(16.dp)
-        )
-
-        LazyColumn(
-            modifier = Modifier.weight(1f)
+    Box(modifier = modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
         ) {
-            itemsIndexed(orders) { _, order ->
-                CardItem(item = order)
+            Text(
+                text = "Pedidos",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(16.dp)
+            )
+
+            LazyColumn(
+                modifier = Modifier.weight(1f)
+            ) {
+                itemsIndexed(orders) { _, order ->
+                    CardItem(item = order)
+                }
             }
         }
+
+        FloatingActionButton(
+            onClick = { navController.navigate(Screen.Scan.route) },
+            shape = RoundedCornerShape(50),
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(16.dp)
+                .height(40.dp),
+            containerColor = MaterialTheme.colorScheme.primary
+        ) {
+            Text(
+                text = "Escanear",
+                style = MaterialTheme.typography.labelLarge,
+                modifier = Modifier.padding(horizontal = 15.dp, vertical = 0.dp)
+            )
+        }
+
     }
 }

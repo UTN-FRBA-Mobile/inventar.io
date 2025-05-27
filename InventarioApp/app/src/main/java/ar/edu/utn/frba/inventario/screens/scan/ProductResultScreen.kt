@@ -69,7 +69,7 @@ fun ProductResultBodyContent(
             Spacer(Modifier.height(32.dp))
             Button(onClick = {
                 if (isFromManual) {
-                    navController.navigate("manual_input")
+                    navController.navigate("manual_code")
                 } else {
                     navController.navigate("scan")
                 }

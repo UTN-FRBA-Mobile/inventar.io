@@ -1,8 +1,6 @@
 package ar.edu.utn.frba.inventario.components
 
-import android.graphics.drawable.Icon
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
