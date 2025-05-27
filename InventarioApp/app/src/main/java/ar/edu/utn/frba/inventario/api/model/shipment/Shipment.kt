@@ -1,12 +1,12 @@
 package ar.edu.utn.frba.inventario.api.model.shipment
 
 import android.content.Context
-import java.time.LocalDateTime
 import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.item.Item
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.utils.format
+import java.time.LocalDateTime
 
 data class Shipment(
     override val id: String,
