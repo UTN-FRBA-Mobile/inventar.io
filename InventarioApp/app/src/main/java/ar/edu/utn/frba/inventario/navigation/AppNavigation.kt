@@ -26,10 +26,12 @@ import ar.edu.utn.frba.inventario.utils.withArgsDefinition
 fun AppNavigation() {
     val navController = rememberNavController()
     val tokenManager = rememberTokenManager()
+    val startDestination = if (tokenManager.hasSession()) Screen.Home.route else Screen.SessionChecker.route
 
     val productResultArgs = ProductResultArgs.entries.toTypedArray()
 
-    NavHost(navController, startDestination = Screen.SessionChecker.route) {
+
+    NavHost(navController, startDestination = startDestination) {
         composable(Screen.Login.route) {
             LoginScreen(navController)
         }

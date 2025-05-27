@@ -19,12 +19,7 @@ fun SessionCheckerScreen(
     tokenManager: TokenManager
 ) {
     LaunchedEffect(Unit) {
-        if (tokenManager.hasSession()) {
-            Log.d("SessionCheckerScreen", "Session found, navigating to Home")
-            navController.navigate(Screen.Home.route) {
-                popUpTo(Screen.SessionChecker.route) { inclusive = true }
-            }
-        } else {
+        if (!tokenManager.hasSession()) {
             Log.d("SessionCheckerScreen", "No session found, navigating to Login")
             navController.navigate(Screen.Login.route) {
                 popUpTo(Screen.SessionChecker.route) { inclusive = true }
