@@ -1,6 +1,5 @@
 package ar.edu.utn.frba.inventario.components
 
-import ShipmentStatus
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -16,16 +15,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import ar.edu.utn.frba.inventario.R
+import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import ar.edu.utn.frba.inventario.ui.theme.Purple40
 
 @Composable
 fun StatusFilter(
-    statusList: List<ShipmentStatus>,//cuando armemos la parte de pedidos esto podría soportar un Status general y serviría para ambos
-    selectedStatusList: Set<ShipmentStatus>,
-    onStatusSelected: (ShipmentStatus) -> Unit,
+    statusList: List<ItemStatus>,
+    selectedStatusList: Set<ItemStatus>,
+    onStatusSelected: (ItemStatus) -> Unit,
     onClearFilters: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -48,7 +47,6 @@ fun StatusFilter(
                 selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
             )
         )
-        //Filter chips por estado
         statusList.forEach { status ->
             val isSelected = status in selectedStatusList
             FilterChip(

@@ -1,6 +1,5 @@
 package ar.edu.utn.frba.inventario.screens
 
-import Shipment
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,11 +12,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
+import ar.edu.utn.frba.inventario.api.model.shipment.Shipment
 import ar.edu.utn.frba.inventario.components.BranchLocationBar
-import ar.edu.utn.frba.inventario.components.ShipmentItem
+import ar.edu.utn.frba.inventario.components.CardItem
 import ar.edu.utn.frba.inventario.components.StatusFilter
 import ar.edu.utn.frba.inventario.viewmodels.HomeViewModel
 
@@ -40,16 +43,18 @@ fun HomeScreen(
                     .fillMaxWidth()
                     .padding(top = 12.dp)
             )
+            val selectedStatusListVM by viewModel.selectedStatusList.collectAsStateWithLifecycle()
+
             StatusFilter(
-                statusList = ShipmentStatus.values().toList(),
-                selectedStatusList = viewModel.selectedStatuses.value,
-                onStatusSelected = { viewModel.updateSelectedStatuses(it) },
+                statusList = ItemStatus.values().toList(),
+                selectedStatusList = selectedStatusListVM,
+                onStatusSelected = { viewModel.updateSelectedStatusList(it) },
                 onClearFilters = { viewModel.clearFilters() },
                 modifier = Modifier
                     .fillMaxWidth()
             )
             HomeBodyContent(
-                shipments = viewModel.getFilteredShipments(),
+                shipments = viewModel.getFilteredItems(),
                 modifier = Modifier.weight(1f)
             )
         }
@@ -75,7 +80,7 @@ fun HomeBodyContent(
             modifier = Modifier.weight(1f)
         ) {
             itemsIndexed(shipments) { _, shipment ->
-                ShipmentItem(shipment = shipment)
+                CardItem(item = shipment)
             }
         }
     }
