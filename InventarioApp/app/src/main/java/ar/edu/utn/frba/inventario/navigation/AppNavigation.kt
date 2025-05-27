@@ -12,7 +12,6 @@ import ar.edu.utn.frba.inventario.api.utils.TokenManager
 import ar.edu.utn.frba.inventario.screens.HomeScreen
 import ar.edu.utn.frba.inventario.screens.LoginScreen
 import ar.edu.utn.frba.inventario.screens.OrdersScreen
-import ar.edu.utn.frba.inventario.screens.SessionCheckerScreen
 import ar.edu.utn.frba.inventario.screens.UserScreen
 import ar.edu.utn.frba.inventario.screens.scan.ManualCodeScreen
 import ar.edu.utn.frba.inventario.screens.scan.ProductResultScreen
@@ -26,10 +25,11 @@ import ar.edu.utn.frba.inventario.utils.withArgsDefinition
 fun AppNavigation() {
     val navController = rememberNavController()
     val tokenManager = rememberTokenManager()
+    val startDestination = if (tokenManager.hasSession()) Screen.Home.route else Screen.Login.route
 
     val productResultArgs = ProductResultArgs.entries.toTypedArray()
 
-    NavHost(navController, startDestination = Screen.SessionChecker.route) {
+    NavHost(navController, startDestination = startDestination) {
         composable(Screen.Login.route) {
             LoginScreen(navController)
         }
@@ -41,9 +41,6 @@ fun AppNavigation() {
         }
         composable(Screen.User.route) {
             UserScreen(navController)
-        }
-        composable(Screen.SessionChecker.route) {
-            SessionCheckerScreen(navController, tokenManager)
         }
         composable(Screen.Scan.route) {
             ScanScreen(navController)

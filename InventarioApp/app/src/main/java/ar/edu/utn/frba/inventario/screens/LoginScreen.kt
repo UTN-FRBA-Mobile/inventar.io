@@ -45,6 +45,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.events.NavigationEvent
+import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.utils.Spinner
 import ar.edu.utn.frba.inventario.viewmodels.LoginScreenViewModel
 
@@ -77,7 +78,7 @@ fun LoginScreen(
                     navController.navigate(event.route) {
                         // Limpio el stack al start del grafo de navegacion
                         // Asi el user no puede volver al login yendo para atras
-                        popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                        popUpTo(Screen.Login.route) { inclusive = true }
                     }
                 }
                 null -> { /* No op */ }
