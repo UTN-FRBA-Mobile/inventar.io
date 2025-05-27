@@ -57,13 +57,6 @@ fun OrdersScreen(
                     .fillMaxWidth()
                     .padding(top = 12.dp)
             )
-
-
-
-            val filteredOrders by viewModel.selectedStatusList.collectAsStateWithLifecycle().let { state ->
-                derivedStateOf { viewModel.getFilteredItems() }
-            }
-
             StatusFilter(
                 statusList = ItemStatus.values().toList(),
                 selectedStatusList = selectedStatusList,
@@ -72,9 +65,6 @@ fun OrdersScreen(
                 modifier = Modifier
                     .fillMaxWidth()
             )
-
-
-
             OrderBodyContent(
                 orders = viewModel.getFilteredItems(),
                 modifier = Modifier.weight(1f)
