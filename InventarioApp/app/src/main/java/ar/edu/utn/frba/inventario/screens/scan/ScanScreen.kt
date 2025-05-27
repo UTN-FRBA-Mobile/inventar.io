@@ -1,8 +1,7 @@
-package ar.edu.utn.frba.inventario.screens
+package ar.edu.utn.frba.inventario.screens.scan
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -25,6 +24,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -48,6 +49,10 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
+import ar.edu.utn.frba.inventario.screens.BottomNavigationBar
+import ar.edu.utn.frba.inventario.utils.ProductResultArgs
+import ar.edu.utn.frba.inventario.utils.Screen
+import ar.edu.utn.frba.inventario.utils.withNavArgs
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
@@ -106,7 +111,7 @@ fun ScanCameraContent(innerPadding: PaddingValues, navController: NavController)
             .fillMaxSize()
             .padding(innerPadding)
     ) {
-        // 🔴 CAMERA PREVIEW
+        // CAMERA PREVIEW
         AndroidView(
             factory = { ctx ->
                 val previewView = PreviewView(ctx)
@@ -158,7 +163,7 @@ fun ScanCameraContent(innerPadding: PaddingValues, navController: NavController)
             modifier = Modifier.fillMaxSize()
         )
 
-        // 🔴 OVERLAY UI
+        // OVERLAY UI
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -202,13 +207,33 @@ fun ScanCameraContent(innerPadding: PaddingValues, navController: NavController)
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Escanee un QR or Código de barras",
+                    text = "Escanee un QR o Código de barras",
                     color = Color.White,
                     fontSize = 18.sp,
                     modifier = Modifier
                         .background(Color.Black.copy(alpha = 0.5f), shape = RoundedCornerShape(8.dp))
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                 )
+            }
+
+            // Manual Input Button
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 48.dp)
+                    .align(Alignment.BottomCenter),
+                contentAlignment = Alignment.Center
+            ) {
+                Button(
+                    onClick = { navController.navigate(Screen.ManualCode.route) },
+                    shape = RoundedCornerShape(50),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.White.copy(alpha = 0.9f),
+                        contentColor = Color.Black
+                    )
+                ) {
+                    Text("Ingreso manual")
+                }
             }
         }
     }
@@ -228,21 +253,36 @@ private fun handleScanSuccess(
         val code = valid.rawValue ?: ""
         Log.d("[ScanScreen]", "Scanned code: $code")
 
-        if (valid.format == Barcode.FORMAT_EAN_13) {
-            val destination = "scan_result?result=${Uri.encode(code)}&codeType=ean-13"
-            navController.navigate(destination)
-        } else {
-            if (code.startsWith(QR_CODE_PREFIX)) {
-                val id = code.substring(QR_CODE_PREFIX.length)
+        val destination = when {
+            valid.format == Barcode.FORMAT_EAN_13 -> {
+                Screen.ProductResult.withNavArgs(
+                    ProductResultArgs.Code to code,
+                    ProductResultArgs.CodeType to "ean-13"
+                )
+            }
 
-                val destination = "scan_result?result=${Uri.encode(id)}&codeType=qr"
-                navController.navigate(destination)
-            } else {
-                navController.navigate("scan_result?errorMessage=${Uri.encode("Código QR inválido.")}")
+            code.startsWith(QR_CODE_PREFIX) -> {
+                val id = code.substring(QR_CODE_PREFIX.length)
+                Screen.ProductResult.withNavArgs(
+                    ProductResultArgs.Code to id,
+                    ProductResultArgs.CodeType to "qr"
+                )
+            }
+
+            else -> {
+                Screen.ProductResult.withNavArgs(
+                    ProductResultArgs.ErrorMessage to "Código QR inválido."
+                )
             }
         }
+
+        navController.navigate(destination)
+
     } else if (barcodes.isNotEmpty()) {
-        navController.navigate("scan_result?errorMessage=${Uri.encode("Formato no soportado.")}")
+        val destination = Screen.ProductResult.withNavArgs(
+            ProductResultArgs.ErrorMessage to "Formato no soportado."
+        )
+        navController.navigate(destination)
     }
 }
 
