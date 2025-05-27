@@ -29,8 +29,7 @@ fun AppNavigation() {
     val startDestination = if (tokenManager.hasSession()) Screen.Home.route else Screen.SessionChecker.route
 
     val productResultArgs = ProductResultArgs.entries.toTypedArray()
-
-
+    
     NavHost(navController, startDestination = startDestination) {
         composable(Screen.Login.route) {
             LoginScreen(navController)
