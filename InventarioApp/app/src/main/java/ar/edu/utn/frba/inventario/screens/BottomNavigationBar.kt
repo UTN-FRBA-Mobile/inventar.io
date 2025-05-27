@@ -3,6 +3,7 @@ package ar.edu.utn.frba.inventario.screens
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -14,7 +15,7 @@ import ar.edu.utn.frba.inventario.utils.Screen
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
-    val items = listOf(Screen.Home, Screen.Orders, Screen.User)
+    val items = listOf(Screen.Home, Screen.Orders, Screen.User, Screen.Scan)
 
     NavigationBar {
         items.forEach { screen ->
@@ -24,6 +25,7 @@ fun BottomNavigationBar(navController: NavController) {
                         Screen.Home -> Icon(Icons.Default.Home, contentDescription = null)
                         Screen.Orders -> Icon(Icons.Default.Star, contentDescription = null)
                         Screen.User -> Icon(Icons.Default.AccountCircle, contentDescription = null)
+                        Screen.Scan -> Icon(Icons.Default.Search, contentDescription = null)
                         else -> throw IllegalArgumentException("Unknown screen: ${screen.route}")
                     }
                 },
