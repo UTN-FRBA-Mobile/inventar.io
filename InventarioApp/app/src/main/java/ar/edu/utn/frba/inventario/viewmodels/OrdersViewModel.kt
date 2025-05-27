@@ -1,12 +1,11 @@
 package ar.edu.utn.frba.inventario.viewmodels
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.SavedStateHandle
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import ar.edu.utn.frba.inventario.api.model.order.Order
-import ar.edu.utn.frba.inventario.api.model.shipment.Product
+import ar.edu.utn.frba.inventario.api.model.product.Product
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import java.time.LocalDateTime
@@ -15,15 +14,10 @@ import java.time.LocalDateTime
 class OrdersViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : BaseItemViewModel<Order>(
-     savedStateHandle,
-     "orders_filter"
+    savedStateHandle = savedStateHandle,
+    filterKey = "orders_filter"
 ) {
-
-    init {
-        Log.d("ORDERS_VM", "Filtros iniciales: ${savedStateHandle.get<List<String>>("orders_filter")}")
-    }
-
-    // Lista de órdenes con datos de ejemplo
+    // TODO remover cuando le peguemos al back
     override val items: SnapshotStateList<Order> = mutableStateListOf<Order>().apply {
         addAll(listOf(
             Order(
@@ -82,6 +76,6 @@ class OrdersViewModel @Inject constructor(
     }
 
     override fun getStatus(item: Order) = item.status
-    override fun getFilterDate(item: Order) = item.creationDate //Uso creationDate pero deberíamos evaluar cómo ordenamos
 
+    override fun getFilterDate(item: Order) = item.creationDate //TODO analizar si usamos creationDate o deberíamos ordenar por otra fecha
 }

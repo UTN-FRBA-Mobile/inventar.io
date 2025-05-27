@@ -22,7 +22,7 @@ import ar.edu.utn.frba.inventario.ui.theme.Purple40
 
 @Composable
 fun StatusFilter(
-    statusList: List<ItemStatus>,//cuando armemos la parte de pedidos esto podría soportar un Status general y serviría para ambos
+    statusList: List<ItemStatus>,
     selectedStatusList: Set<ItemStatus>,
     onStatusSelected: (ItemStatus) -> Unit,
     onClearFilters: () -> Unit,
@@ -47,7 +47,6 @@ fun StatusFilter(
                 selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
             )
         )
-        //Filter chips por estado
         statusList.forEach { status ->
             val isSelected = status in selectedStatusList
             FilterChip(

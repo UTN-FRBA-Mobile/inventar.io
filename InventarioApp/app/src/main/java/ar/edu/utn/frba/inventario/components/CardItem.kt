@@ -55,12 +55,10 @@ private fun CardContent(item: Item) {
 @Composable
 private fun CardText(item: Item) {
     val context = LocalContext.current
-
     Column(modifier = Modifier.padding(8.dp)) {
         StatusTitle(item.status.displayName, item.status.color)
         CardItemTitle(item.getDisplayName())
         CardItemDetail(item.getCardDetail(context))
-
     }
 }
 

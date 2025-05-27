@@ -5,15 +5,16 @@ import java.time.LocalDateTime
 import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.item.Item
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
+import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.utils.format
 
 data class Shipment(
-    override val id: String, // Al principio del id podría tener el código de sucursal
+    override val id: String,
     val number: String,
     override val customerName: String,
     override val status: ItemStatus,
     override val products: List<Product>,
-    override val creationDate: LocalDateTime = LocalDateTime.now(), // esto variaría según fecha de creación
+    override val creationDate: LocalDateTime = LocalDateTime.now(), // TODO esto variaría según fecha de creación que venga del back
 ) : Item {
     override fun getRelevantDate() = creationDate
 
@@ -28,9 +29,3 @@ data class Shipment(
         )
     }
 }
-
-data class Product(
-    val id: String,
-    val name: String,
-    val quantity: Int
-)

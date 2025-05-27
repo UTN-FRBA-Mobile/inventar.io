@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.inventario.screens
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,8 +19,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -28,22 +31,18 @@ import ar.edu.utn.frba.inventario.api.model.order.Order
 import ar.edu.utn.frba.inventario.components.BranchLocationBar
 import ar.edu.utn.frba.inventario.components.CardItem
 import ar.edu.utn.frba.inventario.components.StatusFilter
+import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.viewmodels.OrdersViewModel
 
 
+@SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
 fun OrdersScreen(
-    viewModel: OrdersViewModel = hiltViewModel(),
-    navController: NavController
+    navController: NavController,
+    viewModel: OrdersViewModel = hiltViewModel()
 ) {
     val selectedStatusList by viewModel.selectedStatusList.collectAsStateWithLifecycle()
 
-    // Usa rememberUpdatedState para el estado que podría cambiar durante la recomposición
-    val currentStatusList by rememberUpdatedState(selectedStatusList)
-
-    LaunchedEffect(currentStatusList) {
-        Log.d("FILTER_DEBUG", "Filtros actualizados: ${viewModel.savedStateHandle.get<List<String>>("orders_filter")}")
-    }
     Scaffold(bottomBar = { BottomNavigationBar(navController) }
     ) { innerPadding ->
         Column(
@@ -53,8 +52,8 @@ fun OrdersScreen(
                 .background(MaterialTheme.colorScheme.secondaryContainer)
         ) {
             BranchLocationBar(
-                branchName = "Centro", //Harcodeado, luego deberíamos obtenerlo a partir del dato del usuario
-                modifier = Modifier //Posiblemente varíe la forma de usar el componente también
+                branchName = "Centro", //TODO Harcodeado, luego deberíamos obtenerlo a partir del dato del usuario
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 12.dp)
             )
@@ -77,7 +76,7 @@ fun OrdersScreen(
 
 
             OrderBodyContent(
-                orders = filteredOrders,
+                orders = viewModel.getFilteredItems(),
                 modifier = Modifier.weight(1f)
             )
         }

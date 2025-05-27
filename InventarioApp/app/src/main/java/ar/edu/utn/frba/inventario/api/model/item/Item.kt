@@ -1,7 +1,7 @@
 package ar.edu.utn.frba.inventario.api.model.item
 
 import android.content.Context
-import ar.edu.utn.frba.inventario.api.model.shipment.Product
+import ar.edu.utn.frba.inventario.api.model.product.Product
 import java.time.LocalDateTime
 
 interface Item {

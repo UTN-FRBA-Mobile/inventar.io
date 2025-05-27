@@ -1,12 +1,10 @@
 package ar.edu.utn.frba.inventario.viewmodels
 
 import android.util.Log
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,17 +15,13 @@ abstract class BaseItemViewModel<T>(
     internal val savedStateHandle: SavedStateHandle,
     private val filterKey: String
 ) : ViewModel() {
-
     protected abstract val items: SnapshotStateList<T>
 
-    private val _selectedStatusList = MutableStateFlow<Set<ItemStatus>>(
-        savedStateHandle.get<List<String>>(filterKey)?.toItemStatusSet() ?: emptySet()
-
-    )
+    private val _selectedStatusList = MutableStateFlow<Set<ItemStatus>>(emptySet())
     val selectedStatusList: StateFlow<Set<ItemStatus>> = _selectedStatusList.asStateFlow()
 
     private fun restoreFiltersFromSavedState(): Set<ItemStatus> {
-        Log.d("FILTER_DEBUG", "Filtros: ${savedStateHandle.get<List<String>>(filterKey)}")
+        Log.d("VIEWMODEL_BASE_ITEM", "Filtros: ${savedStateHandle.get<List<String>>(filterKey)}")
         return savedStateHandle.get<List<String>>(filterKey)
             ?.mapNotNull { statusName ->
                 try {
@@ -38,14 +32,6 @@ abstract class BaseItemViewModel<T>(
             }
             ?.toSet() ?: emptySet()
     }
-
-    init {
-        Log.d("VIEWMODEL_INIT", "Filtros iniciales: ${_selectedStatusList.value}")
-        Log.d("VIEWMODEL_INIT", "SavedState: ${savedStateHandle.get<List<String>>(filterKey)}")
-    }
-
-    abstract fun getStatus(item: T): ItemStatus
-    abstract fun getFilterDate(item: T): LocalDateTime
 
     fun getFilteredItems(): List<T> {
         return if (_selectedStatusList.value.isEmpty()) {
@@ -66,12 +52,10 @@ abstract class BaseItemViewModel<T>(
     }
 
     fun clearFilters() {
-        Log.d("VIEWMODEL_INIT", "clearFilter antes : ${_selectedStatusList.value}")
+        Log.d("VIEWMODEL_BASE_ITEM", "clearFilter antes : ${_selectedStatusList.value}")
         _selectedStatusList.value = emptySet()
         savedStateHandle[filterKey] = emptyList<String>()
-        Log.d(
-            "VIEWMODEL_INIT",
-            "clearFilter después : ${savedStateHandle.get<List<String>>(filterKey)}"
+        Log.d("VIEWMODEL_BASE_ITEM", "clearFilter aplicado : ${savedStateHandle.get<List<String>>(filterKey)}"
         )
     }
 
@@ -82,15 +66,7 @@ abstract class BaseItemViewModel<T>(
         )
     }
 
-    private fun List<String>?.toItemStatusSet(): Set<ItemStatus> {
-        return this?.mapNotNull { name ->
-            try {
-                ItemStatus.valueOf(name)
-            } catch (e: IllegalArgumentException) {
-                null
-            }
-        }?.toSet() ?: emptySet()
-    }
+    abstract fun getStatus(item: T): ItemStatus
 
-
+    abstract fun getFilterDate(item: T): LocalDateTime
 }

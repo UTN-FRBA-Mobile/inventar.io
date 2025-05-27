@@ -4,13 +4,13 @@ import android.content.Context
 import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.item.Item
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
-import ar.edu.utn.frba.inventario.api.model.shipment.Product
+import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.utils.format
 import java.time.LocalDateTime
 
 data class Order(
     override val id: String,
-    val number: String,//Todos estos nombres están muy así nomás. Una vez que los definamos los actualizamos
+    val number: String,
     override val sender: String,
     override val status: ItemStatus,
     override val products : List<Product>,
@@ -31,6 +31,7 @@ data class Order(
 
     override fun getCardDetail(context: Context): String {
         val formattedDate = getRelevantDate()?.format() ?: context.getString(R.string.unknown_date)
+
         return when(status) {
             ItemStatus.COMPLETED -> context.getString(R.string.received_on, formattedDate)
             ItemStatus.CANCELLED -> context.getString(R.string.cancelled_on, formattedDate)

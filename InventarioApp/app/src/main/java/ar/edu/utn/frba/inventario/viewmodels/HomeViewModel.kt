@@ -4,7 +4,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.SavedStateHandle
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
-import ar.edu.utn.frba.inventario.api.model.shipment.Product
+import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.api.model.shipment.Shipment
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
@@ -17,8 +17,7 @@ class HomeViewModel @Inject constructor(
     savedStateHandle = savedStateHandle,
     filterKey = "shipment_filter"
 ) {
-
-    //Creo lista con productos random para poder visualizar las cards
+    //TODO remover cuando tengamos datos reales
     override val items: SnapshotStateList<Shipment> = mutableStateListOf<Shipment>().apply {
         addAll(listOf(
             Shipment(
@@ -114,7 +113,6 @@ class HomeViewModel @Inject constructor(
     }
 
     override fun getStatus(item: Shipment) = item.status
+
     override fun getFilterDate(item: Shipment) = item.creationDate
-
 }
-
