@@ -22,12 +22,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.api.model.item.Item
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
+import ar.edu.utn.frba.inventario.utils.Screen
 
 @Composable
-fun CardItem(item: Item) {
-    Card(
+fun CardItem(navController: NavController, item: Item) {
+    Card(onClick = {navController.navigate(Screen.Shipment.route + "/${item.id}")},
         modifier = Modifier
             .fillMaxWidth()
             .padding(6.dp),
