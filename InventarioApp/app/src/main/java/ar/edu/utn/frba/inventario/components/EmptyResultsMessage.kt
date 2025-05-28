@@ -1,6 +1,5 @@
 package ar.edu.utn.frba.inventario.components
 
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -26,7 +25,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ar.edu.utn.frba.inventario.R
-
 
 @Composable
 fun EmptyResultsMessage(
