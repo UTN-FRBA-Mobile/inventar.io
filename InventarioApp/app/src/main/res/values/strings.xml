@@ -7,6 +7,7 @@
     <string name="cancelled_on">Fecha cancelación: %1$s</string>
     <string name="pending_reception">Recepción estimada: %1$s</string>
     <string name="created_date">Fecha creación: %1$s</string>
+    <string name="no_results_for_filters">Sin resultados para los filtros aplicados</string>
 
     <plurals name="products_and_date_template">
         <item quantity="one">%1$d producto • Solicitado %2$s</item>
