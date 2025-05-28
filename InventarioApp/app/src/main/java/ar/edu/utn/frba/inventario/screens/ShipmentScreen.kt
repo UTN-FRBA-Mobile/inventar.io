@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.viewmodels.Product
 
 
@@ -50,12 +51,12 @@ import ar.edu.utn.frba.inventario.viewmodels.Product
 fun ShipmentScreen(viewModel:ShipmentViewModel = hiltViewModel(), navController: NavController, id:String){
     Scaffold(bottomBar = {ButtonBox(viewModel,navController)}){
         innerPadding ->
-        ShipmentBodyContent(viewModel, id,innerPadding)
+        ShipmentBodyContent(viewModel, navController, id,innerPadding)
     }
 
 }
 @Composable
-fun ShipmentBodyContent(viewModel:ShipmentViewModel, id:String, innerPadding: PaddingValues){
+fun ShipmentBodyContent(viewModel:ShipmentViewModel, navController: NavController, id:String, innerPadding: PaddingValues){
     viewModel.loadShipment(id)
     val shipment by viewModel.shipment.collectAsState()
 
@@ -65,7 +66,13 @@ fun ShipmentBodyContent(viewModel:ShipmentViewModel, id:String, innerPadding: Pa
         .padding(innerPadding)
         ) {
         Spacer(modifier = Modifier
-            .height(50.dp))
+            .height(20.dp))
+        Button(onClick = {navController.navigate(Screen.Home.route)}
+        ){
+            Text(text = "Atras")
+        }
+        Spacer(modifier = Modifier
+            .height(10.dp))
         Box(modifier = Modifier
             .fillMaxWidth()
             .background(color = Color(0xFFE7ECFB))){
