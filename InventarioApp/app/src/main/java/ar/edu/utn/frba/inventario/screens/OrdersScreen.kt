@@ -13,7 +13,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -39,44 +38,41 @@ fun OrdersScreen(
 ) {
     val selectedStatusList by viewModel.selectedStatusList.collectAsStateWithLifecycle()
 
-    Scaffold(bottomBar = { BottomNavigationBar(navController) }
-    ) { innerPadding ->
-        Column(
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.secondaryContainer)
+    ) {
+        BranchLocationBar(
+            branchName = "Centro", //TODO Harcodeado, luego deberíamos obtenerlo a partir del dato del usuario
             modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.secondaryContainer)
-        ) {
-            BranchLocationBar(
-                branchName = "Centro", //TODO Harcodeado, luego deberíamos obtenerlo a partir del dato del usuario
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp)
-            )
-            StatusFilter(
-                statusList = ItemStatus.entries,
-                selectedStatusList = selectedStatusList,
-                onStatusSelected = { viewModel.updateSelectedStatusList(it) },
-                onClearFilters = { viewModel.clearFilters() },
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-            OrderBodyContent(
-                navController,
-                viewModel.getFilteredItems(),
-                Modifier.weight(1f)
-            )
-            BackHandler {
-                navController.navigate(Screen.Home.route) {
-                    popUpTo(navController.graph.startDestinationId) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                }
+                .fillMaxWidth()
+                .padding(top = 12.dp)
+        )
+        StatusFilter(
+            statusList = ItemStatus.entries,
+            selectedStatusList = selectedStatusList,
+            onStatusSelected = { viewModel.updateSelectedStatusList(it) },
+            onClearFilters = { viewModel.clearFilters() },
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+        OrderBodyContent(
+            navController,
+            viewModel.getFilteredItems(),
+            Modifier.weight(1f)
+        )
+        BackHandler {
+            navController.navigate(Screen.Home.route) {
+//                popUpTo(navController.graph.startDestinationId) {
+//                    saveState = true
+//                }
+//                launchSingleTop = true
+//                restoreState = true
             }
         }
     }
+
 }
 
 @Composable

@@ -15,10 +15,10 @@ import ar.edu.utn.frba.inventario.utils.Screen
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
-    val items = listOf(Screen.Home, Screen.Orders, Screen.User, Screen.Scan)
+    val navBarItems = listOf(Screen.Home, Screen.Orders, Screen.User, Screen.Scan)
 
     NavigationBar {
-        items.forEach { screen ->
+        navBarItems.forEach { screen ->
             NavigationBarItem(
                 icon = {
                     when (screen) {

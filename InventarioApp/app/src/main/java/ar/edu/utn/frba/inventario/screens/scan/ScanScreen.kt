@@ -17,7 +17,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,9 +24,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -51,7 +48,6 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.R
-import ar.edu.utn.frba.inventario.screens.BottomNavigationBar
 import ar.edu.utn.frba.inventario.utils.ProductResultArgs
 import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.utils.withNavArgs
@@ -63,16 +59,12 @@ import java.util.concurrent.Executors
 
 @Composable
 fun ScanScreen(navController: NavController) {
-    Scaffold(
-        bottomBar = { BottomNavigationBar(navController) }
-    ) { innerPadding ->
-        ScanBodyContent(innerPadding, navController)
-    }
+    ScanBodyContent(navController)
 }
 
 @OptIn(ExperimentalGetImage::class)
 @Composable
-fun ScanBodyContent(innerPadding: PaddingValues, navController: NavController) {
+fun ScanBodyContent(navController: NavController) {
     val context = LocalContext.current
 
     val hasCameraPermission = remember {
@@ -94,14 +86,14 @@ fun ScanBodyContent(innerPadding: PaddingValues, navController: NavController) {
     }
 
     if (hasCameraPermission.value)
-        ScanCameraContent(innerPadding, navController)
+        ScanCameraContent(navController)
     else
-        PermissionDeniedContent(innerPadding, navController)
+        PermissionDeniedContent(navController)
 }
 
 @OptIn(ExperimentalGetImage::class)
 @Composable
-fun ScanCameraContent(innerPadding: PaddingValues, navController: NavController) {
+fun ScanCameraContent(navController: NavController) {
     val context = LocalContext.current
 
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -111,9 +103,7 @@ fun ScanCameraContent(innerPadding: PaddingValues, navController: NavController)
     val scannedCode = remember { mutableStateOf(false) }
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)
+        modifier = Modifier.fillMaxSize()
     ) {
         // CAMERA PREVIEW
         AndroidView(
@@ -303,11 +293,10 @@ private fun handleScanSuccess(
 
 
 @Composable
-fun PermissionDeniedContent(innerPadding: PaddingValues, navController: NavController) {
+fun PermissionDeniedContent(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(innerPadding)
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center

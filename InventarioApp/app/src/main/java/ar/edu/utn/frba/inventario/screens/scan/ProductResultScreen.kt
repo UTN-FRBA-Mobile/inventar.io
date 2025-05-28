@@ -3,13 +3,10 @@ package ar.edu.utn.frba.inventario.screens.scan
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.R
-import ar.edu.utn.frba.inventario.screens.BottomNavigationBar
 
 @Composable
 fun ProductResultScreen(
@@ -31,25 +27,18 @@ fun ProductResultScreen(
     errorMessage: String?,
     origin: String
 ) {
-    Scaffold(
-        bottomBar = { BottomNavigationBar(navController) }
-    ) { innerPadding ->
-        ProductResultBodyContent(navController, innerPadding, code, codeType, errorMessage, origin)
-    }
+    ProductResultBodyContent(navController, code, codeType, errorMessage, origin)
 }
 @Composable
 fun ProductResultBodyContent(
     navController: NavController,
-    innerPadding: PaddingValues,
     code: String?,
     codeType: String?,
     errorMessage: String?,
     origin: String
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
