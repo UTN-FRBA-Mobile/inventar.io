@@ -57,8 +57,9 @@ fun HomeScreen(
                     .fillMaxWidth()
             )
             HomeBodyContent(
-                shipments = viewModel.getFilteredItems(),
-                modifier = Modifier.weight(1f)
+                navController,
+                viewModel.getFilteredItems(),
+                Modifier.weight(1f)
             )
         }
     }
@@ -66,6 +67,7 @@ fun HomeScreen(
 
 @Composable
 fun HomeBodyContent(
+    navController: NavController,
     shipments: List<Shipment>,
     modifier: Modifier = Modifier
 ) {
@@ -87,7 +89,7 @@ fun HomeBodyContent(
                 modifier = Modifier.weight(1f)
             ) {
                 itemsIndexed(shipments) { _, shipment ->
-                    CardItem(item = shipment)
+                    CardItem(navController, shipment)
                 }
             }
         }
