@@ -96,7 +96,7 @@ fun ScanBodyContent(innerPadding: PaddingValues, navController: NavController) {
     if (hasCameraPermission.value)
         ScanCameraContent(innerPadding, navController)
     else
-        PermissionDeniedContent(innerPadding)
+        PermissionDeniedContent(innerPadding, navController)
 }
 
 @OptIn(ExperimentalGetImage::class)
@@ -237,18 +237,19 @@ fun ScanCameraContent(innerPadding: PaddingValues, navController: NavController)
                     .align(Alignment.BottomCenter),
                 contentAlignment = Alignment.Center
             ) {
-                Button(
-                    onClick = { navController.navigate(Screen.ManualCode.route) },
-                    shape = RoundedCornerShape(50),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.White.copy(alpha = 0.9f),
-                        contentColor = Color.Black
-                    )
-                ) {
-                    Text(stringResource(R.string.scan_manual_input_button))
-                }
+                ManualInputButton(navController)
             }
         }
+    }
+}
+
+@Composable
+fun ManualInputButton(navController: NavController) {
+    Button(
+        onClick = { navController.navigate(Screen.ManualCode.route) },
+        shape = RoundedCornerShape(50),
+    ) {
+        Text(stringResource(R.string.scan_manual_input_button))
     }
 }
 
@@ -302,7 +303,7 @@ private fun handleScanSuccess(
 
 
 @Composable
-fun PermissionDeniedContent(innerPadding: PaddingValues) {
+fun PermissionDeniedContent(innerPadding: PaddingValues, navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -323,6 +324,8 @@ fun PermissionDeniedContent(innerPadding: PaddingValues) {
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center
         )
+        Spacer(modifier = Modifier.height(12.dp))
+        ManualInputButton(navController)
     }
 }
 
