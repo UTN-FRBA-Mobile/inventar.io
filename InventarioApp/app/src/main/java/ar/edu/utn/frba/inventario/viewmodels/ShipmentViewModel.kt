@@ -28,7 +28,7 @@ class ShipmentViewModel @Inject constructor():ViewModel(){
     private val _navigationEvent = MutableSharedFlow<NavigationEvent?>()
     val navigationEvent = _navigationEvent.asSharedFlow()
 
-    fun loadShipment(id:Int){
+    fun loadShipment(id:String){
         viewModelScope.launch {
 
             Log.d("ShipmentViewModel", "Iniciando pedido a API del envio: $id")
@@ -80,7 +80,7 @@ class ShipmentViewModel @Inject constructor():ViewModel(){
     )
 
     //Para pruebas, hasta que este el endponit
-    private fun shipmentRepositoryMock(id: Int):Shipment{
+    private fun shipmentRepositoryMock(id: String):Shipment{
 
         val envios: List<Shipment> =
             listOf(
@@ -176,7 +176,7 @@ class ShipmentViewModel @Inject constructor():ViewModel(){
 
 
 
-        val result = envios.first { s -> s.id.equals("S01-$id") }
+        val result = envios.first { s -> s.id.equals(id) }
 
         return result
     }

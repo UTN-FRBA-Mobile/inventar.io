@@ -33,10 +33,10 @@ fun AppNavigation() {
         composable(route=Screen.Shipment.route+"/{id}",
         arguments = listOf(
             navArgument(name = "id"){
-                type= NavType.IntType
+                type= NavType.StringType
             }
         )) { backStackEntry->
-            val idShipment = backStackEntry.arguments!!.getInt("id")
+            val idShipment = backStackEntry.arguments?.getString("id")?:""
             ShipmentScreen(navController = navController, id = idShipment)
         }
     }

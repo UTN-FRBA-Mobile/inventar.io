@@ -41,12 +41,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import ar.edu.utn.frba.inventario.viewmodels.Product
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ShipmentScreen(viewModel:ShipmentViewModel = hiltViewModel(), navController: NavController, id:Int){
+fun ShipmentScreen(viewModel:ShipmentViewModel = hiltViewModel(), navController: NavController, id:String){
     Scaffold(bottomBar = {ButtonBox(viewModel,navController)}){
         innerPadding ->
         ShipmentBodyContent(viewModel, id,innerPadding)
@@ -54,7 +55,7 @@ fun ShipmentScreen(viewModel:ShipmentViewModel = hiltViewModel(), navController:
 
 }
 @Composable
-fun ShipmentBodyContent(viewModel:ShipmentViewModel, id:Int, innerPadding: PaddingValues){
+fun ShipmentBodyContent(viewModel:ShipmentViewModel, id:String, innerPadding: PaddingValues){
     viewModel.loadShipment(id)
     val shipment by viewModel.shipment.collectAsState()
 
@@ -153,29 +154,37 @@ fun ButtonBox(viewModel:ShipmentViewModel, navController: NavController){
 
 @Preview
 @Composable
-fun vistaProd(){
-    ElevatedCard(modifier = Modifier
-        .fillMaxWidth()
-        .padding(2.dp)){
-        Column (modifier = Modifier
-            .padding(15.dp)){
-            Text("Pendrive 32gb kingston")
-            Spacer(modifier = Modifier
-                .height(10.dp))
-            Row {
-                Text("x5")
-                Spacer(modifier = Modifier.width(25.dp)
-                    .weight(2f))
-                Box(contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .background(color = Color.White)){
-                    Text(text="Cargado: 0")
-                }
-
-
-            }
-        }
-    }
-
+fun vistaFinal(){
+    ShipmentScreen(navController = rememberNavController(), id = "S01-3")
 }
+
+//@Preview
+//@Composable
+//fun vistaProd(){
+//    ElevatedCard(modifier = Modifier
+//        .fillMaxWidth()
+//        .padding(2.dp)){
+//        Column (modifier = Modifier
+//            .padding(15.dp)){
+//            Text("Pendrive 32gb kingston")
+//            Spacer(modifier = Modifier
+//                .height(10.dp))
+//            Row {
+//                Text("x5")
+//                Spacer(modifier = Modifier.width(25.dp)
+//                    .weight(2f))
+//                Box(contentAlignment = Alignment.Center,
+//                    modifier = Modifier
+//                        .background(color = Color.White)){
+//                    Text(text="Cargado: 0")
+//                }
+//
+//
+//            }
+//        }
+//    }
+//
+//}
+
+
 
