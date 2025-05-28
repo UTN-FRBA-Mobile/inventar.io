@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.inventario.screens.scan
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,11 +22,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.screens.BottomNavigationBar
 import ar.edu.utn.frba.inventario.utils.ProductResultArgs
 import ar.edu.utn.frba.inventario.utils.Screen
@@ -57,7 +60,7 @@ fun ManualCodeBodyContent(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Ingrese el código EAN-13", fontSize = 20.sp)
+        Text(stringResource(R.string.manual_code_insert_code_title), fontSize = 20.sp)
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -67,7 +70,7 @@ fun ManualCodeBodyContent(
                 code = it.filter { char -> char.isDigit() }.take(13)
                 isError = false
             },
-            label = { Text("Código EAN-13") },
+            label = { Text(stringResource(R.string.manual_code_input)) },
             isError = isError,
             singleLine = true,
             keyboardOptions = KeyboardOptions.Default.copy(
@@ -86,7 +89,11 @@ fun ManualCodeBodyContent(
                     return@Button
                 }
 
-                // TODO - Verificar digito de control, para ver q sea codigo valido
+                if (!isValidEAN13(code)) {
+                    isError = true
+                    return@Button
+                }
+
                 val destination = Screen.ProductResult.withNavArgs(
                     ProductResultArgs.Code to code,
                     ProductResultArgs.CodeType to "ean-13",
@@ -97,12 +104,31 @@ fun ManualCodeBodyContent(
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Confirmar")
+            Text(stringResource(R.string.manual_code_confirm_button))
         }
 
         if (isError) {
             Spacer(modifier = Modifier.height(12.dp))
-            Text("Debe ingresar un código EAN-13 válido.", color = Color.Red)
+            Text(stringResource(R.string.manual_code_error_invalid_code), color = Color.Red)
         }
     }
+}
+
+fun isValidEAN13(code: String): Boolean {
+    if (code.length != 13 || code.any { !it.isDigit() })
+        return false
+
+    val digits = code.map { it.digitToInt() }
+    val checkDigit = digits.last()
+
+    val sum = digits.dropLast(1).mapIndexed { index, digit ->
+        if (index % 2 == 0) digit else digit * 3
+    }.sum()
+
+    val computedCheckDigit = (10 - (sum % 10)) % 10
+
+    // Print checkDigit and computedCheckDigit for debugging
+    Log.d("ManuelCodeScreen", "Check Digit: $checkDigit, Computed Check Digit: $computedCheckDigit")
+
+    return checkDigit == computedCheckDigit
 }

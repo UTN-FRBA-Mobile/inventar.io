@@ -15,10 +15,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.screens.BottomNavigationBar
 
 @Composable
@@ -56,7 +58,9 @@ fun ProductResultBodyContent(
 
         if (errorMessage != null) {
             Text(
-                text = if (isFromScan) "Escaneo fallido" else "Búsqueda fallida",
+                text = if (isFromScan)
+                    stringResource(R.string.product_result_scan_failed) else
+                    stringResource(R.string.product_result_search_failed),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Red
@@ -68,25 +72,23 @@ fun ProductResultBodyContent(
             )
             Spacer(Modifier.height(32.dp))
             Button(onClick = {
-                if (isFromManual) {
-                    navController.navigate("manual_code")
-                } else {
-                    navController.navigate("scan")
-                }
+                navController.popBackStack()
             }) {
-                Text("Reintentar")
+                Text(stringResource(R.string.product_result_try_again_button))
             }
             return
         }
 
         val codeTypeText = when (codeType) {
-            "ean-13" -> "Código de barras"
-            "qr" -> "Código QR"
-            else -> "ERROR - Código no soportado"
+            "ean-13" -> stringResource(R.string.product_result_barcode)
+            "qr" -> stringResource(R.string.product_result_qr_code)
+            else -> stringResource(R.string.product_result_error_invalid_code_type)
         }
 
         Text(
-            text = if (isFromScan) "Escaneo exitoso" else "Producto encontrado correctamente",
+            text = if (isFromScan)
+                stringResource(R.string.product_result_scan_success) else
+                stringResource(R.string.product_result_search_success),
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF2E7D32)
@@ -106,19 +108,15 @@ fun ProductResultBodyContent(
         Spacer(Modifier.height(32.dp))
 
         Button(onClick = {
-            if (isFromManual) {
-                navController.navigate("manual_input")
-            } else {
-                navController.navigate("scan")
-            }
+            navController.popBackStack()
         }) {
-            Text("Reintentar")
+            Text(stringResource(R.string.product_result_try_again_button))
         }
 
         Button(onClick = {
             Log.d("[ProductResultScreen]", "#ToDo, navigate to next page with result: $code")
         }) {
-            Text("Continuar")
+            Text(stringResource(R.string.product_result_continue_button))
         }
     }
 }
