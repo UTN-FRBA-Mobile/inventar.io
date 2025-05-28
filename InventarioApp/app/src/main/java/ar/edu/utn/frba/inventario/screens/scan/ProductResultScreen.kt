@@ -54,7 +54,6 @@ fun ProductResultBodyContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val isFromScan = origin == "scan"
-        val isFromManual = origin == "manual"
 
         if (errorMessage != null) {
             Text(
