@@ -100,7 +100,7 @@ fun OrderBodyContent(
                 modifier = Modifier.weight(1f)
             ) {
                 itemsIndexed(orders) { _, order ->
-                    CardItem(item = order)
+                    CardItem(navController= navController, item = order)
                 }
             }
         }
