@@ -42,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,6 +50,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
+import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.screens.BottomNavigationBar
 import ar.edu.utn.frba.inventario.utils.ProductResultArgs
 import ar.edu.utn.frba.inventario.utils.Screen
@@ -94,7 +96,7 @@ fun ScanBodyContent(innerPadding: PaddingValues, navController: NavController) {
     if (hasCameraPermission.value)
         ScanCameraContent(innerPadding, navController)
     else
-        PermissionDeniedContent(innerPadding)
+        PermissionDeniedContent(innerPadding, navController)
 }
 
 @OptIn(ExperimentalGetImage::class)
@@ -105,6 +107,8 @@ fun ScanCameraContent(innerPadding: PaddingValues, navController: NavController)
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
     val cameraExecutor = remember { Executors.newSingleThreadExecutor() }
+
+    val scannedCode = remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier
@@ -130,10 +134,16 @@ fun ScanCameraContent(innerPadding: PaddingValues, navController: NavController)
 
                     imageAnalysis.setAnalyzer(cameraExecutor) { imageProxy ->
                         val mediaImage = imageProxy.image
-                        if (mediaImage != null) {
+
+                        if (mediaImage != null && !scannedCode.value) {
                             val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
                             scanner.process(image)
-                                .addOnSuccessListener { handleScanSuccess(it, navController) }
+                                .addOnSuccessListener { scannedCodes ->
+                                    if (!scannedCode.value && scannedCodes.isNotEmpty()) {
+                                        scannedCode.value = true
+                                        handleScanSuccess(scannedCodes, navController, context)
+                                    }
+                                }
                                 .addOnFailureListener {
                                     Log.e("[ScanScreen]", "Scan failed", it)
                                 }
@@ -207,11 +217,14 @@ fun ScanCameraContent(innerPadding: PaddingValues, navController: NavController)
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Escanee un QR o Código de barras",
+                    text = stringResource(R.string.scan_camera_instruction),
                     color = Color.White,
                     fontSize = 18.sp,
                     modifier = Modifier
-                        .background(Color.Black.copy(alpha = 0.5f), shape = RoundedCornerShape(8.dp))
+                        .background(
+                            Color.Black.copy(alpha = 0.5f),
+                            shape = RoundedCornerShape(8.dp)
+                        )
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                 )
             }
@@ -224,71 +237,73 @@ fun ScanCameraContent(innerPadding: PaddingValues, navController: NavController)
                     .align(Alignment.BottomCenter),
                 contentAlignment = Alignment.Center
             ) {
-                Button(
-                    onClick = { navController.navigate(Screen.ManualCode.route) },
-                    shape = RoundedCornerShape(50),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.White.copy(alpha = 0.9f),
-                        contentColor = Color.Black
-                    )
-                ) {
-                    Text("Ingreso manual")
-                }
+                ManualInputButton(navController)
             }
         }
+    }
+}
+
+@Composable
+fun ManualInputButton(navController: NavController) {
+    Button(
+        onClick = { navController.navigate(Screen.ManualCode.route) },
+        shape = RoundedCornerShape(50),
+    ) {
+        Text(stringResource(R.string.scan_manual_input_button))
     }
 }
 
 private fun handleScanSuccess(
-    barcodes: List<Barcode>,
-    navController: NavController
+    scannedCodes: List<Barcode>,
+    navController: NavController,
+    context: android.content.Context
 ) {
     val QR_CODE_PREFIX = "inv_T3eI5QJ868z40lY_"
 
-    val valid = barcodes.firstOrNull { barcode ->
+    val validCode = scannedCodes.firstOrNull { barcode ->
         barcode.format == Barcode.FORMAT_QR_CODE || barcode.format == Barcode.FORMAT_EAN_13
     }
 
-    if (valid != null) {
-        val code = valid.rawValue ?: ""
-        Log.d("[ScanScreen]", "Scanned code: $code")
-
-        val destination = when {
-            valid.format == Barcode.FORMAT_EAN_13 -> {
-                Screen.ProductResult.withNavArgs(
-                    ProductResultArgs.Code to code,
-                    ProductResultArgs.CodeType to "ean-13"
-                )
-            }
-
-            code.startsWith(QR_CODE_PREFIX) -> {
-                val id = code.substring(QR_CODE_PREFIX.length)
-                Screen.ProductResult.withNavArgs(
-                    ProductResultArgs.Code to id,
-                    ProductResultArgs.CodeType to "qr"
-                )
-            }
-
-            else -> {
-                Screen.ProductResult.withNavArgs(
-                    ProductResultArgs.ErrorMessage to "Código QR inválido."
-                )
-            }
-        }
-
-        navController.navigate(destination)
-
-    } else if (barcodes.isNotEmpty()) {
+    if (validCode == null) {
         val destination = Screen.ProductResult.withNavArgs(
-            ProductResultArgs.ErrorMessage to "Formato no soportado."
+            ProductResultArgs.ErrorMessage to context.getString(R.string.scan_error_unsupported_code_format)
         )
         navController.navigate(destination)
+        return
     }
+
+    val code = validCode.rawValue ?: ""
+    Log.d("[ScanScreen]", "Scanned code: $code")
+
+    val destination = when {
+        validCode.format == Barcode.FORMAT_EAN_13 -> {
+            Screen.ProductResult.withNavArgs(
+                ProductResultArgs.Code to code,
+                ProductResultArgs.CodeType to "ean-13"
+            )
+        }
+
+        code.startsWith(QR_CODE_PREFIX) -> {
+            val id = code.substring(QR_CODE_PREFIX.length)
+            Screen.ProductResult.withNavArgs(
+                ProductResultArgs.Code to id,
+                ProductResultArgs.CodeType to "qr"
+            )
+        }
+
+        else -> {
+            Screen.ProductResult.withNavArgs(
+                ProductResultArgs.ErrorMessage to context.getString(R.string.scan_error_invalid_qr)
+            )
+        }
+    }
+
+    navController.navigate(destination)
 }
 
 
 @Composable
-fun PermissionDeniedContent(innerPadding: PaddingValues) {
+fun PermissionDeniedContent(innerPadding: PaddingValues, navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -298,17 +313,19 @@ fun PermissionDeniedContent(innerPadding: PaddingValues) {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Permiso de camara requerido para escanear",
+            text = stringResource(R.string.scan_camera_permission_denied_title),
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = "Por favor otorgar este permiso en la configuración de esta aplicación.",
+            text = stringResource(R.string.scan_camera_permission_denied_body),
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center
         )
+        Spacer(modifier = Modifier.height(12.dp))
+        ManualInputButton(navController)
     }
 }
 

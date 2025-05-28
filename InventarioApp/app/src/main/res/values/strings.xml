@@ -9,6 +9,31 @@
     <string name="created_date">Fecha creación: %1$s</string>
     <string name="no_results_for_filters">Sin resultados para los filtros aplicados</string>
 
+    <!-- ScanScreen -->
+    <string name="scan_camera_permission_denied_title">Permiso de camara requerido para escanear</string>
+    <string name="scan_camera_permission_denied_body">Por favor otorgar este permiso en la configuración de esta aplicación.</string>
+    <string name="scan_camera_instruction">Escanee un QR o Código de barras</string>
+    <string name="scan_manual_input_button">Ingreso manual</string>
+    <string name="scan_error_invalid_qr">Código QR inválido.</string>
+    <string name="scan_error_unsupported_code_format">Formato no soportado.</string>
+
+    <!-- ManualCodeScreen -->
+    <string name="manual_code_confirm_button">Confirmar</string>
+    <string name="manual_code_error_invalid_code">Debe ingresar un código EAN-13 válido.</string>
+    <string name="manual_code_insert_code_title">Ingrese el código EAN-13</string>
+    <string name="manual_code_input">Código EAN-13</string>
+
+    <!-- ProductResultScreen -->
+    <string name="product_result_scan_failed">Escaneo fallido</string>
+    <string name="product_result_search_failed">Búsqueda fallida</string>
+    <string name="product_result_try_again_button">Reintentar</string>
+    <string name="product_result_barcode">Código de barras</string>
+    <string name="product_result_qr_code">Código QR</string>
+    <string name="product_result_error_invalid_code_type">ERROR - Código no soportado</string>
+    <string name="product_result_scan_success">Escaneo exitoso</string>
+    <string name="product_result_search_success">Producto encontrado</string>
+    <string name="product_result_continue_button">Continuar</string>
+
     <plurals name="products_and_date_template">
         <item quantity="one">%1$d producto • Solicitado %2$s</item>
         <item quantity="other">%1$d productos • Solicitado %2$s</item>

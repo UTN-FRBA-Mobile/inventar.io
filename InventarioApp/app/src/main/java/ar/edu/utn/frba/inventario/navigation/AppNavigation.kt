@@ -1,9 +1,13 @@
 package ar.edu.utn.frba.inventario.navigation
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -12,6 +16,7 @@ import ar.edu.utn.frba.inventario.api.utils.TokenManager
 import ar.edu.utn.frba.inventario.screens.HomeScreen
 import ar.edu.utn.frba.inventario.screens.LoginScreen
 import ar.edu.utn.frba.inventario.screens.OrdersScreen
+import ar.edu.utn.frba.inventario.screens.ShipmentScreen
 import ar.edu.utn.frba.inventario.screens.UserScreen
 import ar.edu.utn.frba.inventario.screens.scan.ManualCodeScreen
 import ar.edu.utn.frba.inventario.screens.scan.ProductResultScreen
@@ -28,6 +33,8 @@ fun AppNavigation() {
     val startDestination = if (tokenManager.hasSession()) Screen.Home.route else Screen.Login.route
 
     val productResultArgs = ProductResultArgs.entries.toTypedArray()
+
+    printCurrentBackStack(navController)
 
     NavHost(navController, startDestination = startDestination) {
         composable(Screen.Login.route) {
@@ -60,6 +67,31 @@ fun AppNavigation() {
                 backStackEntry.arguments?.getString(ProductResultArgs.Origin.code) ?: "scan"
             )
         }
+        composable(route=Screen.Shipment.route+"/{id}",
+        arguments = listOf(
+            navArgument(name = "id"){
+                type= NavType.StringType
+            }
+        )) { backStackEntry->
+            val idShipment = backStackEntry.arguments?.getString("id")?:""
+            ShipmentScreen(navController = navController, id = idShipment)
+        }
+    }
+}
+
+fun printCurrentBackStack(navController: NavController) {
+    navController.addOnDestinationChangedListener { controller, _, _ ->
+        @SuppressLint("RestrictedApi")
+        val routes = controller.currentBackStack.value.joinToString(", ") {
+            val route = it.destination.route
+            route?.substringBefore("?") ?: "null"
+        }
+
+        Log.d("BackStackLog", "BackStack: $routes")
+
+        // Print current route without query params
+        val currentRoute = controller.currentBackStackEntry?.destination?.route?.substringBefore("?")
+        Log.d("BackStackLog", "Current Route: $currentRoute")
     }
 }
 
