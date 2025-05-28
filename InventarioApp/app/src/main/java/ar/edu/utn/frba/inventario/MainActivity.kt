@@ -29,14 +29,12 @@ class MainActivity : ComponentActivity() {
                 val currentBackStack by navController.currentBackStackEntryAsState()
                 val currentRoute = currentBackStack?.destination?.route
 
-                val routesWithoutBottomBar = listOf(
-                    Screen.Login.route
-                )
+                val navBarItems: List<Screen> = listOf(Screen.Home, Screen.Orders, Screen.User)
 
                 Scaffold(
                     bottomBar = {
-                        if (currentRoute !in routesWithoutBottomBar) {
-                            BottomNavigationBar(navController)
+                        if (currentRoute in navBarItems.map { it.route }) {
+                            BottomNavigationBar(navController, navBarItems)
                         }
                     }
                 ) { innerPadding ->

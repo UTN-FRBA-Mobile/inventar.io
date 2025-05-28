@@ -10,15 +10,18 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import ar.edu.utn.frba.inventario.utils.Screen
 
 @Composable
-fun BottomNavigationBar(navController: NavController) {
-    val navBarItems = listOf(Screen.Home, Screen.Orders, Screen.User, Screen.Scan)
+fun BottomNavigationBar(navController: NavController, items: List<Screen> ) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
     NavigationBar {
-        navBarItems.forEach { screen ->
+        items.forEach { screen ->
             NavigationBarItem(
                 icon = {
                     when (screen) {
@@ -30,8 +33,11 @@ fun BottomNavigationBar(navController: NavController) {
                     }
                 },
                 label = { Text(screen.route) },
-                selected = navController.currentDestination?.route == screen.route,
+                selected = currentRoute == screen.route,
                 onClick = {
+                    if (currentRoute == screen.route)
+                        return@NavigationBarItem
+
                     navController.navigate(screen.route) {
                         popUpTo(navController.graph.startDestinationId) { saveState = true }
                         launchSingleTop = true

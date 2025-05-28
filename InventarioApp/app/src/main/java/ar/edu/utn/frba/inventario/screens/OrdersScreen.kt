@@ -1,6 +1,5 @@
 package ar.edu.utn.frba.inventario.screens
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -62,17 +61,7 @@ fun OrdersScreen(
             viewModel.getFilteredItems(),
             Modifier.weight(1f)
         )
-        BackHandler {
-            navController.navigate(Screen.Home.route) {
-//                popUpTo(navController.graph.startDestinationId) {
-//                    saveState = true
-//                }
-//                launchSingleTop = true
-//                restoreState = true
-            }
-        }
     }
-
 }
 
 @Composable
