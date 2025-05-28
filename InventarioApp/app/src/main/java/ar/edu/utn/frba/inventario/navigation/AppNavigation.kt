@@ -1,34 +1,66 @@
 package ar.edu.utn.frba.inventario.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import ar.edu.utn.frba.inventario.api.utils.TokenManager
 import ar.edu.utn.frba.inventario.screens.HomeScreen
 import ar.edu.utn.frba.inventario.screens.LoginScreen
 import ar.edu.utn.frba.inventario.screens.OrdersScreen
 import ar.edu.utn.frba.inventario.screens.ShipmentScreen
 import ar.edu.utn.frba.inventario.screens.UserScreen
+import ar.edu.utn.frba.inventario.screens.scan.ManualCodeScreen
+import ar.edu.utn.frba.inventario.screens.scan.ProductResultScreen
+import ar.edu.utn.frba.inventario.screens.scan.ScanScreen
+import ar.edu.utn.frba.inventario.utils.HasCode
+import ar.edu.utn.frba.inventario.utils.ProductResultArgs
 import ar.edu.utn.frba.inventario.utils.Screen
+import ar.edu.utn.frba.inventario.utils.withArgsDefinition
 
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
+    val tokenManager = rememberTokenManager()
+    val startDestination = if (tokenManager.hasSession()) Screen.Home.route else Screen.Login.route
 
-    NavHost(navController = navController, startDestination = Screen.Login.route) {
+    val productResultArgs = ProductResultArgs.entries.toTypedArray()
+
+    NavHost(navController, startDestination = startDestination) {
         composable(Screen.Login.route) {
-            LoginScreen(navController = navController)
+            LoginScreen(navController)
         }
         composable(Screen.Home.route) {
-            HomeScreen(navController = navController)
+            HomeScreen(navController)
         }
         composable(Screen.Orders.route) {
-            OrdersScreen(navController = navController)
+            OrdersScreen(navController)
         }
         composable(Screen.User.route) {
-            UserScreen(navController = navController)
+            UserScreen(navController)
+        }
+        composable(Screen.Scan.route) {
+            ScanScreen(navController)
+        }
+        composable(Screen.ManualCode.route) {
+            ManualCodeScreen(navController)
+        }
+        composable(
+            Screen.ProductResult.withArgsDefinition(productResultArgs),
+            arguments = navArgsOf(productResultArgs)
+        ) { backStackEntry ->
+            ProductResultScreen(
+                navController,
+                backStackEntry.arguments?.getString(ProductResultArgs.Code.code),
+                backStackEntry.arguments?.getString(ProductResultArgs.CodeType.code),
+                backStackEntry.arguments?.getString(ProductResultArgs.ErrorMessage.code),
+                backStackEntry.arguments?.getString(ProductResultArgs.Origin.code) ?: "scan"
+            )
         }
         composable(route=Screen.Shipment.route+"/{id}",
         arguments = listOf(
@@ -40,4 +72,19 @@ fun AppNavigation() {
             ShipmentScreen(navController = navController, id = idShipment)
         }
     }
+}
+
+fun navArgsOf(args: Array<out HasCode>): List<NamedNavArgument> {
+    return args.map {
+        navArgument(it.code) {
+            nullable = true
+            defaultValue = null
+        }
+    }
+}
+
+@Composable
+fun rememberTokenManager(): TokenManager {
+    val context = LocalContext.current
+    return remember { TokenManager(context.applicationContext) }
 }

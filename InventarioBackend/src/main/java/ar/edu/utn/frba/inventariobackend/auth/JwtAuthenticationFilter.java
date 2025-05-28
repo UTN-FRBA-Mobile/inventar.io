@@ -25,6 +25,19 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    private static final List<String> PUBLIC_ENDPOINTS = List.of(
+        "/auth/login",
+        "/auth/refresh",
+        "/api/v1/user",
+        "/api/v1/location"
+    );
+
+    private static final List<String> PUBLIC_PREFIXES = List.of(
+        "/v3/api-docs",
+        "/swagger-ui",
+        "/swagger-ui.html"
+    );
+
     private final JwtUtil jwtUtil;
 
     /**
@@ -42,20 +55,31 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         @NonNull HttpServletResponse response,
         @NonNull FilterChain chain
     ) throws ServletException, IOException {
-        String header = request.getHeader("Authorization");
+        if (PUBLIC_ENDPOINTS.stream().noneMatch(path -> request.getServletPath().equals(path)) &&
+            PUBLIC_PREFIXES.stream().noneMatch(path -> request.getServletPath().startsWith(path))
+        ) {
+            boolean isTokenValid = false;
+            String header = request.getHeader("Authorization");
 
-        if (header != null && header.startsWith("Bearer ")) {
-            String token = header.substring(7);
+            if (header != null && header.startsWith("Bearer ")) {
+                String token = header.substring(7);
 
-            if (jwtUtil.isTokenValid(token, "access")) {
-                Claims claims = jwtUtil.extractClaims(token);
-                String username = claims.getSubject();
-                Long locationId = claims.get("locationId", Long.class);
+                if (jwtUtil.isTokenValid(token, "access")) {
+                    Claims claims = jwtUtil.extractClaims(token);
+                    String username = claims.getSubject();
+                    Long locationId = claims.get("locationId", Long.class);
 
-                UsernamePasswordAuthenticationToken auth =
-                    new UsernamePasswordAuthenticationToken(username, null, List.of());
-                auth.setDetails(new AuthenticationDetails(locationId));
-                SecurityContextHolder.getContext().setAuthentication(auth);
+                    UsernamePasswordAuthenticationToken auth =
+                            new UsernamePasswordAuthenticationToken(username, null, List.of());
+                    auth.setDetails(new AuthenticationDetails(locationId));
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                    isTokenValid = true;
+                }
+            }
+
+            if (!isTokenValid) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
             }
         }
 

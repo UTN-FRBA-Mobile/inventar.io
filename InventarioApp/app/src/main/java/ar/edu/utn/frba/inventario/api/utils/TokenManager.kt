@@ -2,6 +2,7 @@ package ar.edu.utn.frba.inventario.api.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import javax.inject.Singleton
 
 @Singleton
@@ -11,60 +12,35 @@ class TokenManager(context: Context) {
 
     companion object {
         private const val PREFS_NAME = "inventar.io_prefs"
-        private const val KEY_ACCESS_TOKEN = "access_token"
-        private const val KEY_REFRESH_TOKEN = "refresh_token"
-    }
-
-    fun saveAccessToken(token: String) {
-        with(sharedPreferences.edit()) {
-            putString(KEY_ACCESS_TOKEN, token)
-            apply() // Asynchronous save
-        }
+        private const val ACCESS_TOKEN_KEY = "access_token"
+        private const val REFRESH_TOKEN_KEY = "refresh_token"
     }
 
     fun getAccessToken(): String? {
-        return sharedPreferences.getString(KEY_ACCESS_TOKEN, null)
-    }
-
-    fun clearAccessToken() {
-        with(sharedPreferences.edit()) {
-            remove(KEY_ACCESS_TOKEN)
-            apply()
-        }
-    }
-
-    fun saveRefreshToken(token: String) {
-        with(sharedPreferences.edit()) {
-            putString(KEY_REFRESH_TOKEN, token)
-            apply()
-        }
+        return sharedPreferences.getString(ACCESS_TOKEN_KEY, null)
     }
 
     fun getRefreshToken(): String? {
-        return sharedPreferences.getString(KEY_REFRESH_TOKEN, null)
+        return sharedPreferences.getString(REFRESH_TOKEN_KEY, null)
     }
 
-    fun clearRefreshToken() {
-        with(sharedPreferences.edit()) {
-            remove(KEY_REFRESH_TOKEN)
+    fun saveSession(accessToken: String, refreshToken: String) {
+        sharedPreferences.edit {
+            putString(ACCESS_TOKEN_KEY, accessToken)
+            putString(REFRESH_TOKEN_KEY, refreshToken)
+        }
+    }
+
+    fun clearSession() {
+        sharedPreferences.edit {
+            remove(ACCESS_TOKEN_KEY)
+            remove(REFRESH_TOKEN_KEY)
             apply()
         }
     }
 
-    fun saveTokens(accessToken: String, refreshToken: String) {
-        with(sharedPreferences.edit()) {
-            putString(KEY_ACCESS_TOKEN, accessToken)
-            putString(KEY_REFRESH_TOKEN, refreshToken)
-            apply()
-        }
-    }
-
-    fun clearAllTokens() {
-        with(sharedPreferences.edit()) {
-            remove(KEY_ACCESS_TOKEN)
-            remove(KEY_REFRESH_TOKEN)
-            apply()
-        }
+    fun hasSession(): Boolean {
+        return hasAccessToken() && hasRefreshToken()
     }
 
     fun hasAccessToken(): Boolean {

@@ -13,7 +13,7 @@ class AuthRepository @Inject constructor(
         return safeApiCall { apiService.login(loginRequest) }
     }
 
-    suspend fun refreshToken(refreshToken: String): NetworkResult<LoginResponse> {
-        return safeApiCall { apiService.refreshToken(refreshToken) }
+    fun refreshToken(refreshToken: String): NetworkResult<LoginResponse> {
+        return blockingApiCall { apiService.refreshToken(refreshToken) }
     }
 }
