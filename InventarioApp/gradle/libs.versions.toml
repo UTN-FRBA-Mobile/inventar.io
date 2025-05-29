@@ -54,6 +54,9 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "jetbrainsKotlinxCoroutinesCore" }
 logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+play-services-location = { module = "com.google.android.gms:play-services-location", version = "21.3.0" }
+google-maps = { module = "com.google.android.gms:play-services-maps", version = "18.2.0" }
+maps-compose = { module = "com.google.maps.android:maps-compose", version = "4.4.0" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

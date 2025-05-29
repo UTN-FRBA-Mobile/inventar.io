@@ -97,6 +97,11 @@ dependencies {
     implementation (libs.androidx.camera.view)
     implementation (libs.androidx.camera.extensions)
 
+    // For getting user location
+    implementation(libs.play.services.location)
+    implementation(libs.google.maps)
+    implementation(libs.maps.compose)
+
     // For reading barcode
     implementation(libs.barcode.scanning)
 }
