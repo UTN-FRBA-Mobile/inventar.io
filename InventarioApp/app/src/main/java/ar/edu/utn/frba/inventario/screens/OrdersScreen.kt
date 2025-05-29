@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.inventario.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -116,5 +117,14 @@ fun OrderBodyContent(
             )
         }
 
+        BackHandler {
+            navController.navigate(Screen.Home.route) {
+                popUpTo(navController.graph.startDestinationId) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
+        }
     }
 }

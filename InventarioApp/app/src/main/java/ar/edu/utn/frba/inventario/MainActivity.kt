@@ -29,7 +29,11 @@ class MainActivity : ComponentActivity() {
                 val currentBackStack by navController.currentBackStackEntryAsState()
                 val currentRoute = currentBackStack?.destination?.route
 
-                val navBarItems: List<Screen> = listOf(Screen.Home, Screen.Orders, Screen.User)
+                val navBarItems: List<Screen> = listOf(
+                    Screen.Home,
+                    Screen.Orders,
+                    Screen.User
+                )
 
                 Scaffold(
                     bottomBar = {
