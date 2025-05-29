@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,44 +31,35 @@ fun HomeScreen(
     navController: NavController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    Scaffold(bottomBar = { BottomNavigationBar(navController) }
-    ) { innerPadding ->
-        Column(
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.secondaryContainer)
+    ) {
+        BranchLocationBar(
+            branchName = "Centro", //TODO Harcodeado, luego deberíamos obtenerlo a partir del dato del usuario
             modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.secondaryContainer)
-        ) {
-            BranchLocationBar(
-                branchName = "Centro", //TODO Harcodeado, luego deberíamos obtenerlo a partir del dato del usuario
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp)
-            )
-            val selectedStatusListVM by viewModel.selectedStatusList.collectAsStateWithLifecycle()
+                .fillMaxWidth()
+                .padding(top = 12.dp)
+        )
+        val selectedStatusListVM by viewModel.selectedStatusList.collectAsStateWithLifecycle()
 
-            StatusFilter(
-                statusList = ItemStatus.values().toList(),
-                selectedStatusList = selectedStatusListVM,
-                onStatusSelected = { viewModel.updateSelectedStatusList(it) },
-                onClearFilters = { viewModel.clearFilters() },
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-            HomeBodyContent(
-                navController,
-                viewModel.getFilteredItems(),
-                Modifier.weight(1f)
-            )
-        }
+        StatusFilter(
+            statusList = ItemStatus.entries,
+            selectedStatusList = selectedStatusListVM,
+            onStatusSelected = { viewModel.updateSelectedStatusList(it) },
+            onClearFilters = { viewModel.clearFilters() },
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+        HomeBodyContent(navController, viewModel.getFilteredItems())
     }
 }
 
 @Composable
 fun HomeBodyContent(
     navController: NavController,
-    shipments: List<Shipment>,
-    modifier: Modifier = Modifier
+    shipments: List<Shipment>
 ) {
     Column(
         modifier = Modifier
@@ -83,7 +73,8 @@ fun HomeBodyContent(
         if (shipments.isEmpty()) {
             EmptyResultsMessage(
                 message = stringResource(R.string.no_results_for_filters),
-                modifier = Modifier.weight(1f))
+                modifier = Modifier.weight(1f)
+            )
         } else {
             LazyColumn(
                 modifier = Modifier.weight(1f)

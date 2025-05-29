@@ -3,7 +3,6 @@ package ar.edu.utn.frba.inventario.screens.scan
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.R
-import ar.edu.utn.frba.inventario.screens.BottomNavigationBar
 import ar.edu.utn.frba.inventario.utils.ProductResultArgs
 import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.utils.withNavArgs
@@ -37,16 +34,11 @@ import ar.edu.utn.frba.inventario.utils.withNavArgs
 
 @Composable
 fun ManualCodeScreen(navController: NavController) {
-    Scaffold(
-        bottomBar = { BottomNavigationBar(navController) }
-    ) { innerPadding ->
-        ManualCodeBodyContent(innerPadding, navController)
-    }
+    ManualCodeBodyContent(navController)
 }
 
 @Composable
 fun ManualCodeBodyContent(
-    innerPadding: PaddingValues,
     navController: NavController
 ) {
     var code by remember { mutableStateOf("") }
@@ -55,7 +47,6 @@ fun ManualCodeBodyContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(innerPadding)
             .padding(24.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally

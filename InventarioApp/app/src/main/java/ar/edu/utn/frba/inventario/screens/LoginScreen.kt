@@ -73,15 +73,12 @@ fun LoginScreen(
 
     LaunchedEffect(Unit) {
         loginScreenViewModel.navigationEvent.collect { event ->
-            when (event) {
-                is NavigationEvent.NavigateTo -> {
-                    navController.navigate(event.route) {
-                        // Limpio el stack al start del grafo de navegacion
-                        // Asi el user no puede volver al login yendo para atras
-                        popUpTo(Screen.Login.route) { inclusive = true }
-                    }
+            if (event is NavigationEvent.NavigateTo) {
+                navController.navigate(event.route) {
+                    // Limpio el stack al start del grafo de navegación
+                    // Asi el user no puede volver al login yendo para atrás
+                    popUpTo(Screen.Login.route) { inclusive = true }
                 }
-                null -> { /* No op */ }
             }
         }
     }

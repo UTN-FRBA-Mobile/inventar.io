@@ -7,10 +7,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import ar.edu.utn.frba.inventario.api.utils.TokenManager
 import ar.edu.utn.frba.inventario.screens.HomeScreen
@@ -27,8 +27,7 @@ import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.utils.withArgsDefinition
 
 @Composable
-fun AppNavigation() {
-    val navController = rememberNavController()
+fun AppNavigation(navController: NavHostController) {
     val tokenManager = rememberTokenManager()
     val startDestination = if (tokenManager.hasSession()) Screen.Home.route else Screen.Login.route
 
@@ -84,6 +83,7 @@ fun printCurrentBackStack(navController: NavController) {
         @SuppressLint("RestrictedApi")
         val routes = controller.currentBackStack.value.joinToString(", ") {
             val route = it.destination.route
+            // Print all routes without query params
             route?.substringBefore("?") ?: "null"
         }
 
