@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -16,6 +17,7 @@ import ar.edu.utn.frba.inventario.api.utils.TokenManager
 import ar.edu.utn.frba.inventario.screens.HomeScreen
 import ar.edu.utn.frba.inventario.screens.LoginScreen
 import ar.edu.utn.frba.inventario.screens.OrdersScreen
+import ar.edu.utn.frba.inventario.screens.ProductDetailScreen
 import ar.edu.utn.frba.inventario.screens.ShipmentScreen
 import ar.edu.utn.frba.inventario.screens.UserScreen
 import ar.edu.utn.frba.inventario.screens.scan.ManualCodeScreen
@@ -25,6 +27,7 @@ import ar.edu.utn.frba.inventario.utils.HasCode
 import ar.edu.utn.frba.inventario.utils.ProductResultArgs
 import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.utils.withArgsDefinition
+import ar.edu.utn.frba.inventario.viewmodels.ShipmentViewModel
 
 @Composable
 fun AppNavigation(navController: NavHostController) {
@@ -75,6 +78,18 @@ fun AppNavigation(navController: NavHostController) {
             val idShipment = backStackEntry.arguments?.getString("id")?:""
             ShipmentScreen(navController = navController, id = idShipment)
         }
+        composable(
+            route = "productDetail/{productId}",
+            arguments = listOf(navArgument("productId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val productId = backStackEntry.arguments?.getString("productId") ?: ""
+            val viewModel: ShipmentViewModel = hiltViewModel()
+            ProductDetailScreen(
+                product = viewModel.getProductById(productId),
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
     }
 }
 
