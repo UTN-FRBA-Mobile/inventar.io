@@ -20,16 +20,13 @@ class UserScreenViewModel @Inject constructor(
     private val selfRepository: SelfRepository,
     private val tokenManager: TokenManager,
 ) : ViewModel() {
+
     private val _user = MutableStateFlow<UserResponse?>(null)
     val user: StateFlow<UserResponse?> = _user
 
     fun getUser() {
-        viewModelScope.launch(Dispatchers.Default) {
-            val userResult = withContext(Dispatchers.Default) {
-                selfRepository.getMyUser()
-            }
-
-            when (userResult) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val userResult = selfRepository.getMyUser()) {
                 is NetworkResult.Success -> {
                     Log.d("UserViewModel", "Success: ${userResult.data}")
                     _user.value = userResult.data

@@ -39,6 +39,7 @@ import androidx.navigation.compose.rememberNavController
 import ar.edu.utn.frba.inventario.api.model.self.UserResponse
 import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.viewmodels.UserScreenViewModel
+import kotlinx.coroutines.flow.collect
 
 @Composable
 fun UserScreen(
@@ -54,6 +55,7 @@ fun UserBodyContent(
     userScreenViewModel: UserScreenViewModel
 ) {
     val user by userScreenViewModel.user.collectAsState()
+
 
     LaunchedEffect(Unit) {
         userScreenViewModel.getUser()
@@ -78,6 +80,8 @@ fun UserBodyContent(
         }) {
             Text("Logout")
         }
+
+
         Text("parte de santi")
         if (user == null) {
             CircularProgressIndicator()
@@ -105,6 +109,9 @@ fun UserBodyContent(
                             .clip(CircleShape)
                     )*/
                     Spacer(modifier = Modifier.width(16.dp))
+                    user?.let {
+
+                    }
                     Column {
                         Text(text = user.name, fontSize = 24.sp, fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.width(16.dp))
