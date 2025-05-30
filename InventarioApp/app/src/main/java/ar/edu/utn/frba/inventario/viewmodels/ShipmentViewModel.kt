@@ -1,11 +1,15 @@
 package ar.edu.utn.frba.inventario.viewmodels
 
+import android.annotation.SuppressLint
 import android.util.Log
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.events.NavigationEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -76,16 +80,19 @@ class ShipmentViewModel @Inject constructor():ViewModel(){
         return isCompletedProduct
     }
 
+    @SuppressLint("StateFlowValueCalledInComposition")
+    @Composable
     fun getProductById(productId: String): Product {
         return try {
             _shipment.value.products.first { it.id == productId }
         } catch (e: NoSuchElementException) {
             Log.e("ShipmentViewModel", "Producto no encontrado: $productId")
+            //TODO: en lugar de mostrar la screen de producto cuando no se encuentra un producto, mostrar solo un mensaje de producto no identificado, como cuando se filtra y no hay resultados
             Product(
-                id = "unknown", name = "Producto no encontrado", quantity = 0,
-                innerLocation = "est",
-                currentStock = 22,
-                imageUrl = "a"
+                id = stringResource(R.string.unknown_product_id), name = stringResource(R.string.product_not_found), quantity = 0,
+                innerLocation = stringResource(R.string.no_location_assigned),
+                currentStock = 0,
+                imageUrl = ""
             )
         }
     }
