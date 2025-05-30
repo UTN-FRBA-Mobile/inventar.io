@@ -1,7 +1,9 @@
 package ar.edu.utn.frba.inventario.screens
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +21,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +30,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.viewmodels.Product
 import ar.edu.utn.frba.inventario.viewmodels.ShipmentViewModel
@@ -96,26 +102,41 @@ fun ShipmentBodyContent(viewModel:ShipmentViewModel, navController: NavControlle
 
 @Composable
 fun ProductItem(viewModel:ShipmentViewModel,product:Product){
-    val isComplete = viewModel.isProductCompleted(product.id)
-    val backgroundColor = if (isComplete) Color(0xFFB2FF59) else {CardDefaults.elevatedCardColors().containerColor}
-    ElevatedCard(colors = CardDefaults.elevatedCardColors(containerColor = backgroundColor)
+    val  statusProd = viewModel.isProductCompleted(product.id)
+    //val backgroundColor = if (isComplete) Color(0xFFB2FF59) else {CardDefaults.elevatedCardColors().containerColor}
+
+
+    ElevatedCard(colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
         ,modifier = Modifier
         .fillMaxSize()
         .padding(2.dp)){
-        Column(modifier = Modifier
-            .padding(15.dp)){
-            Text(text = product.name, fontWeight = FontWeight.Bold, fontSize = 15.sp,)
-            Spacer(modifier = Modifier
-                .height(10.dp))
-            Row {
-                Text(text = "${product.quantity} Requeridos")
-                Spacer(modifier = Modifier.width(25.dp)
-                    .weight(2f))
-                Box(contentAlignment = Alignment.CenterEnd,
-                    modifier = Modifier
-                        .background(color = Color.White)){
-                    Text(text="${viewModel.getLoadedQuantityProduct(product.id)} Cargados")
+        Row(modifier = Modifier
+            .fillMaxSize()){
+            Column(modifier = Modifier
+                .padding(15.dp)){
+                Text(text = product.name, fontWeight = FontWeight.Bold, fontSize = 15.sp,)
+                Spacer(modifier = Modifier
+                    .height(10.dp))
+                Row {
+                    Text(text = "${product.quantity} Requeridos")
+                    Spacer(modifier = Modifier.width(60.dp))
+                    Box(contentAlignment = Alignment.Center
+                            ){
+                        Text(text="${viewModel.getLoadedQuantityProduct(product.id)} Cargados")
+                    }
                 }
+            }
+            Spacer(modifier = Modifier.width(10.dp))
+            Box(modifier = Modifier
+                .width(50.dp)
+                .padding(start = 8.dp)
+                .align(alignment = Alignment.CenterVertically),
+                contentAlignment = Alignment.CenterEnd){
+                Image(painter = painterResource(id = statusProd.iconResourceId),
+                    contentDescription = "icono del estado de la carga de productos",
+                    modifier = Modifier.fillMaxSize(0.9f),
+                    contentScale = ContentScale.Fit)
+
             }
         }
     }
@@ -155,6 +176,11 @@ fun ButtonBox(viewModel:ShipmentViewModel, navController: NavController){
 @Preview
 @Composable
 fun vistaFinal(){
+    ShipmentScreen(navController = rememberNavController(), id = "S01-3")
+}
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun vistaFinalDark(){
     ShipmentScreen(navController = rememberNavController(), id = "S01-3")
 }
 

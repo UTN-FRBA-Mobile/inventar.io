@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import ar.edu.utn.frba.inventario.events.NavigationEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -65,9 +66,16 @@ class ShipmentViewModel @Inject constructor():ViewModel(){
         }
         }
     }
-    fun isProductCompleted(id:String):Boolean{
+    fun isProductCompleted(id:String):ItemStatus{
         val prodToScan = productToScanList.first { ps -> ps.id == id }
-        val isCompletedProduct = prodToScan.requiredQuantity == prodToScan.loadedQuantity.value
+
+        var isCompletedProduct = ItemStatus.PENDING
+
+        if(prodToScan.requiredQuantity == prodToScan.loadedQuantity.value){
+            isCompletedProduct = ItemStatus.COMPLETED
+        }else if (prodToScan.requiredQuantity < prodToScan.loadedQuantity.value){
+            isCompletedProduct = ItemStatus.BLOCKED
+        }
         return isCompletedProduct
     }
 
