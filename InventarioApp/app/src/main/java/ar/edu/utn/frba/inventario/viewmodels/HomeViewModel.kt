@@ -26,8 +26,16 @@ class HomeViewModel @Inject constructor(
                 customerName = "Este es un nombre tan largo que no debería entrar",
                 status = ItemStatus.COMPLETED,
                 products = listOf(
-                    Product("P-101", "AAAA", 1),
-                    Product("P-102", "BBBB", 2)
+                    Product(
+                        "P-101", "AAAA", 1,
+                        imageUrl = "a",
+                        innerLocation = "Pasillo 3, estante 2",
+                        currentStock = 100
+                    ),
+                    Product("P-102", "BBBB", 2,
+                        imageUrl = "a",
+                        innerLocation = "Pasillo 3, estante 2",
+                        currentStock = 100)
                 ),
                 creationDate = LocalDateTime.now().minusDays(3)
             ),
@@ -37,8 +45,14 @@ class HomeViewModel @Inject constructor(
                 customerName = "Dibu Martínez",
                 status = ItemStatus.BLOCKED,
                 products = listOf(
-                    Product("P-101", "AAAA", 1),
-                    Product("P-102", "BBBB", 2)
+                    Product("P-101", "AAAA", 1,
+                        imageUrl = "a",
+                        innerLocation = "Pasillo 3, estante 2",
+                        currentStock = 100),
+                    Product("P-102", "BBBB", 2,
+                        imageUrl = "a",
+                        innerLocation = "Pasillo 3, estante 2",
+                        currentStock = 100)
                 ),
                 creationDate = LocalDateTime.now().minusDays(3)
             ),
@@ -48,7 +62,10 @@ class HomeViewModel @Inject constructor(
                 customerName = "Enzo Fernández",
                 status = ItemStatus.PENDING,
                 products = listOf(
-                    Product("P-101", "AAAA", 1)
+                    Product("P-101", "AAAA", 1,
+                        imageUrl = "a",
+                        innerLocation = "Pasillo 3, estante 2",
+                        currentStock = 100)
                 ),
                 creationDate = LocalDateTime.now().minusDays(3)
             ),
@@ -58,8 +75,14 @@ class HomeViewModel @Inject constructor(
                 customerName = "Lionel Messi",
                 status = ItemStatus.IN_PROGRESS,
                 products = listOf(
-                    Product("P-201", "Monitor", 1),
-                    Product("P-202", "Teclado", 1)
+                    Product("P-201", "Monitor", 1,
+                        imageUrl = "a",
+                        innerLocation = "Pasillo 3, estante 2",
+                        currentStock = 100),
+                    Product("P-202", "Teclado", 1,
+                        imageUrl = "a",
+                        innerLocation = "Pasillo 3, estante 2",
+                        currentStock = 100)
                 ),
                 creationDate = LocalDateTime.now().minusDays(1)
             ),
@@ -69,20 +92,39 @@ class HomeViewModel @Inject constructor(
                 customerName = "UTN FRBA",
                 status = ItemStatus.PENDING,
                 products = listOf(
-                    Product("P-301", "ASDADS", 1),
-                    Product("P-302", "ADADASD", 3),
-                    Product("P-301", "ASDADS", 1),
-                    Product("P-302", "ADADASD", 3),
-                    Product("P-301", "ASDADS", 1),
-                    Product("P-302", "ADADASD", 3),
-                    Product("P-301", "ASDADS", 1),
-                    Product("P-302", "ADADASD", 3),
-                    Product("P-301", "ASDADS", 1),
-                    Product("P-302", "ADADASD", 3),
-                    Product("P-301", "ASDADS", 1),
-                    Product("P-302", "ADADASD", 3),
-                    Product("P-301", "ASDADS", 1),
-                    Product("P-302", "ADADASD", 3)
+                    Product("P-301", "ASDADS", 1,
+                        imageUrl = "a",
+                        innerLocation = "Pasillo 3, estante 2",
+                        currentStock = 100),
+                    Product("P-302", "ADADASD", 3,
+                        imageUrl = "a",
+                        innerLocation = "Pasillo 3, estante 2",
+                        currentStock = 100),
+                    Product("P-301", "ASDADS", 1,
+                        imageUrl = "a",
+                        innerLocation = "Pasillo 3, estante 2",
+                        currentStock = 100),
+                    Product("P-302", "ADADASD", 3,
+                        imageUrl = "a",
+                        innerLocation = "Pasillo 3, estante 2",
+                        currentStock = 100),
+                    Product("P-301", "ASDADS", 1,
+                        imageUrl = "a",
+                        innerLocation = "Pasillo 3, estante 2",
+                        currentStock = 100),
+                    Product("P-302", "ADADASD", 3,
+                        imageUrl = "a",
+                        innerLocation = "Pasillo 3, estante 2",
+                        currentStock = 100),
+                    Product("P-301", "ASDADS", 1,
+                        imageUrl = "a",
+                        innerLocation = "Pasillo 3, estante 2",
+                        currentStock = 100),
+                    Product("P-302", "ADADASD", 3,
+                        imageUrl = "a",
+                        innerLocation = "Pasillo 3, estante 2",
+                        currentStock = 100),
+
                 ),
                 creationDate = LocalDateTime.now().minusHours(5)
             ),
@@ -92,8 +134,14 @@ class HomeViewModel @Inject constructor(
                 customerName = "Julián Álvarez",
                 status = ItemStatus.COMPLETED,
                 products = listOf(
-                    Product("P-401", "Tablet", 2),
-                    Product("P-402", "Fundas", 2)
+                    Product("P-401", "Tablet", 2,
+                        imageUrl = "a",
+                        innerLocation = "Pasillo 3, estante 2",
+                        currentStock = 100),
+                    Product("P-402", "Fundas", 2,
+                        imageUrl = "a",
+                        innerLocation = "Pasillo 3, estante 2",
+                        currentStock = 100)
                 ),
                 creationDate = LocalDateTime.now().minusDays(2)
             ),
@@ -103,8 +151,14 @@ class HomeViewModel @Inject constructor(
                 customerName = "Juan Pérez",
                 status = ItemStatus.IN_PROGRESS,
                 products = listOf(
-                    Product("P-501", "adasd", 1),
-                    Product("P-502", "aaaaaaa", 1)
+                    Product("P-501", "adasd", 1,
+                        imageUrl = "a",
+                        innerLocation = "Pasillo 3, estante 2",
+                        currentStock = 100),
+                    Product("P-502", "aaaaaaa", 1,
+                        imageUrl = "a",
+                        innerLocation = "Pasillo 3, estante 2",
+                        currentStock = 100)
                 ),
                 creationDate = LocalDateTime.now().minusHours(12)
             )
