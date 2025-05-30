@@ -5,8 +5,8 @@
     <string name="branch_name">Sucursal %s</string>
     <string name="no_results_for_filters">Sin resultados para los filtros aplicados</string>
 
+    <!-- ProductDetailScreen -->
     <string name="product_detail_screen_title">Detalle del producto</string>
-
     <string name="inner_location">Ubicación en depósito</string>
     <string name="current_stock">Stock actual</string>
 
@@ -15,6 +15,7 @@
     <string name="product_not_found">Producto no encontrado</string>
     <string name="no_location_assigned">Sin ubicación asignada</string>
 
+    <!-- Shipment and Orders cards -->
     <string name="unknown_date">Fecha desconocida</string>
     <string name="received_on">Recepción confirmada: %1$s</string>
     <string name="cancelled_on">Fecha cancelación: %1$s</string>
