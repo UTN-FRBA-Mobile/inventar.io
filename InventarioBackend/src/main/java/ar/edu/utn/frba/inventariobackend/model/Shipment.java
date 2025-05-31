@@ -40,6 +40,12 @@ public class Shipment {
     private LocalDateTime lastModifiedDate;
 
     /**
+     * Location id associated to this shipment
+     */
+    @Column(nullable = false)
+    private Long idLocation;
+
+    /**
      * The name of the customer or recipient of the shipment.
      */
     @Column(nullable = false)
@@ -56,12 +62,20 @@ public class Shipment {
      * @param status           the initial state of the shipment
      * @param creationDate     the creation date
      * @param lastModifiedDate the last modified date
+     * @param idLocation       the location of the shipment
      * @param customerName     the name of the customer
      */
-    public Shipment(Status status, LocalDateTime creationDate, LocalDateTime lastModifiedDate, String customerName) {
+    public Shipment(
+        Status status,
+        LocalDateTime creationDate,
+        LocalDateTime lastModifiedDate,
+        Long idLocation,
+        String customerName
+    ) {
         this.status = status;
         this.creationDate = creationDate;
         this.lastModifiedDate = lastModifiedDate;
+        this.idLocation = idLocation;
         this.customerName = customerName;
     }
 
