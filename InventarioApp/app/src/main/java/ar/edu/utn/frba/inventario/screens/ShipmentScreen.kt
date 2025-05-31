@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -59,13 +60,11 @@ fun ShipmentBodyContent(viewModel:ShipmentViewModel, navController: NavControlle
     viewModel.loadShipment(id)
     val shipment by viewModel.shipment.collectAsState()
 
-
     Column(modifier = Modifier
         .fillMaxSize()
+        .background(MaterialTheme.colorScheme.secondaryContainer)
         .padding(innerPadding)
         ) {
-        Spacer(modifier = Modifier
-            .height(20.dp))
         Button(onClick = {navController.navigate(Screen.Home.route)}
         ){
             Text(text = "Atras")
@@ -74,16 +73,17 @@ fun ShipmentBodyContent(viewModel:ShipmentViewModel, navController: NavControlle
             .height(10.dp))
         Box(modifier = Modifier
             .fillMaxWidth()
-            .background(color = Color(0xFFE7ECFB))){
+            .background(color = MaterialTheme.colorScheme.primaryContainer)){
             Column (modifier = Modifier
                 .padding(20.dp)){
                 Text(
                     text = "Envio ${shipment.number}",
+                    style = MaterialTheme.typography.titleLarge,
                     fontSize = 25.sp,
                     fontWeight = FontWeight.Bold
                 )
-                Text(text = "Comprador: ${shipment.customerName}", fontWeight = FontWeight.SemiBold)
-                Text(text = "Total de productos unicos: ${shipment.products.size}", fontWeight = FontWeight.SemiBold)
+                Text(text = "Comprador: ${shipment.customerName}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                Text(text = "Total de productos unicos: ${shipment.products.size}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
             }
         }
         LazyColumn(modifier = Modifier
@@ -103,8 +103,6 @@ fun ShipmentBodyContent(viewModel:ShipmentViewModel, navController: NavControlle
 @Composable
 fun ProductItem(viewModel:ShipmentViewModel,product:Product){
     val  statusProd = viewModel.isProductCompleted(product.id)
-    //val backgroundColor = if (isComplete) Color(0xFFB2FF59) else {CardDefaults.elevatedCardColors().containerColor}
-
 
     ElevatedCard(colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
         ,modifier = Modifier
@@ -113,25 +111,26 @@ fun ProductItem(viewModel:ShipmentViewModel,product:Product){
         Row(modifier = Modifier
             .fillMaxSize()){
             Column(modifier = Modifier
+                .weight(1f)
                 .padding(15.dp)){
-                Text(text = product.name, fontWeight = FontWeight.Bold, fontSize = 15.sp,)
+                Text(text = product.name, fontWeight = FontWeight.Bold, fontSize = 15.sp, style = MaterialTheme.typography.bodyMedium)
                 Spacer(modifier = Modifier
                     .height(10.dp))
                 Row {
-                    Text(text = "${product.quantity} Requeridos")
+                    Text(text = "${product.quantity} Requeridos", style = MaterialTheme.typography.bodySmall)
                     Spacer(modifier = Modifier.width(60.dp))
                     Box(contentAlignment = Alignment.Center
                             ){
-                        Text(text="${viewModel.getLoadedQuantityProduct(product.id)} Cargados")
+                        Text(text="${viewModel.getLoadedQuantityProduct(product.id)} Cargados", style = MaterialTheme.typography.bodySmall)
                     }
                 }
             }
-            Spacer(modifier = Modifier.width(10.dp))
+
             Box(modifier = Modifier
-                .width(50.dp)
-                .padding(start = 8.dp)
+                .padding(end = 12.dp)
+                .size(40.dp)
                 .align(alignment = Alignment.CenterVertically),
-                contentAlignment = Alignment.CenterEnd){
+                contentAlignment = Alignment.Center){
                 Image(painter = painterResource(id = statusProd.iconResourceId),
                     contentDescription = "icono del estado de la carga de productos",
                     modifier = Modifier.fillMaxSize(0.9f),
@@ -151,18 +150,19 @@ fun ButtonBox(viewModel:ShipmentViewModel, navController: NavController){
             .padding(10.dp)){
             Row {
 
-                Button(colors = ButtonDefaults.buttonColors(Color(0xFFE7ECFB)),
-                    border = BorderStroke(1.dp, color = Color.Gray),onClick = {}, modifier = Modifier
+                Button(colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.surfaceTint),
+                    onClick = {},
+                    modifier = Modifier
                         .fillMaxSize()
                         .weight(1f)){
-                    Text(text = "Siguiente", color = Color.Black, fontSize = 25.sp,
+                    Text(text = "Siguiente", style = MaterialTheme.typography.titleMedium, fontSize = 25.sp,
                         fontWeight = FontWeight.Bold)
                 }
-                Button(onClick = { }, modifier = Modifier
+                Button(colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onSecondaryContainer), onClick = { }, modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)
                 ){
-                    Text(text = "Scan", color = Color.Black, fontSize = 25.sp,
+                    Text(text = "Scan", style = MaterialTheme.typography.titleMedium, fontSize = 25.sp,
                         fontWeight = FontWeight.Bold)
                 }
             }
