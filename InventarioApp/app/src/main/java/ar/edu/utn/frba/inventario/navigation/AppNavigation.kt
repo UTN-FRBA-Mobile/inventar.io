@@ -15,6 +15,7 @@ import androidx.navigation.navArgument
 import ar.edu.utn.frba.inventario.api.utils.TokenManager
 import ar.edu.utn.frba.inventario.screens.HomeScreen
 import ar.edu.utn.frba.inventario.screens.LoginScreen
+import ar.edu.utn.frba.inventario.screens.OrderDetailScreen
 import ar.edu.utn.frba.inventario.screens.OrdersScreen
 import ar.edu.utn.frba.inventario.screens.ShipmentScreen
 import ar.edu.utn.frba.inventario.screens.UserScreen
@@ -74,6 +75,15 @@ fun AppNavigation(navController: NavHostController) {
         )) { backStackEntry->
             val idShipment = backStackEntry.arguments?.getString("id")?:""
             ShipmentScreen(navController = navController, id = idShipment)
+        }
+        composable(route=Screen.OrderDetail.route+"/{orderId}",
+            arguments = listOf(
+                navArgument(name = "orderId"){
+                    type= NavType.StringType
+                }
+            )) { backStackEntry->
+            val idOrder = backStackEntry.arguments?.getString("orderId")?:""
+            OrderDetailScreen(navController = navController, id = idOrder)
         }
     }
 }
