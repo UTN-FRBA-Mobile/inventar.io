@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import ar.edu.utn.frba.inventario.events.NavigationEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -22,6 +23,8 @@ class ShipmentViewModel @Inject constructor():ViewModel(){
     val shipment = _shipment.asStateFlow()
 
     val productToScanList = mutableStateListOf<ProductToScan>()
+
+    val isStateCompleteShipment: MutableState<Boolean> = mutableStateOf(false)
 
     private val _navigationEvent = MutableSharedFlow<NavigationEvent?>()
     val navigationEvent = _navigationEvent.asSharedFlow()
@@ -61,14 +64,25 @@ class ShipmentViewModel @Inject constructor():ViewModel(){
         {
             p.loadedQuantity.value = newValue
             Log.d("ShipmentViewModel", "Se actualizo el valor de loadedQuantity a ${p.loadedQuantity.value} del producto $id")
-
         }
         }
+        isCompletedShipment()
     }
-    fun isProductCompleted(id:String):Boolean{
+    fun isProductCompleted(id:String):ItemStatus{
         val prodToScan = productToScanList.first { ps -> ps.id == id }
-        val isCompletedProduct = prodToScan.requiredQuantity == prodToScan.loadedQuantity.value
+
+        var isCompletedProduct = ItemStatus.PENDING
+
+        if(prodToScan.requiredQuantity == prodToScan.loadedQuantity.value){
+            isCompletedProduct = ItemStatus.COMPLETED
+        }else if (prodToScan.requiredQuantity < prodToScan.loadedQuantity.value){
+            isCompletedProduct = ItemStatus.BLOCKED
+        }
         return isCompletedProduct
+    }
+
+    fun isCompletedShipment(){
+        isStateCompleteShipment.value = productToScanList.all { ps -> ps.requiredQuantity == ps.loadedQuantity.value}
     }
 
     data class ProductToScan(
