@@ -24,6 +24,8 @@ class ShipmentViewModel @Inject constructor():ViewModel(){
 
     val productToScanList = mutableStateListOf<ProductToScan>()
 
+    val isStateCompleteShipment: MutableState<Boolean> = mutableStateOf(false)
+
     private val _navigationEvent = MutableSharedFlow<NavigationEvent?>()
     val navigationEvent = _navigationEvent.asSharedFlow()
 
@@ -62,9 +64,9 @@ class ShipmentViewModel @Inject constructor():ViewModel(){
         {
             p.loadedQuantity.value = newValue
             Log.d("ShipmentViewModel", "Se actualizo el valor de loadedQuantity a ${p.loadedQuantity.value} del producto $id")
-
         }
         }
+        isCompletedShipment()
     }
     fun isProductCompleted(id:String):ItemStatus{
         val prodToScan = productToScanList.first { ps -> ps.id == id }
@@ -77,6 +79,10 @@ class ShipmentViewModel @Inject constructor():ViewModel(){
             isCompletedProduct = ItemStatus.BLOCKED
         }
         return isCompletedProduct
+    }
+
+    fun isCompletedShipment(){
+        isStateCompleteShipment.value = productToScanList.all { ps -> ps.requiredQuantity == ps.loadedQuantity.value}
     }
 
     data class ProductToScan(

@@ -67,7 +67,7 @@ fun ShipmentBodyContent(viewModel:ShipmentViewModel, navController: NavControlle
         ) {
         Button(onClick = {navController.navigate(Screen.Home.route)}
         ){
-            Text(text = "Atras")
+            Text(text = "Atras", style = MaterialTheme.typography.titleMedium)
         }
         Spacer(modifier = Modifier
             .height(10.dp))
@@ -149,8 +149,8 @@ fun ButtonBox(viewModel:ShipmentViewModel, navController: NavController){
             .height(70.dp)
             .padding(10.dp)){
             Row {
-
                 Button(colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.surfaceTint),
+                    enabled = viewModel.isStateCompleteShipment.value,
                     onClick = {},
                     modifier = Modifier
                         .fillMaxSize()
@@ -158,7 +158,9 @@ fun ButtonBox(viewModel:ShipmentViewModel, navController: NavController){
                     Text(text = "Siguiente", style = MaterialTheme.typography.titleMedium, fontSize = 25.sp,
                         fontWeight = FontWeight.Bold)
                 }
-                Button(colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onSecondaryContainer), onClick = { }, modifier = Modifier
+                Button(colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onSecondaryContainer),
+                    onClick = { },
+                    modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)
                 ){
