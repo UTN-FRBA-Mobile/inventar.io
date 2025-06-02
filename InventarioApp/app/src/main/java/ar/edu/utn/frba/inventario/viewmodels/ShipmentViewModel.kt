@@ -77,17 +77,17 @@ class ShipmentViewModel @Inject constructor():ViewModel(){
         }
         isCompletedShipment()
     }
-    fun isProductCompleted(id:String):ItemStatus{
+    fun getProductStatus(id:String):ItemStatus{
         val prodToScan = productToScanList.first { ps -> ps.id == id }
 
-        var isCompletedProduct = ItemStatus.PENDING
+        var productStatus = ItemStatus.PENDING
 
         if(prodToScan.requiredQuantity == prodToScan.loadedQuantity.value){
-            isCompletedProduct = ItemStatus.COMPLETED
+            productStatus = ItemStatus.COMPLETED
         }else if (prodToScan.requiredQuantity < prodToScan.loadedQuantity.value){
-            isCompletedProduct = ItemStatus.BLOCKED
+            productStatus = ItemStatus.BLOCKED
         }
-        return isCompletedProduct
+        return productStatus
     }
 
     fun isCompletedShipment(){

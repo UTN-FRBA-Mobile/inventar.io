@@ -95,36 +95,38 @@ fun OrderBodyContent(
                     modifier = Modifier.weight(1f)
                 ) {
                     itemsIndexed(orders) { _, order ->
-                        CardItem(navController, order)
+                        CardItem(navController, order, onItemClick = { clickedItem ->
+                            navController.navigate(Screen.OrderDetail.route + "/${clickedItem.id}")
+                        })
                     }
                 }
             }
         }
 
-        FloatingActionButton(
-            onClick = { navController.navigate(Screen.Scan.route) },
-            shape = RoundedCornerShape(50),
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(16.dp)
-                .height(40.dp),
-            containerColor = MaterialTheme.colorScheme.primary
-        ) {
-            Text(
-                text = "Escanear",
-                style = MaterialTheme.typography.labelLarge,
-                modifier = Modifier.padding(horizontal = 15.dp, vertical = 0.dp)
-            )
-        }
+            FloatingActionButton(
+                onClick = { navController.navigate(Screen.Scan.route) },
+                shape = RoundedCornerShape(50),
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(16.dp)
+                    .height(40.dp),
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
+                Text(
+                    text = "Escanear",
+                    style = MaterialTheme.typography.labelLarge,
+                    modifier = Modifier.padding(horizontal = 15.dp, vertical = 0.dp)
+                )
+            }
 
-        BackHandler {
-            navController.navigate(Screen.Home.route) {
-                popUpTo(navController.graph.startDestinationId) {
-                    saveState = true
+            BackHandler {
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(navController.graph.startDestinationId) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
                 }
-                launchSingleTop = true
-                restoreState = true
             }
         }
     }
-}

@@ -24,6 +24,7 @@ import ar.edu.utn.frba.inventario.components.BranchLocationBar
 import ar.edu.utn.frba.inventario.components.CardItem
 import ar.edu.utn.frba.inventario.components.EmptyResultsMessage
 import ar.edu.utn.frba.inventario.components.StatusFilter
+import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.viewmodels.HomeViewModel
 
 @Composable
@@ -80,7 +81,9 @@ fun HomeBodyContent(
                 modifier = Modifier.weight(1f)
             ) {
                 itemsIndexed(shipments) { _, shipment ->
-                    CardItem(navController, shipment)
+                    CardItem(navController, shipment, onItemClick = { clickedItem ->
+                        navController.navigate(Screen.Shipment.route + "/${clickedItem.id}")
+                    })
                 }
             }
         }
