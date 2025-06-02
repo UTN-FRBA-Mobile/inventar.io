@@ -89,7 +89,7 @@ fun AppNavigation(navController: NavHostController) {
             OrderDetailScreen(navController = navController, id = idOrder)
         }
         composable(
-            route = "productDetail/{productId}",
+            route = Screen.ProductDetail.route +  "/{productId}",
             arguments = listOf(navArgument("productId") { type = NavType.StringType })
         ) { backStackEntry ->
             val productId = backStackEntry.arguments?.getString("productId") ?: ""

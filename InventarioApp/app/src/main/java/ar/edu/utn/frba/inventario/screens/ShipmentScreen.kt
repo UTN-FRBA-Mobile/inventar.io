@@ -99,7 +99,7 @@ fun ShipmentBodyContent(
                 product ->
                 ProductItem(viewModel,product,
                     onProductClick = { clickedProduct ->
-                        navController.navigate("productDetail/${clickedProduct.id}")
+                        navController.navigate(Screen.ProductDetail.route + "/${clickedProduct.id}")
                     })
                 Spacer(modifier = Modifier.height(5.dp))
             }

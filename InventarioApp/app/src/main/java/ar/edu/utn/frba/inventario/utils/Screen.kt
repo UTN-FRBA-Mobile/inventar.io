@@ -11,7 +11,8 @@ enum class Screen(val route: String) {
     OrderDetail("orderdetail"),
     Scan("scan"),
     ProductResult("product_result"),
-    ManualCode("manual_code");
+    ManualCode("manual_code"),
+    ProductDetail("product_detail");
 }
 
 enum class ProductResultArgs(override val code: String) : HasCode {
