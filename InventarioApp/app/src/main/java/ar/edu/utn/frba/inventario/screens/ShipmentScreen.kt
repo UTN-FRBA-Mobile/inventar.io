@@ -3,11 +3,13 @@ package ar.edu.utn.frba.inventario.screens
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,6 +21,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,34 +37,44 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.utils.Screen
-import ar.edu.utn.frba.inventario.viewmodels.Product
+
 import ar.edu.utn.frba.inventario.viewmodels.ShipmentViewModel
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShipmentScreen(viewModel:ShipmentViewModel = hiltViewModel(), navController: NavController, id:String){
-    Scaffold(bottomBar = {ButtonBox(viewModel,navController)}){
-        innerPadding ->
-        ShipmentBodyContent(viewModel, navController, id,innerPadding)
+fun ShipmentScreen(
+    viewModel: ShipmentViewModel = hiltViewModel(),
+    navController: NavController,
+    id: String
+) {
+    Scaffold(
+        contentWindowInsets = WindowInsets(0.dp),
+        bottomBar = { ButtonBox(viewModel, navController) }
+    ) { innerPadding ->
+        ShipmentBodyContent(viewModel, navController, id, innerPadding)
     }
-
 }
+
 @Composable
-fun ShipmentBodyContent(viewModel:ShipmentViewModel, navController: NavController, id:String, innerPadding: PaddingValues){
+fun ShipmentBodyContent(
+    viewModel: ShipmentViewModel,
+    navController: NavController,
+    id: String,
+    innerPadding: PaddingValues
+) {
     viewModel.loadShipment(id)
     val shipment by viewModel.shipment.collectAsState()
 
-
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(innerPadding)
-        ) {
-        Spacer(modifier = Modifier
-            .height(20.dp))
-        Button(onClick = {navController.navigate(Screen.Home.route)}
-        ){
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+    ) {
+        Button(onClick = { navController.navigate(Screen.Home.route) }) {
             Text(text = "Atras")
         }
         Spacer(modifier = Modifier
@@ -84,7 +97,10 @@ fun ShipmentBodyContent(viewModel:ShipmentViewModel, navController: NavControlle
             .padding(15.dp)) {
             items(shipment.products){
                 product ->
-                ProductItem(viewModel,product)
+                ProductItem(viewModel,product,
+                    onProductClick = { clickedProduct ->
+                        navController.navigate(Screen.ProductDetail.route + "/${clickedProduct.id}")
+                    })
                 Spacer(modifier = Modifier.height(5.dp))
             }
         }
@@ -95,13 +111,16 @@ fun ShipmentBodyContent(viewModel:ShipmentViewModel, navController: NavControlle
 }
 
 @Composable
-fun ProductItem(viewModel:ShipmentViewModel,product:Product){
+fun ProductItem(viewModel:ShipmentViewModel,product:Product,
+                onProductClick: (Product) -> Unit ){
     val isComplete = viewModel.isProductCompleted(product.id)
     val backgroundColor = if (isComplete) Color(0xFFB2FF59) else {CardDefaults.elevatedCardColors().containerColor}
     ElevatedCard(colors = CardDefaults.elevatedCardColors(containerColor = backgroundColor)
         ,modifier = Modifier
         .fillMaxSize()
-        .padding(2.dp)){
+        .padding(2.dp)
+            .clickable { onProductClick(product)}
+    ){
         Column(modifier = Modifier
             .padding(15.dp)){
             Text(text = product.name, fontWeight = FontWeight.Bold, fontSize = 15.sp,)
