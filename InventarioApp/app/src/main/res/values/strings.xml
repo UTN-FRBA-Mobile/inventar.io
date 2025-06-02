@@ -1,13 +1,26 @@
 <resources>
+    <!-- Others -->
     <string name="app_name">Inventario</string>
     <string name="all_status_selected">Todos</string>
     <string name="branch_name">Sucursal %s</string>
+    <string name="no_results_for_filters">Sin resultados para los filtros aplicados</string>
+
+    <!-- ProductDetailScreen -->
+    <string name="product_detail_screen_title">Detalle del producto</string>
+    <string name="inner_location">Ubicación en depósito</string>
+    <string name="current_stock">Stock actual</string>
+
+    <!-- ShipmentViewModel -->
+    <string name="unknown_product_id">Producto no identificado</string>
+    <string name="product_not_found">Producto no encontrado</string>
+    <string name="no_location_assigned">Sin ubicación asignada</string>
+
+    <!-- Shipment and Orders cards -->
     <string name="unknown_date">Fecha desconocida</string>
     <string name="received_on">Recepción confirmada: %1$s</string>
     <string name="cancelled_on">Fecha cancelación: %1$s</string>
     <string name="pending_reception">Recepción estimada: %1$s</string>
     <string name="created_date">Fecha creación: %1$s</string>
-    <string name="no_results_for_filters">Sin resultados para los filtros aplicados</string>
 
     <!-- ScanScreen -->
     <string name="scan_camera_permission_denied_title">Permiso de camara requerido para escanear</string>

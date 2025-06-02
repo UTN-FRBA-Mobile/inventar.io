@@ -1,11 +1,16 @@
 package ar.edu.utn.frba.inventario.viewmodels
 
+import android.annotation.SuppressLint
 import android.util.Log
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ar.edu.utn.frba.inventario.R
+import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import ar.edu.utn.frba.inventario.events.NavigationEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -51,7 +56,11 @@ class ShipmentViewModel @Inject constructor():ViewModel(){
     }
 
     private fun loadProductToScanList(products:List<Product>){
-        products.forEach { p->productToScanList.add(ProductToScan(id = p.id, requiredQuantity = p.quantity)) }
+        products.forEach { p->productToScanList.add(ProductToScan(
+            id = p.id, requiredQuantity = p.quantity,
+            innerLocation = "",
+            currentStock = 222
+        )) }
     }
 
     fun getLoadedQuantityProduct(id:String):Int{
@@ -85,10 +94,30 @@ class ShipmentViewModel @Inject constructor():ViewModel(){
         isStateCompleteShipment.value = productToScanList.all { ps -> ps.requiredQuantity == ps.loadedQuantity.value}
     }
 
+    @SuppressLint("StateFlowValueCalledInComposition")
+    @Composable
+    fun getProductById(productId: String): Product {
+        return try {
+            _shipment.value.products.first { it.id == productId }
+        } catch (e: NoSuchElementException) {
+            Log.e("ShipmentViewModel", "Producto no encontrado: $productId")
+            //TODO: en lugar de mostrar la screen de producto cuando no se encuentra un producto, mostrar solo un mensaje de producto no identificado, como cuando se filtra y no hay resultados
+            Product(
+                id = stringResource(R.string.unknown_product_id), name = stringResource(R.string.product_not_found), quantity = 0,
+                innerLocation = stringResource(R.string.no_location_assigned),
+                currentStock = 0,
+                imageUrl = ""
+            )
+        }
+    }
+
     data class ProductToScan(
         val id: String,
         val requiredQuantity: Int,
-        val loadedQuantity: MutableState<Int> = mutableStateOf(0)
+        val loadedQuantity: MutableState<Int> = mutableStateOf(0),
+        val innerLocation: String,
+        val currentStock: Int
+
     )
 
     //Para pruebas, hasta que este el endponit
@@ -102,8 +131,18 @@ class ShipmentViewModel @Inject constructor():ViewModel(){
                     customerName = "Este es un nombre tan largo que no debería entrar",
                     //status = ShipmentStatus.COMPLETED,
                     products = listOf(
-                        Product("P-101", "AAAA", 1),
-                        Product("P-102", "BBBB", 2)
+                        Product(
+                            "P-101", "AAAA", 1,
+                            innerLocation = "est",
+                            currentStock = 22,
+                            imageUrl = "a"
+                        ),
+                        Product(
+                            "P-102", "BBBB", 2,
+                            innerLocation = "est",
+                            currentStock = 22,
+                            imageUrl = "a"
+                        )
                     ),
                     creationDate = LocalDateTime.now().minusDays(3)
                 ),
@@ -113,8 +152,18 @@ class ShipmentViewModel @Inject constructor():ViewModel(){
                     customerName = "Dibu Martínez",
                     //status = ShipmentStatus.BLOCKED,
                     products = listOf(
-                        Product("P-101", "AAAA", 1),
-                        Product("P-102", "BBBB", 2)
+                        Product(
+                            "P-101", "AAAA", 1,
+                            innerLocation = "est",
+                            currentStock = 22,
+                            imageUrl = "a"
+                        ),
+                        Product(
+                            "P-102", "BBBB", 2,
+                            innerLocation = "est",
+                            currentStock = 22,
+                            imageUrl = "a"
+                        )
                     ),
                     creationDate = LocalDateTime.now().minusDays(3)
                 ),
@@ -124,7 +173,11 @@ class ShipmentViewModel @Inject constructor():ViewModel(){
                     customerName = "Enzo Fernández",
                     //status = ShipmentStatus.PENDING,
                     products = listOf(
-                        Product("P-101", "AAAA", 1)
+                        Product("P-101", "Resma de papel A4", 1,
+                            innerLocation = "est",
+                            currentStock = 22,
+                            imageUrl = "a"
+                        )
                     ),
                     creationDate = LocalDateTime.now().minusDays(3)
                 ),
@@ -134,9 +187,10 @@ class ShipmentViewModel @Inject constructor():ViewModel(){
                     customerName = "Lionel Messi",
                     //status = ShipmentStatus.IN_PROGRESS,
                     products = listOf(
-                        Product("P-201", "Monitor", 1),
-                        Product("P-202", "Teclado", 1)
-                    ),
+                        Product("P-201", "Monitor", 1,
+                            innerLocation = "est",
+                            currentStock = 22,
+                            imageUrl = "a")),
                     creationDate = LocalDateTime.now().minusDays(1)
                 ),
                 Shipment(
@@ -145,20 +199,14 @@ class ShipmentViewModel @Inject constructor():ViewModel(){
                     customerName = "UTN FRBA",
                     //status = ShipmentStatus.PENDING,
                     products = listOf(
-                        Product("P-301", "ASDADS", 1),
-                        Product("P-302", "ADADASD", 3),
-                        Product("P-301", "ASDADS", 1),
-                        Product("P-302", "ADADASD", 3),
-                        Product("P-301", "ASDADS", 1),
-                        Product("P-302", "ADADASD", 3),
-                        Product("P-301", "ASDADS", 1),
-                        Product("P-302", "ADADASD", 3),
-                        Product("P-301", "ASDADS", 1),
-                        Product("P-302", "ADADASD", 3),
-                        Product("P-301", "ASDADS", 1),
-                        Product("P-302", "ADADASD", 3),
-                        Product("P-301", "ASDADS", 1),
-                        Product("P-302", "ADADASD", 3)
+                        Product("P-301", "ASDADS", 1,
+                            innerLocation = "est",
+                            currentStock = 22,
+                            imageUrl = "a"),
+                        Product("P-302", "ADADASD", 3,
+                            innerLocation = "est",
+                            currentStock = 22,
+                            imageUrl = "a")
                     ),
                     creationDate = LocalDateTime.now().minusHours(5)
                 ),
@@ -168,8 +216,14 @@ class ShipmentViewModel @Inject constructor():ViewModel(){
                     customerName = "Julián Álvarez",
                     //status = ShipmentStatus.COMPLETED,
                     products = listOf(
-                        Product("P-401", "Tablet", 2),
-                        Product("P-402", "Fundas", 2)
+                        Product("P-401", "Tablet", 2,
+                            innerLocation = "est",
+                            currentStock = 22,
+                            imageUrl = "a"),
+                        Product("P-402", "Fundas", 2,
+                            innerLocation = "est",
+                            currentStock = 22,
+                            imageUrl = "a")
                     ),
                     creationDate = LocalDateTime.now().minusDays(2)
                 ),
@@ -179,8 +233,16 @@ class ShipmentViewModel @Inject constructor():ViewModel(){
                     customerName = "Juan Pérez",
                     //status = ShipmentStatus.IN_PROGRESS,
                     products = listOf(
-                        Product("P-501", "adasd", 1),
-                        Product("P-502", "aaaaaaa", 1)
+                        Product(
+                            "P-501", "adasd", 1,
+                            innerLocation = "est",
+                            currentStock = 22,
+                            imageUrl = "a"
+                        ),
+                        Product("P-502", "aaaaaaa", 1,
+                            innerLocation = "est",
+                            currentStock = 22,
+                            imageUrl = "a")
                     ),
                     creationDate = LocalDateTime.now().minusHours(12)
                 )
@@ -201,43 +263,15 @@ data class Shipment(
     val customerName: String,
     //val status: ShipmentStatus,
     val products: List<Product> = listOf(
-        Product("P-001", "Producto Ejemplo 1", 1),
-        Product("P-002", "Producto Ejemplo 2", 2)
+        Product("P-101", "Resma de papel A4", 1,
+            innerLocation = "Pasillo 5 • Estante 3",
+            currentStock = 222,
+            imageUrl = "a"),
+        Product("P-002", "Producto Ejemplo 2", 2,
+            innerLocation = "est",
+            currentStock = 22,
+            imageUrl = "a")
     ),
     val creationDate: LocalDateTime = LocalDateTime.now(), // esto variaría según fecha de creación
     val responsible: String? = "Sin responsable"
 )
-//Luego usar uno que se defina en api/model
-data class Product(
-    val id: String,
-    val name: String,
-    val quantity: Int
-)
-
-
-//enum class ShipmentStatus(
-//    val color: Color,
-//    val displayName: String,
-//    val iconResourceId: Int
-//) {
-//    PENDING(
-//        color = GreyPending,
-//        displayName = "Pendiente",
-//        iconResourceId = R.drawable.pending
-//    ),
-//    IN_PROGRESS(
-//        color = YellowInProgress,
-//        displayName = "En Progreso",
-//        iconResourceId = R.drawable.in_progress
-//    ),
-//    COMPLETED(
-//        color = GreenCompleted,
-//        displayName = "Completado",
-//        iconResourceId = R.drawable.completed
-//    ),
-//    BLOCKED(
-//        color = RedBlocked,
-//        displayName = "Bloqueado",
-//        iconResourceId = R.drawable.blocked
-//    )
-//}
