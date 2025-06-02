@@ -46,7 +46,7 @@ public class UserController {
     @GetMapping("/self")
     public GetUserResponse getSelf() {
         String username = tokenUtils.getUsernameFromToken();
-        return GetUserResponse.from(userService.findByUsername(username)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+        return userService.findFullByUsername(username)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 }
