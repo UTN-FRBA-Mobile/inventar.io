@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         applicationId = "ar.edu.utn.frba.inventario"
-        minSdk = 32
+        minSdk = 31
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"

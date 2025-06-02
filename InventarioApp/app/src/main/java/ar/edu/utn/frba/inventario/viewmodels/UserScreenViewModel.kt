@@ -11,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -22,10 +23,10 @@ class UserScreenViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _user = MutableStateFlow<UserResponse?>(null)
-    val user: StateFlow<UserResponse?> = _user
+    val user = _user.asStateFlow()
 
     fun getUser() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             when (val userResult = selfRepository.getMyUser()) {
                 is NetworkResult.Success -> {
                     Log.d("UserViewModel", "Success: ${userResult.data}")

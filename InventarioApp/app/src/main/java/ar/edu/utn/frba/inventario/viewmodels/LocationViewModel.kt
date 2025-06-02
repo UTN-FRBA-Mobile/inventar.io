@@ -11,13 +11,18 @@ import com.google.android.gms.location.Priority
 import kotlinx.coroutines.launch
 
 import android.content.Context
+import android.location.Geocoder
 import android.os.Looper
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.withContext
+import java.io.IOException
+import java.util.Locale
 import javax.inject.Inject
 
 
@@ -68,5 +73,20 @@ class LocationViewModel @Inject constructor(
             context,
             Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    suspend fun getAddressFromLocation(
+        context: Context,
+        latitude: Double,
+        longitude: Double
+    ): String? = withContext(Dispatchers.IO) {
+        try {
+            val geocoder = Geocoder(context, Locale.getDefault())
+            val addresses = geocoder.getFromLocation(latitude, longitude, 1)
+            addresses?.firstOrNull()?.getAddressLine(0)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null
+        }
     }
 }
