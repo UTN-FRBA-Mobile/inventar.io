@@ -49,6 +49,12 @@ public class Order {
     private String sender;
 
     /**
+     * Location id associated to this order
+     */
+    @Column(nullable = false)
+    private Long idLocation;
+
+    /**
      * Default constructor required by JPA.
      */
     public Order() {}
@@ -60,6 +66,7 @@ public class Order {
      * @param creationDate     the creation date
      * @param scheduledDate    the scheduled date
      * @param lastModifiedDate the last modified date
+     * @param idLocation       the id of the location
      * @param sender           the originator of the order
      */
     public Order(
@@ -67,12 +74,14 @@ public class Order {
         LocalDateTime creationDate,
         LocalDateTime scheduledDate,
         LocalDateTime lastModifiedDate,
+        Long idLocation,
         String sender
     ) {
         this.status = status;
         this.creationDate = creationDate;
         this.scheduledDate = scheduledDate;
         this.lastModifiedDate = lastModifiedDate;
+        this.idLocation = idLocation;
         this.sender = sender;
     }
 
