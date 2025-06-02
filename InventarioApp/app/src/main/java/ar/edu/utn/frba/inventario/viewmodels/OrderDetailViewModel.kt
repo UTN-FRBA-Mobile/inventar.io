@@ -50,8 +50,14 @@ class OrderDetailViewModel @Inject constructor(): ViewModel(){
                     sender = "Cliente Premium",
                     status = ItemStatus.PENDING,
                     products = listOf(
-                        Product("P-101", "Producto A", 2),
-                        Product("P-102", "Producto B", 3)
+                        Product("P-101", "Producto A", 2,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100),
+                        Product("P-102", "Producto B", 3,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100)
                     ),
                     estimatedReceiptDate = LocalDateTime.now().plusDays(2)
                 ),
@@ -61,7 +67,10 @@ class OrderDetailViewModel @Inject constructor(): ViewModel(){
                     sender = "Cliente Regular",
                     status = ItemStatus.COMPLETED,
                     products = listOf(
-                        Product("P-201", "Producto C", 5)
+                        Product("P-201", "Producto C", 5,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100)
                     ),
                     confirmedReceiptDate = LocalDateTime.now().plusDays(1)
                 ),
@@ -71,8 +80,14 @@ class OrderDetailViewModel @Inject constructor(): ViewModel(){
                     sender = "Cliente VIP",
                     status = ItemStatus.COMPLETED,
                     products = listOf(
-                        Product("P-301", "Producto D", 1),
-                        Product("P-302", "Producto E", 2)
+                        Product("P-301", "Producto D", 1,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100),
+                        Product("P-302", "Producto E", 2,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100)
                     ),
                     confirmedReceiptDate = LocalDateTime.now().minusDays(1)
                 ),
@@ -82,7 +97,10 @@ class OrderDetailViewModel @Inject constructor(): ViewModel(){
                     sender = "Cliente Prueba",
                     status = ItemStatus.CANCELLED,
                     products = listOf(
-                        Product("P-401", "Producto F", 4)
+                        Product("P-401", "Producto F", 4,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100)
                     ),
                     cancellationDate = LocalDateTime.now().minusHours(3)
                 ),
@@ -92,7 +110,10 @@ class OrderDetailViewModel @Inject constructor(): ViewModel(){
                     sender = "Empresa X",
                     status = ItemStatus.CANCELLED,
                     products = List(15) { index ->
-                        Product("P-50${index+1}", "Producto ${index+1}", index+1)
+                        Product("P-50${index+1}", "Producto ${index+1}", index+1,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100)
                     },
                     cancellationDate = LocalDateTime.now().plusDays(3)
                 ),
@@ -102,8 +123,14 @@ class OrderDetailViewModel @Inject constructor(): ViewModel(){
                     sender = "Cliente VIP",
                     status = ItemStatus.COMPLETED,
                     products = listOf(
-                        Product("P-301", "Producto D", 1),
-                        Product("P-302", "Producto E", 2)
+                        Product("P-301", "Producto D", 1,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100),
+                        Product("P-302", "Producto E", 2,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100)
                     ),
                     confirmedReceiptDate = LocalDateTime.now().minusDays(1)
                 ),
@@ -113,8 +140,10 @@ class OrderDetailViewModel @Inject constructor(): ViewModel(){
                     sender = "Cliente VIP",
                     status = ItemStatus.COMPLETED,
                     products = listOf(
-                        Product("P-301", "Producto D", 1),
-                        Product("P-302", "Producto E", 2)
+                        Product("P-301", "Producto D", 1,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100)
                     ),
                     confirmedReceiptDate = LocalDateTime.now().minusDays(1)
                 ),
@@ -124,8 +153,14 @@ class OrderDetailViewModel @Inject constructor(): ViewModel(){
                     sender = "Cliente VIP",
                     status = ItemStatus.COMPLETED,
                     products = listOf(
-                        Product("P-301", "Producto D", 1),
-                        Product("P-302", "Producto E", 2)
+                        Product("P-301", "Producto D", 1,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100),
+                        Product("P-302", "Producto E", 2,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100)
                     ),
                     confirmedReceiptDate = LocalDateTime.now().minusDays(1)
                 ),
@@ -135,8 +170,14 @@ class OrderDetailViewModel @Inject constructor(): ViewModel(){
                     sender = "Cliente VIP",
                     status = ItemStatus.COMPLETED,
                     products = listOf(
-                        Product("P-301", "Producto D", 1),
-                        Product("P-302", "Producto E", 2)
+                        Product("P-301", "Producto D", 1,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100),
+                        Product("P-302", "Producto E", 2,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100)
                     ),
                     confirmedReceiptDate = LocalDateTime.now().minusDays(1)
                 ),
@@ -146,8 +187,14 @@ class OrderDetailViewModel @Inject constructor(): ViewModel(){
                     sender = "Cliente VIP",
                     status = ItemStatus.COMPLETED,
                     products = listOf(
-                        Product("P-301", "Producto D", 1),
-                        Product("P-302", "Producto E", 2)
+                        Product("P-301", "Producto D", 1,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100),
+                        Product("P-302", "Producto E", 2,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100)
                     ),
                     confirmedReceiptDate = LocalDateTime.now().minusDays(1)
                 ),
@@ -157,8 +204,10 @@ class OrderDetailViewModel @Inject constructor(): ViewModel(){
                     sender = "Cliente VIP",
                     status = ItemStatus.COMPLETED,
                     products = listOf(
-                        Product("P-301", "Producto D", 1),
-                        Product("P-302", "Producto E", 2)
+                        Product("P-301", "Producto D", 1,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100)
                     ),
                     confirmedReceiptDate = LocalDateTime.now().minusDays(1)
                 ),
@@ -168,8 +217,14 @@ class OrderDetailViewModel @Inject constructor(): ViewModel(){
                     sender = "Cliente VIP",
                     status = ItemStatus.COMPLETED,
                     products = listOf(
-                        Product("P-301", "Producto D", 1),
-                        Product("P-302", "Producto E", 2)
+                        Product("P-301", "Producto D", 1,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100),
+                        Product("P-302", "Producto E", 2,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100)
                     ),
                     confirmedReceiptDate = LocalDateTime.now().minusDays(1)
                 ),
@@ -179,8 +234,14 @@ class OrderDetailViewModel @Inject constructor(): ViewModel(){
                     sender = "Cliente VIP",
                     status = ItemStatus.COMPLETED,
                     products = listOf(
-                        Product("P-301", "Producto D", 1),
-                        Product("P-302", "Producto E", 2)
+                        Product("P-301", "Producto D", 1,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100),
+                        Product("P-302", "Producto E", 2,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100)
                     ),
                     confirmedReceiptDate = LocalDateTime.now().minusDays(1)
                 ),
@@ -190,8 +251,14 @@ class OrderDetailViewModel @Inject constructor(): ViewModel(){
                     sender = "Cliente VIP",
                     status = ItemStatus.COMPLETED,
                     products = listOf(
-                        Product("P-301", "Producto D", 1),
-                        Product("P-302", "Producto E", 2)
+                        Product("P-301", "Producto D", 1,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100),
+                        Product("P-302", "Producto E", 2,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100)
                     ),
                     confirmedReceiptDate = LocalDateTime.now().minusDays(1)
                 ),
@@ -201,8 +268,14 @@ class OrderDetailViewModel @Inject constructor(): ViewModel(){
                     sender = "Cliente VIP",
                     status = ItemStatus.COMPLETED,
                     products = listOf(
-                        Product("P-301", "Producto D", 1),
-                        Product("P-302", "Producto E", 2)
+                        Product("P-301", "Producto D", 1,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100),
+                        Product("P-302", "Producto E", 2,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100)
                     ),
                     confirmedReceiptDate = LocalDateTime.now().minusDays(1)
                 ),
@@ -212,8 +285,14 @@ class OrderDetailViewModel @Inject constructor(): ViewModel(){
                     sender = "Cliente VIP",
                     status = ItemStatus.COMPLETED,
                     products = listOf(
-                        Product("P-301", "Producto D", 1),
-                        Product("P-302", "Producto E", 2)
+                        Product("P-301", "Producto D", 1,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100),
+                        Product("P-302", "Producto E", 2,
+                            imageUrl = "a",
+                            innerLocation = "Pasillo 3, estante 2",
+                            currentStock = 100)
                     ),
                     confirmedReceiptDate = LocalDateTime.now().minusDays(1)
                 ),
@@ -225,4 +304,6 @@ class OrderDetailViewModel @Inject constructor(): ViewModel(){
         return result
     }
 }
+
+
 
