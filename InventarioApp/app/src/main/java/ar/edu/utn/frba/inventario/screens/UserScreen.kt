@@ -132,11 +132,13 @@ fun UserBodyContent(
                     color = MaterialTheme.colorScheme.primary
                 )
                 LazyColumn(modifier = Modifier.padding(8.dp)) {
-                    items(testLocations.size) { index ->
+                    items(user!!.allowedLocations.size) { index ->
                         var address by remember { mutableStateOf<String?>(null) }
-                        LaunchedEffect(testLocations[index].latitude, testLocations[index].longitude) {
-                            address = locationViewModel.getAddressFromLocation(context, testLocations[index].latitude, testLocations[index].longitude)
+
+                        LaunchedEffect(user!!.allowedLocations[index].latitude, user!!.allowedLocations[index].longitude) {
+                            address = locationViewModel.getAddressFromLocation(context, user!!.allowedLocations[index].latitude, user!!.allowedLocations[index].longitude)
                         }
+
                         Column(modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp)) {
@@ -146,7 +148,7 @@ fun UserBodyContent(
                                     containerColor = MaterialTheme.colorScheme.surface
                                 )
                             ){
-                                Text(text = testLocations[index].name, fontSize = 18.sp, modifier = Modifier.padding(10.dp))
+                                Text(text = user!!.allowedLocations[index].name, fontSize = 18.sp, modifier = Modifier.padding(10.dp))
                                 Text(
                                     text = address ?: "Cargando...",
                                     fontSize = 14.sp,
