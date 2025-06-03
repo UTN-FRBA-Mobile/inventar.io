@@ -99,4 +99,8 @@ dependencies {
 
     // For reading barcode
     implementation(libs.barcode.scanning)
+
+    //for maps
+    implementation(libs.maps.compose)
+    //implementation(libs.play.services.maps)
 }
