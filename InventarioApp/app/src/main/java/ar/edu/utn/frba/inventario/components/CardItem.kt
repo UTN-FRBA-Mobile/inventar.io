@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.inventario.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,14 +26,16 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.api.model.item.Item
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
+import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.utils.Screen
 
 @Composable
-fun CardItem(navController: NavController, item: Item) {
-    Card(onClick = {navController.navigate(Screen.Shipment.route + "/${item.id}")},
-        modifier = Modifier
+fun CardItem(navController: NavController, item:Item, onItemClick: (Item) -> Unit) {
+    Card(modifier = Modifier
             .fillMaxWidth()
-            .padding(6.dp),
+            .padding(6.dp)
+            .clickable { onItemClick(item) }
+            ,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         )

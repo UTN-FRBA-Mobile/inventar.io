@@ -1,9 +1,12 @@
 package ar.edu.utn.frba.inventario.screens
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,14 +17,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,7 +39,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,6 +51,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import ar.edu.utn.frba.inventario.api.model.product.Product
+import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.utils.Screen
 
 import ar.edu.utn.frba.inventario.viewmodels.ShipmentViewModel
@@ -53,7 +67,41 @@ fun ShipmentScreen(
 ) {
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
-        bottomBar = { ButtonBox(viewModel, navController) }
+        bottomBar = { ButtonBox(viewModel, navController) },
+        topBar = {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .height(56.dp)
+                        .padding(horizontal = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    IconButton(
+                        onClick = {navController.navigate(Screen.Home.route)},
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Volver",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    Text(
+                        text = "Detalle del Envio",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.weight(1f),
+                        textAlign = TextAlign.Center
+                    )
+
+                    Spacer(modifier = Modifier.size(48.dp))
+                }
+            }
+        }
     ) { innerPadding ->
         ShipmentBodyContent(viewModel, navController, id, innerPadding)
     }
@@ -69,28 +117,24 @@ fun ShipmentBodyContent(
     viewModel.loadShipment(id)
     val shipment by viewModel.shipment.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)
-    ) {
-        Button(onClick = { navController.navigate(Screen.Home.route) }) {
-            Text(text = "Atras")
-        }
-        Spacer(modifier = Modifier
-            .height(10.dp))
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .background(MaterialTheme.colorScheme.secondaryContainer)
+        .padding(innerPadding)
+        ) {
         Box(modifier = Modifier
             .fillMaxWidth()
-            .background(color = Color(0xFFE7ECFB))){
+            .background(color = MaterialTheme.colorScheme.primaryContainer)){
             Column (modifier = Modifier
                 .padding(20.dp)){
                 Text(
                     text = "Envio ${shipment.number}",
+                    style = MaterialTheme.typography.titleLarge,
                     fontSize = 25.sp,
                     fontWeight = FontWeight.Bold
                 )
-                Text(text = "Comprador: ${shipment.customerName}", fontWeight = FontWeight.SemiBold)
-                Text(text = "Total de productos unicos: ${shipment.products.size}", fontWeight = FontWeight.SemiBold)
+                Text(text = "Comprador: ${shipment.customerName}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                Text(text = "Total de productos unicos: ${shipment.products.size}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
             }
         }
         LazyColumn(modifier = Modifier
@@ -112,29 +156,42 @@ fun ShipmentBodyContent(
 
 @Composable
 fun ProductItem(viewModel:ShipmentViewModel,product:Product,
-                onProductClick: (Product) -> Unit ){
-    val isComplete = viewModel.isProductCompleted(product.id)
-    val backgroundColor = if (isComplete) Color(0xFFB2FF59) else {CardDefaults.elevatedCardColors().containerColor}
-    ElevatedCard(colors = CardDefaults.elevatedCardColors(containerColor = backgroundColor)
+                onProductClick: (Product) -> Unit){
+    val  statusProd = viewModel.getProductStatus(product.id)
+
+    ElevatedCard(colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
         ,modifier = Modifier
         .fillMaxSize()
         .padding(2.dp)
-            .clickable { onProductClick(product)}
-    ){
-        Column(modifier = Modifier
-            .padding(15.dp)){
-            Text(text = product.name, fontWeight = FontWeight.Bold, fontSize = 15.sp,)
-            Spacer(modifier = Modifier
-                .height(10.dp))
-            Row {
-                Text(text = "${product.quantity} Requeridos")
-                Spacer(modifier = Modifier.width(25.dp)
-                    .weight(2f))
-                Box(contentAlignment = Alignment.CenterEnd,
-                    modifier = Modifier
-                        .background(color = Color.White)){
-                    Text(text="${viewModel.getLoadedQuantityProduct(product.id)} Cargados")
+            .clickable { onProductClick(product)}){
+        Row(modifier = Modifier
+            .fillMaxSize()){
+            Column(modifier = Modifier
+                .weight(1f)
+                .padding(15.dp)){
+                Text(text = product.name, fontWeight = FontWeight.Bold, fontSize = 15.sp, style = MaterialTheme.typography.bodyMedium)
+                Spacer(modifier = Modifier
+                    .height(10.dp))
+                Row {
+                    Text(text = "${product.quantity} Requeridos", style = MaterialTheme.typography.bodySmall)
+                    Spacer(modifier = Modifier.width(60.dp))
+                    Box(contentAlignment = Alignment.Center
+                            ){
+                        Text(text="${viewModel.getLoadedQuantityProduct(product.id)} Cargados", style = MaterialTheme.typography.bodySmall)
+                    }
                 }
+            }
+
+            Box(modifier = Modifier
+                .padding(end = 12.dp)
+                .size(40.dp)
+                .align(alignment = Alignment.CenterVertically),
+                contentAlignment = Alignment.Center){
+                Image(painter = painterResource(id = statusProd.iconResourceId),
+                    contentDescription = "icono del estado de la carga de productos",
+                    modifier = Modifier.fillMaxSize(0.9f),
+                    contentScale = ContentScale.Fit)
+
             }
         }
     }
@@ -148,19 +205,22 @@ fun ButtonBox(viewModel:ShipmentViewModel, navController: NavController){
             .height(70.dp)
             .padding(10.dp)){
             Row {
-
-                Button(colors = ButtonDefaults.buttonColors(Color(0xFFE7ECFB)),
-                    border = BorderStroke(1.dp, color = Color.Gray),onClick = {}, modifier = Modifier
+                Button(colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.surfaceTint),
+                    enabled = viewModel.isStateCompleteShipment.value,
+                    onClick = {},
+                    modifier = Modifier
                         .fillMaxSize()
                         .weight(1f)){
-                    Text(text = "Siguiente", color = Color.Black, fontSize = 25.sp,
+                    Text(text = "Siguiente", style = MaterialTheme.typography.titleMedium, fontSize = 25.sp,
                         fontWeight = FontWeight.Bold)
                 }
-                Button(onClick = { }, modifier = Modifier
+                Button(colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onSecondaryContainer),
+                    onClick = { },
+                    modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)
                 ){
-                    Text(text = "Scan", color = Color.Black, fontSize = 25.sp,
+                    Text(text = "Scan", style = MaterialTheme.typography.titleMedium, fontSize = 25.sp,
                         fontWeight = FontWeight.Bold)
                 }
             }
@@ -174,6 +234,11 @@ fun ButtonBox(viewModel:ShipmentViewModel, navController: NavController){
 @Preview
 @Composable
 fun vistaFinal(){
+    ShipmentScreen(navController = rememberNavController(), id = "S01-3")
+}
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun vistaFinalDark(){
     ShipmentScreen(navController = rememberNavController(), id = "S01-3")
 }
 
