@@ -29,13 +29,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         "/auth/login",
         "/auth/refresh",
         "/api/v1/user",
-        "/api/v1/location"
+        "/api/v1/location",
+        "/api/v1/shipments",
+        "/api/v1/orders",
+        "/api/v1/products",
+        "/api/v1/products/"
     );
 
     private static final List<String> PUBLIC_PREFIXES = List.of(
         "/v3/api-docs",
         "/swagger-ui",
-        "/swagger-ui.html"
+        "/swagger-ui.html",
+        "/api/v1/products/"
     );
 
     private final JwtUtil jwtUtil;
@@ -45,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      *
      * @param request           the incoming HTTP request.
      * @param response          the outgoing HTTP response.
-     * @param chain             the filter chain to continue processing the request.
+     * @param filterChain       the filter chain to continue processing the request.
      * @throws ServletException in case of a servlet error.
      * @throws IOException      in case of I/O error.
      */
@@ -53,36 +58,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(
         @NonNull HttpServletRequest request,
         @NonNull HttpServletResponse response,
-        @NonNull FilterChain chain
+        @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        if (PUBLIC_ENDPOINTS.stream().noneMatch(path -> request.getServletPath().equals(path)) &&
-            PUBLIC_PREFIXES.stream().noneMatch(path -> request.getServletPath().startsWith(path))
-        ) {
-            boolean isTokenValid = false;
-            String header = request.getHeader("Authorization");
+        final String authHeader = request.getHeader("Authorization");
 
-            if (header != null && header.startsWith("Bearer ")) {
-                String token = header.substring(7);
+        // If there's no Bearer token, fail miserably
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            //response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
 
-                if (jwtUtil.isTokenValid(token, "access")) {
-                    Claims claims = jwtUtil.extractClaims(token);
-                    String username = claims.getSubject();
-                    Long locationId = claims.get("locationId", Long.class);
+        final String token = authHeader.substring(7);
 
-                    UsernamePasswordAuthenticationToken auth =
-                            new UsernamePasswordAuthenticationToken(username, null, List.of());
-                    auth.setDetails(new AuthenticationDetails(locationId));
-                    SecurityContextHolder.getContext().setAuthentication(auth);
-                    isTokenValid = true;
-                }
-            }
+        // If the token is valid, set the authentication in the SecurityContext
+        if (jwtUtil.isTokenValid(token, "access")) {
+            Claims claims = jwtUtil.extractClaims(token);
+            String username = claims.getSubject();
+            Long locationId = claims.get("locationId", Long.class);
 
-            if (!isTokenValid) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
+            // Check if user is not already authenticated
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UsernamePasswordAuthenticationToken auth =
+                        new UsernamePasswordAuthenticationToken(username, null, List.of());
+                auth.setDetails(new AuthenticationDetails(locationId));
+                SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }
 
-        chain.doFilter(request, response);
+        // Continue the filter chain
+        filterChain.doFilter(request, response);
     }
 }
