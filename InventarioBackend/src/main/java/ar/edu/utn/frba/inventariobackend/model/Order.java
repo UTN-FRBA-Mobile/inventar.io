@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Entity
-@Table(name = "order")
+@Table(name = "incoming_order")
 public class Order {
     /**
      * Auto-generated unique identifier for the order.
