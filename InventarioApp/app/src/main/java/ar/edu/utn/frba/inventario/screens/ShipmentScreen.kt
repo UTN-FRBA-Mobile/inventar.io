@@ -2,7 +2,6 @@ package ar.edu.utn.frba.inventario.screens
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -38,7 +37,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -90,7 +88,7 @@ fun ShipmentScreen(
                         )
                     }
                     Text(
-                        text = "Detalle del Envio",
+                        text = stringResource(R.string.shipment_detail_screen_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -128,13 +126,13 @@ fun ShipmentBodyContent(
             Column (modifier = Modifier
                 .padding(20.dp)){
                 Text(
-                    text = "Envio ${shipment.number}",
+                    text = stringResource(R.string.shipment_detail_screen_shipment,shipment.number),
                     style = MaterialTheme.typography.titleLarge,
                     fontSize = 25.sp,
                     fontWeight = FontWeight.Bold
                 )
-                Text(text = "Comprador: ${shipment.customerName}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-                Text(text = "Total de productos unicos: ${shipment.products.size}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                Text(text = stringResource(R.string.shipment_detail_screen_customer,shipment.customerName), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                Text(text = stringResource(R.string.shipment_detail_screen_total,shipment.products.size), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
             }
         }
         LazyColumn(modifier = Modifier
@@ -173,11 +171,11 @@ fun ProductItem(viewModel:ShipmentViewModel,product:Product,
                 Spacer(modifier = Modifier
                     .height(10.dp))
                 Row {
-                    Text(text = "${product.quantity} Requeridos", style = MaterialTheme.typography.bodySmall)
+                    Text(text = stringResource(R.string.shipment_detail_screen_quantity_required, product.quantity), style = MaterialTheme.typography.bodySmall)
                     Spacer(modifier = Modifier.width(60.dp))
                     Box(contentAlignment = Alignment.Center
                             ){
-                        Text(text="${viewModel.getLoadedQuantityProduct(product.id)} Cargados", style = MaterialTheme.typography.bodySmall)
+                        Text(text= stringResource(R.string.shipment_detail_screen_quantity_required, viewModel.getLoadedQuantityProduct(product.id)), style = MaterialTheme.typography.bodySmall)
                     }
                 }
             }
@@ -211,7 +209,7 @@ fun ButtonBox(viewModel:ShipmentViewModel, navController: NavController){
                     modifier = Modifier
                         .fillMaxSize()
                         .weight(1f)){
-                    Text(text = "Siguiente", style = MaterialTheme.typography.titleMedium, fontSize = 25.sp,
+                    Text(text = stringResource(R.string.shipment_detail_screen_next_button), style = MaterialTheme.typography.titleMedium, fontSize = 25.sp,
                         fontWeight = FontWeight.Bold)
                 }
                 Button(colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onSecondaryContainer),
@@ -220,7 +218,7 @@ fun ButtonBox(viewModel:ShipmentViewModel, navController: NavController){
                     .fillMaxSize()
                     .weight(1f)
                 ){
-                    Text(text = "Scan", style = MaterialTheme.typography.titleMedium, fontSize = 25.sp,
+                    Text(text = stringResource(R.string.shipment_detail_screen_scan_button), style = MaterialTheme.typography.titleMedium, fontSize = 25.sp,
                         fontWeight = FontWeight.Bold)
                 }
             }
