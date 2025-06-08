@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         applicationId = "ar.edu.utn.frba.inventario"
-        minSdk = 32
+        minSdk = 31
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -96,6 +96,11 @@ dependencies {
     implementation (libs.androidx.camera.video)
     implementation (libs.androidx.camera.view)
     implementation (libs.androidx.camera.extensions)
+
+    // For getting user location
+    implementation(libs.play.services.location)
+    implementation(libs.google.maps)
+    implementation(libs.maps.compose)
 
     // For reading barcode
     implementation(libs.barcode.scanning)
