@@ -50,7 +50,6 @@ class LocationViewModel @Inject constructor(
                 }
             }
         }
-
         try{
             if(hasLocationPermission(context = context)){
                 fusedLocationClient?.requestLocationUpdates(
