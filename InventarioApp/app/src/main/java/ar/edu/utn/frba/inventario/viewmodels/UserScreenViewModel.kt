@@ -29,14 +29,14 @@ class UserScreenViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.Default) {
             when (val userResult = selfRepository.getMyUser()) {
                 is NetworkResult.Success -> {
-                    Log.d("UserViewModel", "Success: ${userResult.data}")
+                    Log.d("UserScreenViewModel", "Success: ${userResult.data}")
                     _user.value = userResult.data
                 }
                 is NetworkResult.Error -> {
-                    Log.d("UserViewModel", "Error: code=${userResult.code}, message=${userResult.message}")
+                    Log.d("UserScreenViewModel", "Error: code=${userResult.code}, message=${userResult.message}")
                 }
                 is NetworkResult.Exception -> {
-                    Log.d("UserViewModel", "Error crítico: ${userResult.e.message}")
+                    Log.d("UserScreenViewModel", "Error crítico: ${userResult.e.message}")
                 }
             }
         }

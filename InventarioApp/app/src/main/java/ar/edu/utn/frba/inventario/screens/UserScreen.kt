@@ -1,6 +1,5 @@
 package ar.edu.utn.frba.inventario.screens
 
-import android.R
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -9,8 +8,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -45,13 +46,6 @@ import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.viewmodels.LocationViewModel
 import ar.edu.utn.frba.inventario.viewmodels.UserScreenViewModel
 
-data class LocationTest (
-    val name: String,
-    val latitude: Double,
-    val longitude: Double
-)
-
-
 @Composable
 fun UserScreen(
     navController: NavController,
@@ -69,11 +63,6 @@ fun UserBodyContent(
 ) {
     val context = LocalContext.current
     val user by userScreenViewModel.user.collectAsState()
-    val testLocations = listOf(
-        LocationTest("Obelisco", -34.6037, -58.3816),
-        LocationTest("Cataratas del Iguazú", -25.6953, -54.4367),
-        LocationTest("Cerro Aconcagua", -32.6532, -70.0109)
-    )
 
     LaunchedEffect(Unit) {
         userScreenViewModel.getUser()
@@ -84,17 +73,15 @@ fun UserBodyContent(
         .fillMaxSize()
         .background(MaterialTheme.colorScheme.secondaryContainer)
     ){
-        Button(onClick = {
-            userScreenViewModel.doLogout()
-            navController.navigate(Screen.Login.route) {
-                popUpTo(0) { inclusive = true } // clears entire back stack
-                launchSingleTop = true
-            }
-        }) {
-            Text("Logout")
-        }
         if (user == null) {
-            CircularProgressIndicator()
+            Column (
+                modifier = Modifier
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ){
+                CircularProgressIndicator()
+            }
         } else {
             Column(
                 modifier = Modifier
@@ -131,7 +118,11 @@ fun UserBodyContent(
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.primary
                 )
-                LazyColumn(modifier = Modifier.padding(8.dp)) {
+                LazyColumn(modifier =
+                    Modifier
+                        .padding(8.dp)
+                        .fillMaxHeight(0.9f)
+                ) {
                     items(user!!.allowedLocations.size) { index ->
                         var address by remember { mutableStateOf<String?>(null) }
 
@@ -157,6 +148,15 @@ fun UserBodyContent(
                             }
                         }
                     }
+                }
+                Button(onClick = {
+                    userScreenViewModel.doLogout()
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(0) { inclusive = true } // clears entire back stack
+                        launchSingleTop = true
+                    }
+                }) {
+                    Text("Logout")
                 }
             }
         }

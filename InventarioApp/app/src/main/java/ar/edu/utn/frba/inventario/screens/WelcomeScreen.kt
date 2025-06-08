@@ -25,7 +25,7 @@ fun WelcomeScreen(
     navController: NavController,
     userScreenViewModel: UserScreenViewModel = hiltViewModel()
 ) {
-    UserBodyContent(navController, userScreenViewModel)
+    //UserBodyContent(navController, userScreenViewModel)
 }
 
 @Composable
