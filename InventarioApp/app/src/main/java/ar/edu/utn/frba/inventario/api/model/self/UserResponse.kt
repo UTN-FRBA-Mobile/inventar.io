@@ -5,5 +5,5 @@ data class UserResponse(
     val username: String,
     val name: String,
     val base64image: String,
-    val allowedLocations: List<Int>,
+    val allowedLocations: List<LocationResponse>,
 )
