@@ -24,16 +24,7 @@ import java.util.Map;
 @RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
 public class ProductController {
-
     private final ProductService productService;
-    // private final TokenUtils tokenUtils; // Uncomment if needed for user/location context from token
-
-    // --- Placeholder DTOs (would be in separate files) ---
-    // record ProductCreationRequest(String name, String description, String ean13, String imagen_base64) {}
-    // record ProductResponse(Long id, String name, String description, String ean13, String imagen_base64) {}
-    // record CreateStockEntryRequest(Long productId, Long locationId, int stock, String innerLocation) {}
-    // record StockByLocationResponse(Long id, Long productId, String productName, Long locationId, String locationName, int stock, String innerLocation) {}
-
 
     /**
      * Creates a new product in the system.
@@ -55,9 +46,9 @@ public class ProductController {
      * @param createStockEntryRequest A DTO containing product ID, location ID, stock quantity, and inner-location details.
      * @return A {@link ResponseEntity} with HTTP status 201 (Created).
      */
-    @PostMapping("/{id}/stock")
+    @PostMapping("/stock")
     public ResponseEntity<?> addProductStockEntry(@Valid @RequestBody CreateStockEntryRequest createStockEntryRequest) {
-        productService.createStockEntry(createStockEntryRequest); // Assuming service method name change
+        productService.createStockEntry(createStockEntryRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
