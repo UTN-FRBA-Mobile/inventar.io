@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Service layer for managing {@link Product} entities and their stock levels ({@link StockByLocation}).
@@ -64,16 +65,21 @@ public class ProductService {
     /**
      * Retrieves a list of products based on the provided list of product IDs.
      *
-     * @param ids A list of product IDs to fetch.
+     * @param ids    A list of product IDs to fetch.
+     * @param ean13s A list of product EAN13s to be fetched.
      * @return A map of {@link ProductResponse} DTOs for the found products with the id as key.
      * If an ID is not found, it's silently ignored (as per `findAllById` behavior).
      */
-    public Map<Long, ProductResponse> getProductsByIds(List<Long> ids) {
-        return productRepository.findAllById(ids)
-            .stream()
+    @Transactional
+    public Map<Long, ProductResponse> getProductsByFilters(List<Long> ids, List<String> ean13s) {
+        return
+            Stream.concat(
+                productRepository.findAllById(ids).stream(),
+                productRepository.findAllByEan13In(ean13s).stream())
             .collect(
                 Collectors.toMap(
                     Product::getId,
-                    ProductResponse::fromProduct));
+                    ProductResponse::fromProduct,
+                    (product1, __) -> product1));
     }
 }

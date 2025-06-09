@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * REST controller for managing products and their stock levels in various locations.
@@ -53,17 +54,22 @@ public class ProductController {
     }
 
     /**
-     * Retrieves a list of products based on a provided list of product IDs.
+     * Retrieves a list of products based on a provided list of product IDs and/or EAN13.
      *
-     * @param ids A list of {@link Long} representing the unique identifiers of the products to be fetched.
-     * Passed as a comma-separated query parameter (e.g., /api/v1/products/lookup?ids=1,2,3).
+     * @param ids    An optional list of {@link Long} representing the unique identifiers of the products to be fetched.
+     * @param ean13s An optional list of {@link String} representing the EAN13 codes from the products to be fetched.
+     * Both fields as a comma-separated query parameter (e.g., /api/v1/products/lookup?ids=1,2,3).
      * @return A {@link ResponseEntity} containing a list of {@link ProductResponse} objects for the requested products and HTTP status 200 (OK).
      * Returns an empty list if no products match the given IDs.
      */
     @SecurityRequirement(name = "bearerAuth")
-    @GetMapping("/lookup")
-    public ResponseEntity<Map<Long, ProductResponse>> getProductsByIds(@RequestParam List<Long> ids) {
-        Map<Long, ProductResponse> products = productService.getProductsByIds(ids);
+    @GetMapping
+    public ResponseEntity<Map<Long, ProductResponse>> getProductsByFilters(
+        @RequestParam Optional<List<Long>> ids,
+        @RequestParam Optional<List<String>> ean13s
+    ) {
+        Map<Long, ProductResponse> products =
+            productService.getProductsByFilters(ids.orElse(List.of()), ean13s.orElse(List.of()));
         return ResponseEntity.ok(products);
     }
 }
