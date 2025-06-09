@@ -4,11 +4,13 @@ import ar.edu.utn.frba.inventario.api.model.auth.LoginRequest
 import ar.edu.utn.frba.inventario.api.model.auth.LoginResponse
 import ar.edu.utn.frba.inventario.api.model.self.LocationResponse
 import ar.edu.utn.frba.inventario.api.model.self.UserResponse
+import ar.edu.utn.frba.inventario.api.model.shipment.ShipmentResponse
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface ApiService {
     /* Authentication */
@@ -24,4 +26,8 @@ interface ApiService {
 
     @GET("/api/v1/location/self")
     suspend fun getMyLocation(): Response<LocationResponse>
+
+    /*Shipment*/
+    @GET("/api/v1/shipments/")
+    suspend fun getShipment(@Query("id") id:Int): Response<ShipmentResponse>
 }

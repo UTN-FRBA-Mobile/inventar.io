@@ -12,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
+import ar.edu.utn.frba.inventario.api.repository.ShipmentRepository
 import ar.edu.utn.frba.inventario.events.NavigationEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -23,7 +24,7 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class ShipmentViewModel @Inject constructor():ViewModel(){
+class ShipmentViewModel @Inject constructor(private val shipmentRepository: ShipmentRepository):ViewModel(){
     private val _shipment  = MutableStateFlow<Shipment>(Shipment(id = "0", number = "", customerName = ""))
     val shipment = _shipment.asStateFlow()
 
@@ -39,6 +40,8 @@ class ShipmentViewModel @Inject constructor():ViewModel(){
 
             Log.d("ShipmentViewModel", "Iniciando pedido a API del envio: $id")
             val response = shipmentRepositoryMock(id)
+
+            val res = shipmentRepository.getShipment(7)
 
             val result = 200
 
