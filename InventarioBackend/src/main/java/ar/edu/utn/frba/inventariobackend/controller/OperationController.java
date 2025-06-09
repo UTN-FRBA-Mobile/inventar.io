@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -74,5 +75,31 @@ public class OperationController {
     public ResponseEntity<List<ShipmentResponse>> getShipments() {
         List<ShipmentResponse> shipments = operationService.getAllShipments(tokenUtils.getLocationIdFromToken());
         return ResponseEntity.ok(shipments);
+    }
+
+    /**
+     * Retrieves a shipment. Requires authentication.
+     *
+     * @param id The identifier of the shipment.
+     * @return A {@link ResponseEntity} containing a {@link ShipmentResponse} object (or a 404 if not found).
+     */
+    @SecurityRequirement(name = "bearerAuth")
+    @GetMapping("/shipments/{id}")
+    public ResponseEntity<ShipmentResponse> getShipment(@PathVariable long id) {
+        Optional<ShipmentResponse> optionalShipment = operationService.getShipment(id);
+        return optionalShipment.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Retrieves an order. Requires authentication.
+     *
+     * @param id The identifier of the order.
+     * @return A {@link ResponseEntity} containing an {@link OrderResponse} object (or a 404 if not found).
+     */
+    @SecurityRequirement(name = "bearerAuth")
+    @GetMapping("/orders/{id}")
+    public ResponseEntity<OrderResponse> getOrder(@PathVariable long id) {
+        Optional<OrderResponse> optionalOrder = operationService.getOrder(id);
+        return optionalOrder.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

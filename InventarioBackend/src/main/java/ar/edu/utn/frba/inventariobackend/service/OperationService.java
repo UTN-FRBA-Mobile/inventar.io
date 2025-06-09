@@ -7,7 +7,6 @@ import ar.edu.utn.frba.inventariobackend.dto.response.ShipmentResponse;
 import ar.edu.utn.frba.inventariobackend.model.*;
 import ar.edu.utn.frba.inventariobackend.repository.ItemByOperationRepository;
 import ar.edu.utn.frba.inventariobackend.repository.OrderRepository;
-import ar.edu.utn.frba.inventariobackend.repository.ProductRepository;
 import ar.edu.utn.frba.inventariobackend.repository.ShipmentRepository;
 
 
@@ -18,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -83,7 +83,7 @@ public class OperationService {
             .entrySet()
             .stream()
             .map(entry ->
-                 new ItemByOperation(pushedShipment.getId(), entry.getKey(), ItemType.ORDER, entry.getValue()))
+                 new ItemByOperation(pushedShipment.getId(), entry.getKey(), ItemType.SHIPMENT, entry.getValue()))
             .toList();
 
         itemByOperationRepository.saveAll(itemsByOperation);
@@ -106,10 +106,7 @@ public class OperationService {
         return orderRepository.findAllByIdLocation(locationId)
                 .stream()
                 .map(order -> {
-                    Map<Long, Integer> productAmount = itemByOperationRepository
-                        .findAllByIdOperationAndItemType(order.getId(), ItemType.ORDER)
-                        .stream()
-                        .collect(Collectors.toMap(ItemByOperation::getIdProduct, ItemByOperation::getAmount));
+                    Map<Long, Integer> productAmount = getProductAmount(order.getId(), ItemType.SHIPMENT);
                     return OrderResponse.fromOrder(order, productAmount);
                 })
                 .collect(Collectors.toList());
@@ -130,12 +127,49 @@ public class OperationService {
         return shipmentRepository.findAllByIdLocation(locationId)
                 .stream()
                 .map(shipment -> {
-                    Map<Long, Integer> productAmount = itemByOperationRepository
-                        .findAllByIdOperationAndItemType(shipment.getId(), ItemType.SHIPMENT)
-                        .stream()
-                        .collect(Collectors.toMap(ItemByOperation::getIdProduct, ItemByOperation::getAmount));
+                    Map<Long, Integer> productAmount = getProductAmount(shipment.getId(), ItemType.SHIPMENT);
                     return ShipmentResponse.fromShipment(shipment, productAmount);
                 })
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Retrieves an optional shipment associated to an ID.
+     *
+     * @param id The ID of the shipment.
+     * @return An optional {@link ShipmentResponse} referencing the shipment.
+     */
+    public Optional<ShipmentResponse> getShipment(long id) {
+        return shipmentRepository.findById(id).map(shipment -> {
+            Map<Long, Integer> productAmount = getProductAmount(shipment.getId(), ItemType.SHIPMENT);
+            return ShipmentResponse.fromShipment(shipment, productAmount);
+        });
+    }
+
+    /**
+     * Retrieves an optional order associated to an ID.
+     *
+     * @param id The ID of the order.
+     * @return An optional {@link OrderResponse} referencing the order.
+     */
+    public Optional<OrderResponse> getOrder(long id) {
+        return orderRepository.findById(id).map(order -> {
+            Map<Long, Integer> productAmount = getProductAmount(order.getId(), ItemType.ORDER);
+            return OrderResponse.fromOrder(order, productAmount);
+        });
+    }
+
+    /**
+     * Utility method to get the product amount related to an operation.
+     *
+     * @param operationId The id of the associated operation.
+     * @param itemType    The type of the item which can be ORDER or SHIPMENT.
+     * @return A {@link Map} with the products and it's amounts.
+     */
+    private Map<Long, Integer> getProductAmount(long operationId, ItemType itemType) {
+        return itemByOperationRepository
+            .findAllByIdOperationAndItemType(operationId, itemType)
+            .stream()
+            .collect(Collectors.toMap(ItemByOperation::getIdProduct, ItemByOperation::getAmount));
     }
 }
