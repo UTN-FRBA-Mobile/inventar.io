@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class ShipmentRepository@Inject constructor(
     private val apiService: ApiService):Repository() {
-    suspend fun getShipment(idShipment: Int): NetworkResult<ShipmentResponse> {
+    suspend fun getShipment(idShipment: Long): NetworkResult<ShipmentResponse> {
         return safeApiCall {apiService.getShipment(idShipment)}
     }
 }

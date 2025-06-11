@@ -6,8 +6,8 @@ import java.time.LocalDateTime
 data class ShipmentResponse(
     val id: Long,
     val status: ItemStatus,
-    val creationDate: LocalDateTime,
-    val lastModifiedDate: LocalDateTime,
+    val creationDate: String,
+    val lastModifiedDate: String,
     val idLocation: Long,
     val customerName: String,
     val productAmount: Map<Long, Int>)
