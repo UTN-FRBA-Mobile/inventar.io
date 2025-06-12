@@ -65,7 +65,9 @@ class LocationViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        fusedLocationClient?.removeLocationUpdates(locationCallback!!)
+        if(locationCallback != null){
+            fusedLocationClient?.removeLocationUpdates(locationCallback!!)
+        }
     }
     fun hasLocationPermission(context: Context): Boolean {
         return ContextCompat.checkSelfPermission(

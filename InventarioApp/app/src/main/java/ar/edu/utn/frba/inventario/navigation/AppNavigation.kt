@@ -35,7 +35,7 @@ import ar.edu.utn.frba.inventario.viewmodels.ShipmentViewModel
 @Composable
 fun AppNavigation(navController: NavHostController) {
     val tokenManager = rememberTokenManager()
-    val startDestination = if (tokenManager.hasSession()) Screen.Home.route else Screen.Login.route
+    val startDestination = if (tokenManager.hasSession()) Screen.Welcome.route else Screen.Login.route
 
     val productResultArgs = ProductResultArgs.entries.toTypedArray()
 

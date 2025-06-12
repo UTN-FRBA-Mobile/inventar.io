@@ -4,7 +4,7 @@ import android.net.Uri
 
 enum class Screen(val route: String) {
     Login("login"),
-    Welcome("welcomes"),
+    Welcome("welcome"),
     RetryLogin("retryLogin"),
     Home("home"),
     Orders("orders"),
