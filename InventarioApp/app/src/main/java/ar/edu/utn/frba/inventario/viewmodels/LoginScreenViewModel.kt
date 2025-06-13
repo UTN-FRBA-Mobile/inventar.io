@@ -41,6 +41,13 @@ class LoginScreenViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
+    private val _locationPermissionGranted = MutableStateFlow(false)
+    var locationPermissionGranted: StateFlow<Boolean> = _locationPermissionGranted
+
+    fun setLocationPermissionGranted(flag: Boolean){
+        _locationPermissionGranted.value = flag;
+    }
+
     fun changeUser(newUser: String) {
         _user.value = newUser
     }
@@ -71,6 +78,7 @@ class LoginScreenViewModel @Inject constructor(
                 // TODO: obtener desde la API de geolocalización
                 val latitude = -34.6297674
                 val longitude = -58.4521302
+                //val location = locationViewModel.location
 
                 Log.d("LoginViewModel", "Iniciando login con backend para usuario: $currentUser")
 

@@ -24,6 +24,7 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.util.Locale
 import javax.inject.Inject
+import javax.inject.Singleton
 
 
 @HiltViewModel
@@ -34,6 +35,7 @@ class LocationViewModel @Inject constructor(
     val location: StateFlow<LatLng?> = _location
 
     private var locationCallback: LocationCallback? = null
+
 
     fun startLocationUpdates(context: Context) {
 
@@ -90,4 +92,5 @@ class LocationViewModel @Inject constructor(
             null
         }
     }
+
 }

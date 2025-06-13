@@ -45,17 +45,9 @@ fun WelcomeBodyContent(
     locationViewModel: LocationViewModel
 
 ){
-    val username = "usergenerico"
-    val locationName = "Valentin Alsina"
-    val fakeLatitude= -38.0
-    val fakeLongitude = -58.0
     val context = LocalContext.current
     val user by userScreenViewModel.user.collectAsState()
 
-    val posicion = remember(fakeLatitude, fakeLongitude) { LatLng(fakeLatitude, fakeLongitude) }
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(posicion, 15f)
-    }
 
     if(locationViewModel.hasLocationPermission(context)){
         Log.d("WelcomeScreen", "user has Location Permitions")
@@ -71,21 +63,12 @@ fun WelcomeBodyContent(
     )
     {
         Text(
-            text = "Bienvenido $username",
+            text = "Bienvenido username",
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.primary
-        )/*
-        GoogleMap(
-            modifier = Modifier.fillMaxSize(),
-            cameraPositionState = cameraPositionState
-        ) {
-            Marker(
-                state = MarkerState(position = posicion),
-                title = "Tu ubicación"
-            )
-        }*/
+        )
         Text(
-            text = "Actualmente te encuentras en la sucursal $locationName",
+            text = "Actualmente te encuentras en la sucursal locationName",
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.primary
         )
@@ -100,8 +83,7 @@ fun WelcomeBodyContent(
         ) {
             Text(
                 text = "Continuar",
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.secondary
+                style = MaterialTheme.typography.titleLarge
             )
         }
     }
