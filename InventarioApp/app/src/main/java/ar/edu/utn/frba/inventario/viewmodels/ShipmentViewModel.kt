@@ -51,8 +51,8 @@ class ShipmentViewModel @Inject constructor(private val shipmentRepository: Ship
         viewModelScope.launch(Dispatchers.IO) {
 
             Log.d("ShipmentViewModel", "Iniciando pedido a API del envio: $id")
-            //usar id 5 o 6
-            val result = shipmentRepository.getShipment(5)
+
+            val result = shipmentRepository.getShipment(id.toLong())
 
             when(result){
                 is NetworkResult.Success -> {
@@ -155,25 +155,6 @@ class ShipmentViewModel @Inject constructor(private val shipmentRepository: Ship
         val currentStock: Int
 
     )
-    fun pruebaApi(){
-        viewModelScope.launch(Dispatchers.Default) {
-            val res = shipmentRepository.getShipment(5)
-
-            when(res){
-                is NetworkResult.Success -> {
-                    Log.d("ShipmentViewModel", "Success:${res.data.customerName}")
-
-                }
-                is NetworkResult.Error -> {
-                    Log.d("ShipmentViewModel", "Error: Code=${res.code}, message=${res.message}")
-                }
-                is NetworkResult.Exception -> {
-                    Log.d("ShipmentViewModel", "Error Crítico: ${res.e.message}")
-                }
-            }
-
-        }
-    }
 
     fun parseShipment(shipmentResponse:ShipmentResponse, productList: Map<Long,ProductResponse>):Shipment{
 
@@ -192,141 +173,6 @@ class ShipmentViewModel @Inject constructor(private val shipmentRepository: Ship
         )
 
         return shipment
-    }
-
-    //Para pruebas, hasta que este el endponit
-    private fun shipmentRepositoryMock(id: String):Shipment{
-
-        val envios: List<Shipment> =
-            listOf(
-                Shipment(
-                    id = "S01-9",
-                    number = "ENV-0009",
-                    customerName = "Este es un nombre tan largo que no debería entrar",
-                    //status = ShipmentStatus.COMPLETED,
-                    products = listOf(
-                        Product(
-                            "P-101", "AAAA", 1,
-                            innerLocation = "est",
-                            currentStock = 22,
-                            imageUrl = "a"
-                        ),
-                        Product(
-                            "P-102", "BBBB", 2,
-                            innerLocation = "est",
-                            currentStock = 22,
-                            imageUrl = "a"
-                        )
-                    ),
-                    creationDate = LocalDateTime.now().minusDays(3)
-                ),
-                Shipment(
-                    id = "S01-10",
-                    number = "ENV-0010",
-                    customerName = "Dibu Martínez",
-                    //status = ShipmentStatus.BLOCKED,
-                    products = listOf(
-                        Product(
-                            "P-101", "AAAA", 1,
-                            innerLocation = "est",
-                            currentStock = 22,
-                            imageUrl = "a"
-                        ),
-                        Product(
-                            "P-102", "BBBB", 2,
-                            innerLocation = "est",
-                            currentStock = 22,
-                            imageUrl = "a"
-                        )
-                    ),
-                    creationDate = LocalDateTime.now().minusDays(3)
-                ),
-                Shipment(
-                    id = "S01-1",
-                    number = "ENV-0001",
-                    customerName = "Enzo Fernández",
-                    //status = ShipmentStatus.PENDING,
-                    products = listOf(
-                        Product("P-101", "Resma de papel A4", 1,
-                            innerLocation = "est",
-                            currentStock = 22,
-                            imageUrl = "a"
-                        )
-                    ),
-                    creationDate = LocalDateTime.now().minusDays(3)
-                ),
-                Shipment(
-                    id = "S01-2",
-                    number = "ENV-0002",
-                    customerName = "Lionel Messi",
-                    //status = ShipmentStatus.IN_PROGRESS,
-                    products = listOf(
-                        Product("P-201", "Monitor", 1,
-                            innerLocation = "est",
-                            currentStock = 22,
-                            imageUrl = "a")),
-                    creationDate = LocalDateTime.now().minusDays(1)
-                ),
-                Shipment(
-                    id = "S01-3",
-                    number = "ENV-0003",
-                    customerName = "UTN FRBA",
-                    //status = ShipmentStatus.PENDING,
-                    products = listOf(
-                        Product("P-301", "ASDADS", 1,
-                            innerLocation = "est",
-                            currentStock = 22,
-                            imageUrl = "a"),
-                        Product("P-302", "ADADASD", 3,
-                            innerLocation = "est",
-                            currentStock = 22,
-                            imageUrl = "a")
-                    ),
-                    creationDate = LocalDateTime.now().minusHours(5)
-                ),
-                Shipment(
-                    id = "S01-4",
-                    number = "ENV-0004",
-                    customerName = "Julián Álvarez",
-                    //status = ShipmentStatus.COMPLETED,
-                    products = listOf(
-                        Product("P-401", "Tablet", 2,
-                            innerLocation = "est",
-                            currentStock = 22,
-                            imageUrl = "a"),
-                        Product("P-402", "Fundas", 2,
-                            innerLocation = "est",
-                            currentStock = 22,
-                            imageUrl = "a")
-                    ),
-                    creationDate = LocalDateTime.now().minusDays(2)
-                ),
-                Shipment(
-                    id = "S01-5",
-                    number = "ENV-0005",
-                    customerName = "Juan Pérez",
-                    //status = ShipmentStatus.IN_PROGRESS,
-                    products = listOf(
-                        Product(
-                            "P-501", "adasd", 1,
-                            innerLocation = "est",
-                            currentStock = 22,
-                            imageUrl = "a"
-                        ),
-                        Product("P-502", "aaaaaaa", 1,
-                            innerLocation = "est",
-                            currentStock = 22,
-                            imageUrl = "a")
-                    ),
-                    creationDate = LocalDateTime.now().minusHours(12)
-                )
-        )
-
-
-
-        val result = envios.first { s -> s.id.equals(id) }
-
-        return result
     }
 }
 
