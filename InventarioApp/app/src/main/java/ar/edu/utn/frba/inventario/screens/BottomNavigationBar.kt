@@ -1,14 +1,12 @@
 package ar.edu.utn.frba.inventario.screens
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
@@ -25,14 +23,12 @@ fun BottomNavigationBar(navController: NavController, items: List<Screen> ) {
             NavigationBarItem(
                 icon = {
                     when (screen) {
-                        Screen.Home -> Icon(Icons.Default.Home, contentDescription = null)
-                        Screen.Orders -> Icon(Icons.Default.Star, contentDescription = null)
+                        Screen.Home -> Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null)
+                        Screen.Orders -> Icon(Icons.Default.ShoppingCart, contentDescription = null)
                         Screen.User -> Icon(Icons.Default.AccountCircle, contentDescription = null)
-                        Screen.Scan -> Icon(Icons.Default.Search, contentDescription = null)
                         else -> throw IllegalArgumentException("Unknown screen: ${screen.route}")
                     }
                 },
-                label = { Text(screen.route) },
                 selected = currentRoute == screen.route,
                 onClick = {
                     if (currentRoute == screen.route)
