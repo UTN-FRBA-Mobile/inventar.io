@@ -29,17 +29,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.RoundRect
-import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
@@ -48,15 +42,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.R
-import ar.edu.utn.frba.inventario.utils.ProductResultArgs
 import ar.edu.utn.frba.inventario.utils.Screen
-import ar.edu.utn.frba.inventario.utils.withNavArgs
+import ar.edu.utn.frba.inventario.utils.drawScanOverlay
+import ar.edu.utn.frba.inventario.viewmodels.ScanViewModel
 import com.google.mlkit.vision.barcode.BarcodeScanning
-import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
@@ -72,39 +66,17 @@ fun ScanScreen(navController: NavController, origin: String) {
         PermissionDeniedContent(navController, origin)
 }
 
-@Composable
-fun rememberCameraPermissionState(): Boolean {
-    val context = LocalContext.current
-
-    val hasPermission = remember {
-        mutableStateOf(
-            ContextCompat.checkSelfPermission(
-                context, Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED
-        )
-    }
-
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = { hasPermission.value = it }
-    )
-
-    LaunchedEffect(Unit) {
-        if (!hasPermission.value) {
-            permissionLauncher.launch(Manifest.permission.CAMERA)
-        }
-    }
-
-    return hasPermission.value
-}
-
 @OptIn(ExperimentalGetImage::class)
 @Composable
 fun ScanCameraContent(navController: NavController, origin: String) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraExecutor = remember { Executors.newSingleThreadExecutor() }
 
-    val scannedCode = remember { mutableStateOf(false) }
+    val viewModel: ScanViewModel = hiltViewModel()
+
+    LaunchedEffect(Unit) {
+        viewModel.resetScannedCode()
+    }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -112,7 +84,7 @@ fun ScanCameraContent(navController: NavController, origin: String) {
         // CAMERA PREVIEW
         AndroidView(
             factory = { ctx ->
-                createCameraPreviewView(ctx, lifecycleOwner, cameraExecutor, scannedCode, navController, origin)
+                createCameraPreviewView(ctx, lifecycleOwner, cameraExecutor, viewModel, navController, origin)
             },
             modifier = Modifier.fillMaxSize()
         )
@@ -156,7 +128,6 @@ fun ScanCameraContent(navController: NavController, origin: String) {
             }
 
             if (origin == "shipment") {
-                // Manual Input Button
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -210,63 +181,30 @@ fun PermissionDeniedContent(navController: NavController, origin: String) {
     }
 }
 
-private fun handleScanSuccess(
-    scannedCodes: List<Barcode>,
-    navController: NavController,
-    context: Context,
-    origin: String
-) {
-    val QR_CODE_PREFIX = "inv_T3eI5QJ868z40lY_"
+@Composable
+fun rememberCameraPermissionState(): Boolean {
+    val context = LocalContext.current
 
-    val validCode = scannedCodes.firstOrNull { barcode ->
-        when (origin) {
-            "shipment" -> barcode.format == Barcode.FORMAT_EAN_13
-            "order" -> barcode.format == Barcode.FORMAT_QR_CODE
-            else -> false
-        }
-    }
-
-    if (validCode == null) {
-        val destination = Screen.ProductResult.withNavArgs(
-            ProductResultArgs.ErrorMessage to context.getString(
-                when (origin) {
-                    "shipment" -> R.string.scan_error_expected_ean13
-                    "order" -> R.string.scan_error_expected_qr
-                    else -> R.string.scan_error_unsupported_code_format
-                }
-            )
+    val hasPermission = remember {
+        mutableStateOf(
+            ContextCompat.checkSelfPermission(
+                context, Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED
         )
-        navController.navigate(destination)
-        return
     }
 
-    val code = validCode.rawValue ?: ""
-    Log.d("[ScanScreen]", "Scanned code: $code")
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { hasPermission.value = it }
+    )
 
-    val destination = when {
-        origin == "shipment" -> {
-            Screen.ProductResult.withNavArgs(
-                ProductResultArgs.Code to code,
-                ProductResultArgs.CodeType to "ean-13"
-            )
-        }
-
-        origin == "order" && code.startsWith(QR_CODE_PREFIX) -> {
-            val id = code.substring(QR_CODE_PREFIX.length)
-            Screen.ProductResult.withNavArgs(
-                ProductResultArgs.Code to id,
-                ProductResultArgs.CodeType to "qr"
-            )
-        }
-
-        else -> {
-            Screen.ProductResult.withNavArgs(
-                ProductResultArgs.ErrorMessage to context.getString(R.string.scan_error_invalid_qr)
-            )
+    LaunchedEffect(Unit) {
+        if (!hasPermission.value) {
+            permissionLauncher.launch(Manifest.permission.CAMERA)
         }
     }
 
-    navController.navigate(destination)
+    return hasPermission.value
 }
 
 @OptIn(ExperimentalGetImage::class)
@@ -274,7 +212,7 @@ fun createCameraPreviewView(
     context: Context,
     lifecycleOwner: LifecycleOwner,
     cameraExecutor: Executor,
-    scannedCode: MutableState<Boolean>,
+    viewModel: ScanViewModel,
     navController: NavController,
     origin: String
 ): PreviewView {
@@ -296,13 +234,13 @@ fun createCameraPreviewView(
         imageAnalysis.setAnalyzer(cameraExecutor) { imageProxy ->
             val mediaImage = imageProxy.image
 
-            if (mediaImage != null && !scannedCode.value) {
+            if (mediaImage != null && !viewModel.scannedCode.value) {
                 val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
                 scanner.process(image)
                     .addOnSuccessListener { scannedCodes ->
-                        if (!scannedCode.value && scannedCodes.isNotEmpty()) {
-                            scannedCode.value = true
-                            handleScanSuccess(scannedCodes, navController, context, origin)
+                        if (!viewModel.scannedCode.value && scannedCodes.isNotEmpty()) {
+                            viewModel.scannedCode.value = true
+                            viewModel.handleScanSuccess(scannedCodes, navController, context, origin)
                         }
                     }
                     .addOnFailureListener {
@@ -330,30 +268,4 @@ fun createCameraPreviewView(
     }, ContextCompat.getMainExecutor(context))
 
     return previewView
-}
-
-fun DrawScope.drawScanOverlay(scanBoxPx: Float) {
-    // Fullscreen dim
-    drawRect(color = Color.Black.copy(alpha = 0.6f))
-
-    // Transparent rounded cutout (centered)
-    val centerX = size.width / 2
-    val centerY = size.height / 2
-
-    val rectLeft = centerX - scanBoxPx / 2
-    val rectTop = centerY - scanBoxPx / 2
-
-    val path = Path().apply {
-        addRoundRect(
-            RoundRect(
-                left = rectLeft,
-                top = rectTop,
-                right = rectLeft + scanBoxPx,
-                bottom = rectTop + scanBoxPx,
-                cornerRadius = CornerRadius(32f, 32f)
-            )
-        )
-    }
-
-    drawPath(path = path, color = Color.Transparent, blendMode = BlendMode.Clear)
 }
