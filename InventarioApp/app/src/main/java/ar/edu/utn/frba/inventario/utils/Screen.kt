@@ -8,7 +8,7 @@ enum class Screen(val route: String) {
     Orders("orders"),
     User("user"),
     Shipment("shipment"),
-    OrderDetail("orderdetail"),
+    OrderDetail("order_detail"),
     Scan("scan"),
     ProductResult("product_result"),
     ManualCode("manual_code"),
