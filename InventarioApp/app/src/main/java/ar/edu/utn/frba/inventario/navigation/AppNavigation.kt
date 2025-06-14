@@ -26,6 +26,7 @@ import ar.edu.utn.frba.inventario.screens.scan.ProductResultScreen
 import ar.edu.utn.frba.inventario.screens.scan.ScanScreen
 import ar.edu.utn.frba.inventario.utils.HasCode
 import ar.edu.utn.frba.inventario.utils.ProductResultArgs
+import ar.edu.utn.frba.inventario.utils.ScanArgs
 import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.utils.withArgsDefinition
 import ar.edu.utn.frba.inventario.viewmodels.ShipmentViewModel
@@ -36,6 +37,7 @@ fun AppNavigation(navController: NavHostController) {
     val startDestination = if (tokenManager.hasSession()) Screen.Home.route else Screen.Login.route
 
     val productResultArgs = ProductResultArgs.entries.toTypedArray()
+    val scanArgs = ScanArgs.entries.toTypedArray()
 
     printCurrentBackStack(navController)
 
@@ -52,8 +54,14 @@ fun AppNavigation(navController: NavHostController) {
         composable(Screen.User.route) {
             UserScreen(navController)
         }
-        composable(Screen.Scan.route) {
-            ScanScreen(navController)
+        composable(
+            Screen.Scan.withArgsDefinition(scanArgs),
+            arguments = navArgsOf(scanArgs)
+        ) { backStackEntry ->
+            ScanScreen(
+                navController,
+                backStackEntry.arguments?.getString(ScanArgs.Origin.code) ?: "shipment"
+            )
         }
         composable(Screen.ManualCode.route) {
             ManualCodeScreen(navController)

@@ -58,13 +58,13 @@ import java.util.concurrent.Executors
 
 
 @Composable
-fun ScanScreen(navController: NavController) {
-    ScanBodyContent(navController)
+fun ScanScreen(navController: NavController, origin: String) {
+    ScanBodyContent(navController, origin)
 }
 
 @OptIn(ExperimentalGetImage::class)
 @Composable
-fun ScanBodyContent(navController: NavController) {
+fun ScanBodyContent(navController: NavController, origin: String) {
     val context = LocalContext.current
 
     val hasCameraPermission = remember {
@@ -86,14 +86,14 @@ fun ScanBodyContent(navController: NavController) {
     }
 
     if (hasCameraPermission.value)
-        ScanCameraContent(navController)
+        ScanCameraContent(navController, origin)
     else
         PermissionDeniedContent(navController)
 }
 
 @OptIn(ExperimentalGetImage::class)
 @Composable
-fun ScanCameraContent(navController: NavController) {
+fun ScanCameraContent(navController: NavController, origin: String) {
     val context = LocalContext.current
 
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -131,7 +131,7 @@ fun ScanCameraContent(navController: NavController) {
                                 .addOnSuccessListener { scannedCodes ->
                                     if (!scannedCode.value && scannedCodes.isNotEmpty()) {
                                         scannedCode.value = true
-                                        handleScanSuccess(scannedCodes, navController, context)
+                                        handleScanSuccess(scannedCodes, navController, context, origin)
                                     }
                                 }
                                 .addOnFailureListener {
@@ -207,7 +207,12 @@ fun ScanCameraContent(navController: NavController) {
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = stringResource(R.string.scan_camera_instruction),
+                    text = stringResource(
+                        if (origin == "shipment")
+                            R.string.scan_camera_instruction_ean_13
+                        else
+                            R.string.scan_camera_instruction_qr
+                    ),
                     color = Color.White,
                     fontSize = 18.sp,
                     modifier = Modifier
@@ -219,15 +224,17 @@ fun ScanCameraContent(navController: NavController) {
                 )
             }
 
-            // Manual Input Button
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 48.dp)
-                    .align(Alignment.BottomCenter),
-                contentAlignment = Alignment.Center
-            ) {
-                ManualInputButton(navController)
+            if (origin == "shipment") {
+                // Manual Input Button
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 48.dp)
+                        .align(Alignment.BottomCenter),
+                    contentAlignment = Alignment.Center
+                ) {
+                    ManualInputButton(navController)
+                }
             }
         }
     }
@@ -246,17 +253,28 @@ fun ManualInputButton(navController: NavController) {
 private fun handleScanSuccess(
     scannedCodes: List<Barcode>,
     navController: NavController,
-    context: android.content.Context
+    context: android.content.Context,
+    origin: String
 ) {
     val QR_CODE_PREFIX = "inv_T3eI5QJ868z40lY_"
 
     val validCode = scannedCodes.firstOrNull { barcode ->
-        barcode.format == Barcode.FORMAT_QR_CODE || barcode.format == Barcode.FORMAT_EAN_13
+        when (origin) {
+            "shipment" -> barcode.format == Barcode.FORMAT_EAN_13
+            "order" -> barcode.format == Barcode.FORMAT_QR_CODE
+            else -> false
+        }
     }
 
     if (validCode == null) {
         val destination = Screen.ProductResult.withNavArgs(
-            ProductResultArgs.ErrorMessage to context.getString(R.string.scan_error_unsupported_code_format)
+            ProductResultArgs.ErrorMessage to context.getString(
+                when (origin) {
+                    "shipment" -> R.string.scan_error_expected_ean13
+                    "order" -> R.string.scan_error_expected_qr
+                    else -> R.string.scan_error_unsupported_code_format
+                }
+            )
         )
         navController.navigate(destination)
         return
@@ -266,14 +284,14 @@ private fun handleScanSuccess(
     Log.d("[ScanScreen]", "Scanned code: $code")
 
     val destination = when {
-        validCode.format == Barcode.FORMAT_EAN_13 -> {
+        origin == "shipment" -> {
             Screen.ProductResult.withNavArgs(
                 ProductResultArgs.Code to code,
                 ProductResultArgs.CodeType to "ean-13"
             )
         }
 
-        code.startsWith(QR_CODE_PREFIX) -> {
+        origin == "order" && code.startsWith(QR_CODE_PREFIX) -> {
             val id = code.substring(QR_CODE_PREFIX.length)
             Screen.ProductResult.withNavArgs(
                 ProductResultArgs.Code to id,
@@ -290,7 +308,6 @@ private fun handleScanSuccess(
 
     navController.navigate(destination)
 }
-
 
 @Composable
 fun PermissionDeniedContent(navController: NavController) {

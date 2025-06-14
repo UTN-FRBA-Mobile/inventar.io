@@ -95,7 +95,7 @@ fun ManualCodeBodyContent(
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(stringResource(R.string.manual_code_confirm_button))
+            Text(stringResource(R.string.confirm))
         }
 
         if (isError) {

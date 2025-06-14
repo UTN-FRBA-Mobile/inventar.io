@@ -26,8 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.api.model.item.Item
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
-import ar.edu.utn.frba.inventario.api.model.product.Product
-import ar.edu.utn.frba.inventario.utils.Screen
 
 @Composable
 fun CardItem(navController: NavController, item:Item, onItemClick: (Item) -> Unit) {

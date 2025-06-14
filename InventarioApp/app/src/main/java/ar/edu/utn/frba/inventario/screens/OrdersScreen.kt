@@ -104,7 +104,7 @@ fun OrderBodyContent(
         }
 
             FloatingActionButton(
-                onClick = { navController.navigate(Screen.Scan.route) },
+                onClick = { navController.navigate(Screen.Scan.route + "?origin=order") },
                 shape = RoundedCornerShape(50),
                 modifier = Modifier
                     .align(Alignment.BottomCenter)

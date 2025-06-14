@@ -29,6 +29,7 @@ fun ProductResultScreen(
 ) {
     ProductResultBodyContent(navController, code, codeType, errorMessage, origin)
 }
+
 @Composable
 fun ProductResultBodyContent(
     navController: NavController,
@@ -62,7 +63,7 @@ fun ProductResultBodyContent(
             Button(onClick = {
                 navController.popBackStack()
             }) {
-                Text(stringResource(R.string.product_result_try_again_button))
+                Text(stringResource(R.string.try_again))
             }
             return
         }
@@ -98,7 +99,7 @@ fun ProductResultBodyContent(
         Button(onClick = {
             navController.popBackStack()
         }) {
-            Text(stringResource(R.string.product_result_try_again_button))
+            Text(stringResource(R.string.try_again))
         }
 
         Button(onClick = {

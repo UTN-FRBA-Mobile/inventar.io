@@ -2,7 +2,6 @@ package ar.edu.utn.frba.inventario.screens
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,10 +26,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,10 +37,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,9 +48,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import ar.edu.utn.frba.inventario.api.model.product.Product
-import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.utils.Screen
-
 import ar.edu.utn.frba.inventario.viewmodels.ShipmentViewModel
 
 
@@ -215,7 +210,7 @@ fun ButtonBox(viewModel:ShipmentViewModel, navController: NavController){
                         fontWeight = FontWeight.Bold)
                 }
                 Button(colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onSecondaryContainer),
-                    onClick = { },
+                    onClick = { navController.navigate(Screen.Scan.route + "?origin=shipment") },
                     modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)
