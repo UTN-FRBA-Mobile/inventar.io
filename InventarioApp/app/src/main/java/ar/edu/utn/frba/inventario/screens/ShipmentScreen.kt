@@ -115,7 +115,6 @@ fun ShipmentBodyContent(
     innerPadding: PaddingValues
 ) {
     LaunchedEffect(id) {
-        //viewModel.loadShipment2(id)
         viewModel.loadShipment(id)
     }
     val shipment by viewModel.shipment.collectAsState()
@@ -249,7 +248,7 @@ fun ButtonBox(viewModel:ShipmentViewModel, navController: NavController){
                         fontWeight = FontWeight.Bold)
                 }
                 Button(colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onSecondaryContainer),
-                    onClick = { viewModel.setLoadedQuantityProduct("7777777777777",20)},
+                    onClick = { },
                     modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)
