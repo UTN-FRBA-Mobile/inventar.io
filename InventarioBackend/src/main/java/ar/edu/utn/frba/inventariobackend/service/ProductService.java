@@ -52,11 +52,11 @@ public class ProductService {
     public void createStockEntry(CreateStockEntryRequest request) {
         // Product id validation
         productRepository.findById(request.productId())
-           .orElseThrow(() -> new NoSuchElementException("Product not found with ID: " + request.productId()));
+            .orElseThrow(() -> new NoSuchElementException("Product not found with ID: " + request.productId()));
 
         // Location id validation
         locationRepository.findById(request.locationId())
-           .orElseThrow(() -> new NoSuchElementException("Location not found with ID: " + request.locationId()));
+            .orElseThrow(() -> new NoSuchElementException("Location not found with ID: " + request.locationId()));
 
         StockByLocation stockByLocation = CreateStockEntryRequest.toStockByLocation(request);
         stockByLocationRepository.save(stockByLocation);
@@ -72,14 +72,22 @@ public class ProductService {
      */
     @Transactional
     public Map<Long, ProductResponse> getProductsByFilters(List<Long> ids, List<String> ean13s) {
+        if (ids.isEmpty() && ean13s.isEmpty()) {
+            return productRepository.findAll().stream()
+                .collect(Collectors.toMap(
+                    Product::getId,
+                    ProductResponse::fromProduct
+                ));
+        }
+
         return
             Stream.concat(
-                productRepository.findAllById(ids).stream(),
-                productRepository.findAllByEan13In(ean13s).stream())
-            .collect(
-                Collectors.toMap(
-                    Product::getId,
-                    ProductResponse::fromProduct,
-                    (product1, __) -> product1));
+                    productRepository.findAllById(ids).stream(),
+                    productRepository.findAllByEan13In(ean13s).stream())
+                .collect(
+                    Collectors.toMap(
+                        Product::getId,
+                        ProductResponse::fromProduct,
+                        (product1, __) -> product1));
     }
 }
