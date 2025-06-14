@@ -37,8 +37,17 @@ class ScanViewModel @Inject constructor() : ViewModel() {
             return
         }
 
+        // Add to withNavArgs the arg codeType
+        //  "ean-13" ->
+        //    "qr" ->
+
         // Navegación con el código válido
         val destination = Screen.ProductResult.withNavArgs(
+            ProductResultArgs.CodeType to when (validCode.format) {
+                Barcode.FORMAT_EAN_13 -> "ean-13"
+                Barcode.FORMAT_QR_CODE -> "qr"
+                else -> ""
+            },
             ProductResultArgs.Code to validCode.rawValue.orEmpty(),
             ProductResultArgs.Origin to origin
         )
