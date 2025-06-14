@@ -60,7 +60,7 @@
     <string name="shipment_detail_screen_quantity_required">%1$s Requeridos</string>
     <string name="shipment_detail_screen_quantity_loaded">%1$s Cargados</string>
     <string name="shipment_detail_screen_next_button">Siguiente</string>
-    <string name="shipment_detail_screen_scan_button">Scan</string>
+    <string name="shipment_detail_screen_scan_button">Escanear</string>
 
     <!-- OrderDetailScreen -->
     <string name="order_detail_screen_title">Detalle del pedido</string>

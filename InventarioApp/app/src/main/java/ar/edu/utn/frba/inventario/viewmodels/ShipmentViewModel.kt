@@ -13,6 +13,9 @@ import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
+import ar.edu.utn.frba.inventario.api.model.product.ProductResponse
+import ar.edu.utn.frba.inventario.api.model.shipment.ShipmentResponse
+import ar.edu.utn.frba.inventario.api.repository.ProductRepository
 import ar.edu.utn.frba.inventario.api.repository.ShipmentRepository
 import ar.edu.utn.frba.inventario.events.NavigationEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,7 +29,7 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class ShipmentViewModel @Inject constructor(private val shipmentRepository: ShipmentRepository):ViewModel(){
+class ShipmentViewModel @Inject constructor(private val shipmentRepository: ShipmentRepository, private val productRepository: ProductRepository):ViewModel(){
     private val _shipment  = MutableStateFlow<Shipment>(Shipment(id = "0", number = "", customerName = ""))
     val shipment = _shipment.asStateFlow()
 
@@ -45,50 +48,37 @@ class ShipmentViewModel @Inject constructor(private val shipmentRepository: Ship
     val navigationEvent = _navigationEvent.asSharedFlow()
 
     fun loadShipment(id:String){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
 
             Log.d("ShipmentViewModel", "Iniciando pedido a API del envio: $id")
-            val response = shipmentRepositoryMock(id)
-
-            //val res = shipmentRepository.getShipment(5)
-
-            val result = 200
-
-            when(result){
-                200 -> {
-                    _shipment.value = response
-                    loadProductToScanList(response.products)
-                    Log.d("ShipmentViewModel", "Exito en carga de datos del envio: $id")
-                }
-                400 -> {
-                    Log.d("ShipmentViewModel", "Fallo la carga de datos del envio: $id")
-                }
-            }
-        }
-    }
-
-    fun loadShipment2(id:String){
-        viewModelScope.launch {
-
-            Log.d("ShipmentViewModel", "Iniciando pedido a API del envio: $id")
-
+            //usar id 5 o 6
             val result = shipmentRepository.getShipment(5)
 
             when(result){
                 is NetworkResult.Success -> {
                     Log.d("ShipmentViewModel", "Success:${result.data.customerName}")
-                    _shipment.value.id =result.data.id.toString()
-                    _shipment.value.number =result.data.idLocation.toString()
-                    _shipment.value.customerName =result.data.customerName
 
-                    val prods = result.data.productAmount.map {
-                        m-> Product(id=m.key.toString(), name = "EEE", quantity = m.value,innerLocation = "est",
-                        currentStock = 22,
-                        imageUrl = "a") }
-                    _shipment.value.products = prods
+                    val ean13ProductList = result.data.productAmount.map { pa -> pa.key.toString() }
+                    Log.d("ShipmentViewModel", "ean13 productos del envio:$ean13ProductList")
 
-                    loadProductToScanList(prods)
+                    val shipmentProducts = productRepository.getProductList(ean13ProductList)
 
+                    when(shipmentProducts){
+                        is NetworkResult.Success -> {
+                            Log.d("ShipmentViewModel", "Success products:${shipmentProducts.data}")
+
+                            _shipment.value = parseShipment(result.data,shipmentProducts.data)
+                        }
+                        is NetworkResult.Error -> {
+                            Log.d("ShipmentViewModel", "Error Productos: Code=${shipmentProducts.code}, message=${shipmentProducts.message}")
+                        }
+                        is NetworkResult.Exception -> {
+                            Log.d("ShipmentViewModel", "Error Crítico Productos: ${shipmentProducts.e.message}")
+                        }
+                    }
+
+                    loadProductToScanList(_shipment.value.products)
+                    Log.d("ShipmentViewModel", "contenido de ProductsToScan:$productToScanList")
                 }
                 is NetworkResult.Error -> {
                     Log.d("ShipmentViewModel", "Error: Code=${result.code}, message=${result.message}")
@@ -101,6 +91,7 @@ class ShipmentViewModel @Inject constructor(private val shipmentRepository: Ship
     }
 
     private fun loadProductToScanList(products:List<Product>){
+        productToScanList.removeAll(productToScanList)
         products.forEach { p->productToScanList.add(ProductToScan(
             id = p.id, requiredQuantity = p.quantity,
             innerLocation = "",
@@ -182,6 +173,25 @@ class ShipmentViewModel @Inject constructor(private val shipmentRepository: Ship
             }
 
         }
+    }
+
+    fun parseShipment(shipmentResponse:ShipmentResponse, productList: Map<Long,ProductResponse>):Shipment{
+
+        Log.d("ShipmentViewModel", "Shipment to parse: $shipmentResponse")
+
+        val shipmentProducts = shipmentResponse.productAmount.map { pa ->
+            Product(id=pa.key.toString(), name= productList.values.first { p->p.ean13 == pa.key.toString() }.name, quantity = pa.value,
+            innerLocation = "est",
+            currentStock = 22,
+            imageUrl = "a") }
+        val shipment  = Shipment(
+            id=shipmentResponse.id.toString(),
+            number = "S${shipmentResponse.idLocation}E${shipmentResponse.id}",
+            customerName = shipmentResponse.customerName,
+            products = shipmentProducts
+        )
+
+        return shipment
     }
 
     //Para pruebas, hasta que este el endponit

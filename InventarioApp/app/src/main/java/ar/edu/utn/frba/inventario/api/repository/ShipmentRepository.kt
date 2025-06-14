@@ -5,7 +5,7 @@ import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
 import ar.edu.utn.frba.inventario.api.model.shipment.ShipmentResponse
 import javax.inject.Inject
 
-class ShipmentRepository@Inject constructor(
+class ShipmentRepository @Inject constructor(
     private val apiService: ApiService):Repository() {
     suspend fun getShipment(idShipment: Long): NetworkResult<ShipmentResponse> {
         return safeApiCall {apiService.getShipment(idShipment)}
