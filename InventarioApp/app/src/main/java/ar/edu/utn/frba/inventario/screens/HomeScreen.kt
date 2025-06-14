@@ -53,6 +53,7 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxWidth()
         )
+        viewModel.getShipments()
         HomeBodyContent(navController, viewModel.getFilteredItems())
     }
 }

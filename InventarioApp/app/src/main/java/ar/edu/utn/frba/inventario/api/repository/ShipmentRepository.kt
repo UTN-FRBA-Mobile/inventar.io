@@ -10,4 +10,8 @@ class ShipmentRepository@Inject constructor(
     suspend fun getShipment(idShipment: Long): NetworkResult<ShipmentResponse> {
         return safeApiCall {apiService.getShipment(idShipment)}
     }
+
+    suspend fun getShipmentList(): NetworkResult<List<ShipmentResponse>> {
+        return safeApiCall {apiService.getShipmentList()}
+    }
 }

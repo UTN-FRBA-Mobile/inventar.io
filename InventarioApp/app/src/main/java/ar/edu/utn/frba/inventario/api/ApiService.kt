@@ -31,4 +31,7 @@ interface ApiService {
     /*Shipment*/
     @GET("/api/v1/shipments/{id}")
     suspend fun getShipment(@Path("id") id:Long): Response<ShipmentResponse>
+
+    @GET("/api/v1/shipments")
+    suspend fun getShipmentList(): Response<List<ShipmentResponse>>
 }
