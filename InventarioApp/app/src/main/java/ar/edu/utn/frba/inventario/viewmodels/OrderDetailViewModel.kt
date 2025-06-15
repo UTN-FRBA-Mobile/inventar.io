@@ -4,12 +4,16 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
+import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
 import ar.edu.utn.frba.inventario.api.model.order.Order
+import ar.edu.utn.frba.inventario.api.model.order.OrderResponse
 import ar.edu.utn.frba.inventario.api.model.product.Product
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -45,7 +49,7 @@ class OrderDetailViewModel @Inject constructor(): ViewModel(){
         val orders: List<Order> =
             listOf(
                 Order(
-                    id = "ORD-001",
+                    id = "1",
                     number = "P-9090",
                     sender = "Cliente Premium",
                     status = ItemStatus.PENDING,
@@ -303,6 +307,32 @@ class OrderDetailViewModel @Inject constructor(): ViewModel(){
 
         return result
     }
+/*
+    fun getOrderById(orderId: String): OrderResponse {
+        viewModelScope.launch(Dispatchers.Default) {
+            when (val ordersResult = orderRepository.getOrder(orderId)) {
+                is NetworkResult.Success -> {
+                    Log.d("OrdersViewModel", "Success: ${ordersResult.data}")
+                    val ordersParsed = ordersResult.data?.map { response ->
+                        parseMapOrder(response)
+                    } ?: emptyList()
+
+                    // Actualizar la lista en el hilo principal
+                    withContext(Dispatchers.Main) {
+                        _items.clear()
+                        _items.addAll(ordersParsed) // Solo esta línea es necesaria
+                    }
+
+                }
+                is NetworkResult.Error -> {
+                    Log.d("OrdersViewModel", "Error: code=${ordersResult.code}, message=${ordersResult.message}")
+                }
+                is NetworkResult.Exception -> {
+                    Log.d("OrdersViewModel", "Error crítico: ${ordersResult.e.message}")
+                }
+            }
+        }
+    }*/
 }
 
 
