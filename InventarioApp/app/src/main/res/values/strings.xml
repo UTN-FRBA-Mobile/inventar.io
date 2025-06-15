@@ -10,6 +10,11 @@
     <string name="_continue">Continuar</string>
     <string name="scan">Escanear</string>
     <string name="go_back">Volver</string>
+    <string name="logo">Logo</string>
+    <string name="location_place">Ubicación sucursal</string>
+    <string name="state_icon">Ícono de estado</string>
+    <string name="product_image">Imagen del producto</string>
+    <string name="product_state_icon">icono del estado de la carga de productos</string>
 
     <!-- ProductDetailScreen -->
     <string name="product_detail_screen_title">Detalle del producto</string>
@@ -76,10 +81,5 @@
     <string name="order_detail_screen_sender">Remitente: %1$s</string>
     <string name="order_detail_screen_total">Total de productos unicos: %1$s</string>
     <string name="order_detail_screen_quantity">Cantidad %1$s</string>
-    <string name="logo">Logo</string>
-    <string name="location_place">Ubicación sucursal</string>
-    <string name="state_icon">Ícono de estado</string>
-    <string name="product_image">Imagen del producto</string>
-    <string name="product_state_icon">icono del estado de la carga de productos</string>
 
 </resources>
