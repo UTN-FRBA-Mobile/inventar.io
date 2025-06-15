@@ -120,7 +120,7 @@ fun OrderBodyContent(
             }
 
             BackHandler {
-                navController.navigate(Screen.Home.route) {
+                navController.navigate(Screen.Shipments.route) {
                     popUpTo(navController.graph.startDestinationId) {
                         saveState = true
                     }
