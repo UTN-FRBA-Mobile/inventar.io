@@ -58,24 +58,7 @@ class ShipmentViewModel @Inject constructor(private val shipmentRepository: Ship
                 is NetworkResult.Success -> {
                     Log.d("ShipmentViewModel", "Success:${result.data.customerName}")
 
-                    val ean13ProductList = result.data.productAmount.map { pa -> pa.key.toString() }
-                    Log.d("ShipmentViewModel", "ean13 productos del envio:$ean13ProductList")
-
-                    val shipmentProducts = productRepository.getProductList(ean13ProductList)
-
-                    when(shipmentProducts){
-                        is NetworkResult.Success -> {
-                            Log.d("ShipmentViewModel", "Success products:${shipmentProducts.data}")
-
-                            _shipment.value = parseShipment(result.data,shipmentProducts.data)
-                        }
-                        is NetworkResult.Error -> {
-                            Log.d("ShipmentViewModel", "Error Productos: Code=${shipmentProducts.code}, message=${shipmentProducts.message}")
-                        }
-                        is NetworkResult.Exception -> {
-                            Log.d("ShipmentViewModel", "Error Crítico Productos: ${shipmentProducts.e.message}")
-                        }
-                    }
+                    _shipment.value = parseShipment(result.data)
 
                     loadProductToScanList(_shipment.value.products)
                     Log.d("ShipmentViewModel", "contenido de ProductsToScan:$productToScanList")
@@ -156,12 +139,12 @@ class ShipmentViewModel @Inject constructor(private val shipmentRepository: Ship
 
     )
 
-    fun parseShipment(shipmentResponse:ShipmentResponse, productList: Map<Long,ProductResponse>):Shipment{
+    fun parseShipment(shipmentResponse:ShipmentResponse):Shipment{
 
         Log.d("ShipmentViewModel", "Shipment to parse: $shipmentResponse")
 
         val shipmentProducts = shipmentResponse.productAmount.map { pa ->
-            Product(id=pa.key.toString(), name= productList.values.first { p->p.ean13 == pa.key.toString() }.name, quantity = pa.value,
+            Product(id=pa.key.toString(), name= shipmentResponse.productNames.get(pa.key)?:"", quantity = pa.value,
             innerLocation = "est",
             currentStock = 22,
             imageUrl = "a") }
