@@ -27,10 +27,10 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,17 +50,19 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.product.Product
+import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.utils.Screen
-import ar.edu.utn.frba.inventario.viewmodels.ShipmentViewModel
+import androidx.compose.ui.res.stringResource
 
+
+import ar.edu.utn.frba.inventario.viewmodels.ShipmentDetailViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShipmentScreen(
-    viewModel: ShipmentViewModel = hiltViewModel(),
+fun ShipmentDetailScreen(
+    viewModel: ShipmentDetailViewModel = hiltViewModel(),
     navController: NavController,
     id: String
 ) {
@@ -79,7 +81,7 @@ fun ShipmentScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(
-                        onClick = {navController.navigate(Screen.Home.route)},
+                        onClick = {navController.navigate(Screen.Shipments.route)},
                         modifier = Modifier.size(48.dp)
                     ) {
                         Icon(
@@ -102,13 +104,13 @@ fun ShipmentScreen(
             }
         }
     ) { innerPadding ->
-        ShipmentBodyContent(viewModel, navController, id, innerPadding)
+        ShipmentDetailBodyContent(viewModel, navController, id, innerPadding)
     }
 }
 
 @Composable
-fun ShipmentBodyContent(
-    viewModel: ShipmentViewModel,
+fun ShipmentDetailBodyContent(
+    viewModel: ShipmentDetailViewModel,
     navController: NavController,
     id: String,
     innerPadding: PaddingValues
@@ -187,7 +189,7 @@ fun ShipmentBodyContent(
 }
 
 @Composable
-fun ProductItem(viewModel:ShipmentViewModel,product:Product,
+fun ProductItem(viewModel:ShipmentDetailViewModel, product:Product,
                 onProductClick: (Product) -> Unit){
     val  statusProd = viewModel.getProductStatus(product.id)
 
@@ -230,7 +232,7 @@ fun ProductItem(viewModel:ShipmentViewModel,product:Product,
 }
 
 @Composable
-fun ButtonBox(viewModel:ShipmentViewModel, navController: NavController){
+fun ButtonBox(viewModel:ShipmentDetailViewModel, navController: NavController){
     Column {
         Box(contentAlignment = Alignment.Center, modifier = Modifier
             .fillMaxWidth()
@@ -266,12 +268,12 @@ fun ButtonBox(viewModel:ShipmentViewModel, navController: NavController){
 @Preview
 @Composable
 fun vistaFinal(){
-    ShipmentScreen(navController = rememberNavController(), id = "S01-3")
+    ShipmentDetailScreen(navController = rememberNavController(), id = "S01-3")
 }
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun vistaFinalDark(){
-    ShipmentScreen(navController = rememberNavController(), id = "S01-3")
+    ShipmentDetailScreen(navController = rememberNavController(), id = "S01-3")
 }
 
 

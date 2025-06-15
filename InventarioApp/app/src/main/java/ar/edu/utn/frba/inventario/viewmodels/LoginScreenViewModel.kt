@@ -95,7 +95,7 @@ class LoginScreenViewModel @Inject constructor(
                         _user.value = ""
                         _password.value = ""
 
-                        _navigationEvent.emit(NavigationEvent.NavigateTo(Screen.Home.route))
+                        _navigationEvent.emit(NavigationEvent.NavigateTo(Screen.Shipments.route))
 
                     }
                     is NetworkResult.Error -> {

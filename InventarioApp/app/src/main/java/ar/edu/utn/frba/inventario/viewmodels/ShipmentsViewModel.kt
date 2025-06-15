@@ -20,8 +20,8 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val shipmentRepository: ShipmentRepository,
-    savedStateHandle: SavedStateHandle
+class ShipmentsViewModel @Inject constructor(private val shipmentRepository: ShipmentRepository,
+                                             savedStateHandle: SavedStateHandle
 ) : BaseItemViewModel<Shipment>(
     savedStateHandle = savedStateHandle,
     filterKey = "shipment_filter"
