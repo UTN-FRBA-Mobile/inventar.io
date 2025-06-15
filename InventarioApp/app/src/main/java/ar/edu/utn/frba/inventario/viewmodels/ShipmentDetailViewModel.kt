@@ -13,7 +13,6 @@ import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
-import ar.edu.utn.frba.inventario.api.model.product.ProductResponse
 import ar.edu.utn.frba.inventario.api.model.shipment.ShipmentResponse
 import ar.edu.utn.frba.inventario.api.repository.ProductRepository
 import ar.edu.utn.frba.inventario.api.repository.ShipmentRepository
@@ -29,7 +28,7 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class ShipmentViewModel @Inject constructor(private val shipmentRepository: ShipmentRepository, private val productRepository: ProductRepository):ViewModel(){
+class ShipmentDetailViewModel @Inject constructor(private val shipmentRepository: ShipmentRepository, private val productRepository: ProductRepository):ViewModel(){
     private val _shipment  = MutableStateFlow<Shipment>(Shipment(id = "0", number = "", customerName = ""))
     val shipment = _shipment.asStateFlow()
 
@@ -50,24 +49,24 @@ class ShipmentViewModel @Inject constructor(private val shipmentRepository: Ship
     fun loadShipment(id:String){
         viewModelScope.launch(Dispatchers.IO) {
 
-            Log.d("ShipmentViewModel", "Iniciando pedido a API del envio: $id")
+            Log.d("ShipmentDetailViewModel", "Iniciando pedido a API del envio: $id")
 
             val result = shipmentRepository.getShipment(id.toLong())
 
             when(result){
                 is NetworkResult.Success -> {
-                    Log.d("ShipmentViewModel", "Success:${result.data.customerName}")
+                    Log.d("ShipmentDetailViewModel", "Success:${result.data.customerName}")
 
                     _shipment.value = parseShipment(result.data)
 
                     loadProductToScanList(_shipment.value.products)
-                    Log.d("ShipmentViewModel", "contenido de ProductsToScan:$productToScanList")
+                    Log.d("ShipmentDetailViewModel", "contenido de ProductsToScan:$productToScanList")
                 }
                 is NetworkResult.Error -> {
-                    Log.d("ShipmentViewModel", "Error: Code=${result.code}, message=${result.message}")
+                    Log.d("ShipmentDetailViewModel", "Error: Code=${result.code}, message=${result.message}")
                 }
                 is NetworkResult.Exception -> {
-                    Log.d("ShipmentViewModel", "Error Crítico: ${result.e.message}")
+                    Log.d("ShipmentDetailViewModel", "Error Crítico: ${result.e.message}")
                 }
             }
         }
@@ -87,11 +86,11 @@ class ShipmentViewModel @Inject constructor(private val shipmentRepository: Ship
     }
 
     fun setLoadedQuantityProduct(id:String, newValue: Int){
-        Log.d("ShipmentViewModel", "Se inicia con la actualizacion valor de loadedQuantity del producto $id")
+        Log.d("ShipmentDetailViewModel", "Se inicia con la actualizacion valor de loadedQuantity del producto $id")
         productToScanList.forEach { p-> if (p.id==id)
         {
             p.loadedQuantity.value = newValue
-            Log.d("ShipmentViewModel", "Se actualizo el valor de loadedQuantity a ${p.loadedQuantity.value} del producto $id")
+            Log.d("ShipmentDetailViewModel", "Se actualizo el valor de loadedQuantity a ${p.loadedQuantity.value} del producto $id")
         }
         }
         isCompletedShipment()
@@ -119,7 +118,7 @@ class ShipmentViewModel @Inject constructor(private val shipmentRepository: Ship
         return try {
             _shipment.value.products.first { it.id == productId }
         } catch (e: NoSuchElementException) {
-            Log.e("ShipmentViewModel", "Producto no encontrado: $productId")
+            Log.e("ShipmentDetailViewModel", "Producto no encontrado: $productId")
             //TODO: en lugar de mostrar la screen de producto cuando no se encuentra un producto, mostrar solo un mensaje de producto no identificado, como cuando se filtra y no hay resultados
             Product(
                 id = stringResource(R.string.unknown_product_id), name = stringResource(R.string.product_not_found), quantity = 0,
@@ -141,7 +140,7 @@ class ShipmentViewModel @Inject constructor(private val shipmentRepository: Ship
 
     fun parseShipment(shipmentResponse:ShipmentResponse):Shipment{
 
-        Log.d("ShipmentViewModel", "Shipment to parse: $shipmentResponse")
+        Log.d("ShipmentDetailViewModel", "Shipment to parse: $shipmentResponse")
 
         val shipmentProducts = shipmentResponse.productAmount.map { pa ->
             Product(id=pa.key.toString(), name= shipmentResponse.productNames.get(pa.key)?:"", quantity = pa.value,

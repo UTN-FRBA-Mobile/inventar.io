@@ -26,12 +26,12 @@ import ar.edu.utn.frba.inventario.components.CardItem
 import ar.edu.utn.frba.inventario.components.EmptyResultsMessage
 import ar.edu.utn.frba.inventario.components.StatusFilter
 import ar.edu.utn.frba.inventario.utils.Screen
-import ar.edu.utn.frba.inventario.viewmodels.HomeViewModel
+import ar.edu.utn.frba.inventario.viewmodels.ShipmentsViewModel
 
 @Composable
-fun HomeScreen(
+fun ShipmentsScreen(
     navController: NavController,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: ShipmentsViewModel = hiltViewModel()
 ) {
     Column(
         modifier = Modifier
@@ -58,12 +58,12 @@ fun HomeScreen(
         LaunchedEffect(Unit) {
             viewModel.getShipments()
         }
-        HomeBodyContent(navController, viewModel.getFilteredItems())
+        ShipmentsBodyContent(navController, viewModel.getFilteredItems())
     }
 }
 
 @Composable
-fun HomeBodyContent(
+fun ShipmentsBodyContent(
     navController: NavController,
     shipments: List<Shipment>
 ) {
@@ -87,7 +87,7 @@ fun HomeBodyContent(
             ) {
                 itemsIndexed(shipments) { _, shipment ->
                     CardItem(navController, shipment, onItemClick = { clickedItem ->
-                        navController.navigate(Screen.Shipment.route + "/${clickedItem.id}")
+                        navController.navigate(Screen.ShipmentDetail.route + "/${clickedItem.id}")
                     })
                 }
             }
