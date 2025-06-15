@@ -137,6 +137,7 @@ public class OperationService {
      * @param id The ID of the shipment.
      * @return An optional {@link ShipmentResponse} referencing the shipment.
      */
+    @Transactional(readOnly = true)
     public Optional<ShipmentResponse> getShipment(long id) {
         return shipmentRepository.findById(id).map(this::getShipmentResponse);
     }
@@ -147,6 +148,7 @@ public class OperationService {
      * @param id The ID of the order.
      * @return An optional {@link OrderResponse} referencing the order.
      */
+    @Transactional(readOnly = true)
     public Optional<OrderResponse> getOrder(long id) {
         return orderRepository.findById(id).map(this::getOrderResponse);
     }
