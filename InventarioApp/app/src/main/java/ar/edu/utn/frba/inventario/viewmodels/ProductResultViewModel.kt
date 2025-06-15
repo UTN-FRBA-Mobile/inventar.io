@@ -35,14 +35,16 @@ class ProductResultViewModel @Inject constructor(
 
         viewModelScope.launch {
             _isLoading.value = true
-            when (val result = productRepository.getProductByEan13(code)) {
+            when (val result = productRepository.getProductList(listOf(code))) {
                 is NetworkResult.Success -> {
-                    _product.value = result.data
+                    val product = result.data.values.firstOrNull()
+
+                    _product.value = product
 
                     // Print result data
                     Log.d("ProductResultViewModel", "Product data: ${result.data}")
 
-                    _errorMessage.value = if (result.data == null) "No se encontró el producto" else null
+                    _errorMessage.value = if (product == null) "No se encontró el producto" else null
                 }
 
                 is NetworkResult.Error -> {
