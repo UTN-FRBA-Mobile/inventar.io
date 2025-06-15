@@ -36,6 +36,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -112,7 +113,7 @@ fun LoginScreen(
                 ) {
                     Image(
                         painter = painterResource(id = logoResourceId),
-                        contentDescription = "Logo",
+                        contentDescription = stringResource(R.string.logo),
                         modifier = Modifier
                             .size(screenWidth * 0.8f),
                         contentScale = ContentScale.Fit

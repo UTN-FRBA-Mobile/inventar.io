@@ -20,19 +20,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.item.Item
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 
 @Composable
 fun CardItem(navController: NavController, item:Item, onItemClick: (Item) -> Unit) {
     Card(modifier = Modifier
-            .fillMaxWidth()
-            .padding(6.dp)
-            .clickable { onItemClick(item) }
+        .fillMaxWidth()
+        .padding(6.dp)
+        .clickable { onItemClick(item) }
             ,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
@@ -75,7 +77,7 @@ private fun StatusIcon(status: ItemStatus) {
     ) {
         Image(
             painter = painterResource(id = status.iconResourceId),
-            contentDescription = "Ícono de estado",
+            contentDescription = stringResource(R.string.state_icon),
             modifier = Modifier.fillMaxSize(0.9f),
             contentScale = ContentScale.Fit
         )
