@@ -1,6 +1,5 @@
 package ar.edu.utn.frba.inventario.screens.scan
 
-import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -27,10 +26,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.product.ProductResponse
-import ar.edu.utn.frba.inventario.utils.Base64Image
+import ar.edu.utn.frba.inventario.utils.ImageFromURL
 import ar.edu.utn.frba.inventario.utils.Spinner
 import ar.edu.utn.frba.inventario.viewmodels.ProductResultViewModel
-import kotlin.io.encoding.Base64
 
 
 @Composable
@@ -132,9 +130,9 @@ fun ProductResultBodyContent(
 
             Spacer(Modifier.height(24.dp))
 
-            if (product.base64image.isNotBlank()) {
-                Base64Image(
-                    base64String = product.base64image,
+            if (product.imageURL.isNotBlank()) {
+                ImageFromURL(
+                    url = product.imageURL,
                     modifier = Modifier
                         .size(180.dp)
                         .clip(CircleShape)

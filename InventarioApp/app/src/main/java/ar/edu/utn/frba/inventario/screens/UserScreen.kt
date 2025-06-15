@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import ar.edu.utn.frba.inventario.utils.Base64Image
+import ar.edu.utn.frba.inventario.utils.ImageFromURL
 import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.viewmodels.LocationViewModel
 import ar.edu.utn.frba.inventario.viewmodels.UserScreenViewModel
@@ -108,7 +108,7 @@ fun UserBodyContent(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ){
-                    Base64Image(base64String = user!!.base64image, modifier = Modifier
+                    ImageFromURL(url = user!!.imageURL, modifier = Modifier
                         .size(100.dp)
                         .clip(CircleShape)                    // Hace la imagen circular
                         .border(2.dp, Color.Gray, CircleShape)
@@ -123,7 +123,7 @@ fun UserBodyContent(
                             color = MaterialTheme.colorScheme.primary
                         )
                     }
-                    Log.d("Show base64", "Success: ${user!!.base64image}")
+                    Log.d("Show base64", "Success: ${user!!.imageURL}")
                 }
                 Text(
                     text = "Ubicaciones Autorizadas",

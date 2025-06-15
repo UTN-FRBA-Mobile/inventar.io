@@ -14,14 +14,14 @@ import java.util.List;
  * @param username         the username for authentication
  * @param password         the raw password that will be processed (hashed + salted)
  * @param name             the full name of the user
- * @param base64image      a base64-encoded representation of the user's image
+ * @param imageURL      a base64-encoded representation of the user's image
  * @param allowedLocations a list of ids of the locations where the user can work from
  */
 public record AddUserRequest(
     @NotNull String username,
     @NotNull String password,
     @NotNull String name,
-    String base64image,
+    String imageURL,
     @NotNull List<Long> allowedLocations
 ) {
     /**
@@ -35,7 +35,7 @@ public record AddUserRequest(
             addUserRequest.username(),
             passwordEncoder.encode(addUserRequest.password()),
             addUserRequest.name(),
-            addUserRequest.base64image(),
+            addUserRequest.imageURL(),
             addUserRequest.allowedLocations());
     }
 }

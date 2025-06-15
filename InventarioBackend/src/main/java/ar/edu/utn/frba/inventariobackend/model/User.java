@@ -42,8 +42,7 @@ public class User {
     /**
      * An image of the user, encoded as a Base64 string.
      */
-    @Lob
-    private String base64image;
+    private String imageURL;
 
     /**
      * A list of the ids the user is allowed to work from.
@@ -62,14 +61,14 @@ public class User {
      * @param username         the username for login
      * @param password         the hashed password
      * @param name             the full name of the user
-     * @param base64image      a base64-encoded image of the user
+     * @param imageURL         image url of the user
      * @param allowedLocations the ids of the locations that are allowed for the user
      */
-    public User(String username, String password, String name, String base64image, List<Long> allowedLocations) {
+    public User(String username, String password, String name, String imageURL, List<Long> allowedLocations) {
         this.username = username;
         this.password = password;
         this.name = name;
-        this.base64image = base64image;
+        this.imageURL = imageURL;
         this.allowedLocations = allowedLocations;
     }
 }

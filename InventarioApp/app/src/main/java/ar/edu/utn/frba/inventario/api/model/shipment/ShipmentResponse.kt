@@ -1,7 +1,6 @@
 package ar.edu.utn.frba.inventario.api.model.shipment
 
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
-import java.time.LocalDateTime
 
 data class ShipmentResponse(
     val id: Long,
