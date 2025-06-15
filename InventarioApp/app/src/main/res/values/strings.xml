@@ -51,4 +51,22 @@
         <item quantity="one">%1$d producto • Solicitado %2$s</item>
         <item quantity="other">%1$d productos • Solicitado %2$s</item>
     </plurals>
+
+    <!-- ShipmentDetailScreen -->
+    <string name="shipment_detail_screen_title">Detalle del envio</string>
+    <string name="shipment_detail_screen_shipment">Envio %1$s</string>
+    <string name="shipment_detail_screen_customer">Comprador: %1$s</string>
+    <string name="shipment_detail_screen_total">Total de productos unicos: %1$s</string>
+    <string name="shipment_detail_screen_quantity_required">%1$s Requeridos</string>
+    <string name="shipment_detail_screen_quantity_loaded">%1$s Cargados</string>
+    <string name="shipment_detail_screen_next_button">Siguiente</string>
+    <string name="shipment_detail_screen_scan_button">Escanear</string>
+
+    <!-- OrderDetailScreen -->
+    <string name="order_detail_screen_title">Detalle del pedido</string>
+    <string name="order_detail_screen_order">Pedido %1$s</string>
+    <string name="order_detail_screen_sender">Remitente: %1$s</string>
+    <string name="order_detail_screen_total">Total de productos unicos: %1$s</string>
+    <string name="order_detail_screen_quantity">Cantidad %1$s</string>
+
 </resources>

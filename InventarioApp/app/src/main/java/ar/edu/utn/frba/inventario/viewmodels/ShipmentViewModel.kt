@@ -12,8 +12,14 @@ import androidx.lifecycle.viewModelScope
 import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
+import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
+import ar.edu.utn.frba.inventario.api.model.product.ProductResponse
+import ar.edu.utn.frba.inventario.api.model.shipment.ShipmentResponse
+import ar.edu.utn.frba.inventario.api.repository.ProductRepository
+import ar.edu.utn.frba.inventario.api.repository.ShipmentRepository
 import ar.edu.utn.frba.inventario.events.NavigationEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -23,11 +29,18 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class ShipmentViewModel @Inject constructor():ViewModel(){
+class ShipmentViewModel @Inject constructor(private val shipmentRepository: ShipmentRepository, private val productRepository: ProductRepository):ViewModel(){
     private val _shipment  = MutableStateFlow<Shipment>(Shipment(id = "0", number = "", customerName = ""))
     val shipment = _shipment.asStateFlow()
 
-    val productToScanList = mutableStateListOf<ProductToScan>()
+    val productToScanList = mutableStateListOf<ProductToScan>(ProductToScan(id = "P-101",
+        requiredQuantity = 1,
+        innerLocation = "",
+        currentStock = 222),ProductToScan(id = "P-002",
+        requiredQuantity = 2,
+        innerLocation = "est",
+        currentStock = 22)
+    )
 
     val isStateCompleteShipment: MutableState<Boolean> = mutableStateOf(false)
 
@@ -35,27 +48,50 @@ class ShipmentViewModel @Inject constructor():ViewModel(){
     val navigationEvent = _navigationEvent.asSharedFlow()
 
     fun loadShipment(id:String){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
 
             Log.d("ShipmentViewModel", "Iniciando pedido a API del envio: $id")
-            val response = shipmentRepositoryMock(id)
 
-            val result = 200
+            val result = shipmentRepository.getShipment(id.toLong())
 
             when(result){
-                200 -> {
-                    _shipment.value = response
-                    loadProductToScanList(response.products)
-                    Log.d("ShipmentViewModel", "Exito en carga de datos del envio: $id")
+                is NetworkResult.Success -> {
+                    Log.d("ShipmentViewModel", "Success:${result.data.customerName}")
+
+                    val ean13ProductList = result.data.productAmount.map { pa -> pa.key.toString() }
+                    Log.d("ShipmentViewModel", "ean13 productos del envio:$ean13ProductList")
+
+                    val shipmentProducts = productRepository.getProductList(ean13ProductList)
+
+                    when(shipmentProducts){
+                        is NetworkResult.Success -> {
+                            Log.d("ShipmentViewModel", "Success products:${shipmentProducts.data}")
+
+                            _shipment.value = parseShipment(result.data,shipmentProducts.data)
+                        }
+                        is NetworkResult.Error -> {
+                            Log.d("ShipmentViewModel", "Error Productos: Code=${shipmentProducts.code}, message=${shipmentProducts.message}")
+                        }
+                        is NetworkResult.Exception -> {
+                            Log.d("ShipmentViewModel", "Error Crítico Productos: ${shipmentProducts.e.message}")
+                        }
+                    }
+
+                    loadProductToScanList(_shipment.value.products)
+                    Log.d("ShipmentViewModel", "contenido de ProductsToScan:$productToScanList")
                 }
-                400 -> {
-                    Log.d("ShipmentViewModel", "Fallo la carga de datos del envio: $id")
+                is NetworkResult.Error -> {
+                    Log.d("ShipmentViewModel", "Error: Code=${result.code}, message=${result.message}")
+                }
+                is NetworkResult.Exception -> {
+                    Log.d("ShipmentViewModel", "Error Crítico: ${result.e.message}")
                 }
             }
         }
     }
 
     private fun loadProductToScanList(products:List<Product>){
+        productToScanList.removeAll(productToScanList)
         products.forEach { p->productToScanList.add(ProductToScan(
             id = p.id, requiredQuantity = p.quantity,
             innerLocation = "",
@@ -120,149 +156,33 @@ class ShipmentViewModel @Inject constructor():ViewModel(){
 
     )
 
-    //Para pruebas, hasta que este el endponit
-    private fun shipmentRepositoryMock(id: String):Shipment{
+    fun parseShipment(shipmentResponse:ShipmentResponse, productList: Map<Long,ProductResponse>):Shipment{
 
-        val envios: List<Shipment> =
-            listOf(
-                Shipment(
-                    id = "S01-9",
-                    number = "ENV-0009",
-                    customerName = "Este es un nombre tan largo que no debería entrar",
-                    //status = ShipmentStatus.COMPLETED,
-                    products = listOf(
-                        Product(
-                            "P-101", "AAAA", 1,
-                            innerLocation = "est",
-                            currentStock = 22,
-                            imageUrl = "a"
-                        ),
-                        Product(
-                            "P-102", "BBBB", 2,
-                            innerLocation = "est",
-                            currentStock = 22,
-                            imageUrl = "a"
-                        )
-                    ),
-                    creationDate = LocalDateTime.now().minusDays(3)
-                ),
-                Shipment(
-                    id = "S01-10",
-                    number = "ENV-0010",
-                    customerName = "Dibu Martínez",
-                    //status = ShipmentStatus.BLOCKED,
-                    products = listOf(
-                        Product(
-                            "P-101", "AAAA", 1,
-                            innerLocation = "est",
-                            currentStock = 22,
-                            imageUrl = "a"
-                        ),
-                        Product(
-                            "P-102", "BBBB", 2,
-                            innerLocation = "est",
-                            currentStock = 22,
-                            imageUrl = "a"
-                        )
-                    ),
-                    creationDate = LocalDateTime.now().minusDays(3)
-                ),
-                Shipment(
-                    id = "S01-1",
-                    number = "ENV-0001",
-                    customerName = "Enzo Fernández",
-                    //status = ShipmentStatus.PENDING,
-                    products = listOf(
-                        Product("P-101", "Resma de papel A4", 1,
-                            innerLocation = "est",
-                            currentStock = 22,
-                            imageUrl = "a"
-                        )
-                    ),
-                    creationDate = LocalDateTime.now().minusDays(3)
-                ),
-                Shipment(
-                    id = "S01-2",
-                    number = "ENV-0002",
-                    customerName = "Lionel Messi",
-                    //status = ShipmentStatus.IN_PROGRESS,
-                    products = listOf(
-                        Product("P-201", "Monitor", 1,
-                            innerLocation = "est",
-                            currentStock = 22,
-                            imageUrl = "a")),
-                    creationDate = LocalDateTime.now().minusDays(1)
-                ),
-                Shipment(
-                    id = "S01-3",
-                    number = "ENV-0003",
-                    customerName = "UTN FRBA",
-                    //status = ShipmentStatus.PENDING,
-                    products = listOf(
-                        Product("P-301", "ASDADS", 1,
-                            innerLocation = "est",
-                            currentStock = 22,
-                            imageUrl = "a"),
-                        Product("P-302", "ADADASD", 3,
-                            innerLocation = "est",
-                            currentStock = 22,
-                            imageUrl = "a")
-                    ),
-                    creationDate = LocalDateTime.now().minusHours(5)
-                ),
-                Shipment(
-                    id = "S01-4",
-                    number = "ENV-0004",
-                    customerName = "Julián Álvarez",
-                    //status = ShipmentStatus.COMPLETED,
-                    products = listOf(
-                        Product("P-401", "Tablet", 2,
-                            innerLocation = "est",
-                            currentStock = 22,
-                            imageUrl = "a"),
-                        Product("P-402", "Fundas", 2,
-                            innerLocation = "est",
-                            currentStock = 22,
-                            imageUrl = "a")
-                    ),
-                    creationDate = LocalDateTime.now().minusDays(2)
-                ),
-                Shipment(
-                    id = "S01-5",
-                    number = "ENV-0005",
-                    customerName = "Juan Pérez",
-                    //status = ShipmentStatus.IN_PROGRESS,
-                    products = listOf(
-                        Product(
-                            "P-501", "adasd", 1,
-                            innerLocation = "est",
-                            currentStock = 22,
-                            imageUrl = "a"
-                        ),
-                        Product("P-502", "aaaaaaa", 1,
-                            innerLocation = "est",
-                            currentStock = 22,
-                            imageUrl = "a")
-                    ),
-                    creationDate = LocalDateTime.now().minusHours(12)
-                )
+        Log.d("ShipmentViewModel", "Shipment to parse: $shipmentResponse")
+
+        val shipmentProducts = shipmentResponse.productAmount.map { pa ->
+            Product(id=pa.key.toString(), name= productList.values.first { p->p.ean13 == pa.key.toString() }.name, quantity = pa.value,
+            innerLocation = "est",
+            currentStock = 22,
+            imageUrl = "a") }
+        val shipment  = Shipment(
+            id=shipmentResponse.id.toString(),
+            number = "S${shipmentResponse.idLocation}E${shipmentResponse.id}",
+            customerName = shipmentResponse.customerName,
+            products = shipmentProducts
         )
 
-
-
-        val result = envios.first { s -> s.id.equals(id) }
-
-        return result
+        return shipment
     }
 }
 
 //Luego usar uno que se defina en api/model
 data class Shipment(
-    val id: String, // Al principio del id podría tener el código de sucursal
-    val number: String,
-    val customerName: String,
+    var id: String, // Al principio del id podría tener el código de sucursal
+    var number: String,
+    var customerName: String,
     //val status: ShipmentStatus,
-    val products: List<Product> = listOf(
+    var products: List<Product> = listOf(
         Product("P-101", "Resma de papel A4", 1,
             innerLocation = "Pasillo 5 • Estante 3",
             currentStock = 222,
@@ -272,6 +192,6 @@ data class Shipment(
             currentStock = 22,
             imageUrl = "a")
     ),
-    val creationDate: LocalDateTime = LocalDateTime.now(), // esto variaría según fecha de creación
-    val responsible: String? = "Sin responsable"
+    var creationDate: LocalDateTime = LocalDateTime.now(), // esto variaría según fecha de creación
+    var responsible: String? = "Sin responsable"
 )

@@ -2,7 +2,6 @@ package ar.edu.utn.frba.inventario.screens
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,6 +25,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,11 +34,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -90,7 +90,7 @@ fun ShipmentScreen(
                         )
                     }
                     Text(
-                        text = "Detalle del Envio",
+                        text = stringResource(R.string.shipment_detail_screen_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -114,44 +114,77 @@ fun ShipmentBodyContent(
     id: String,
     innerPadding: PaddingValues
 ) {
-    viewModel.loadShipment(id)
+    LaunchedEffect(id) {
+        viewModel.loadShipment(id)
+    }
     val shipment by viewModel.shipment.collectAsState()
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .background(MaterialTheme.colorScheme.secondaryContainer)
-        .padding(innerPadding)
+    if (shipment.id == "0") {
+        CircularProgressIndicator()
+    } else {
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.secondaryContainer)
+            .padding(innerPadding)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = MaterialTheme.colorScheme.primaryContainer)
         ) {
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .background(color = MaterialTheme.colorScheme.primaryContainer)){
-            Column (modifier = Modifier
-                .padding(20.dp)){
+            Column(
+                modifier = Modifier
+                    .padding(20.dp)
+            ) {
                 Text(
-                    text = "Envio ${shipment.number}",
+                    text = stringResource(
+                        R.string.shipment_detail_screen_shipment,
+                        shipment.number
+                    ),
                     style = MaterialTheme.typography.titleLarge,
                     fontSize = 25.sp,
                     fontWeight = FontWeight.Bold
                 )
-                Text(text = "Comprador: ${shipment.customerName}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-                Text(text = "Total de productos unicos: ${shipment.products.size}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                Text(
+                    text = stringResource(
+                        R.string.shipment_detail_screen_customer,
+                        shipment.customerName
+                    ),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Text(
+                    text = stringResource(
+                        R.string.shipment_detail_screen_total,
+                        shipment.products.size
+                    ),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
             }
         }
-        LazyColumn(modifier = Modifier
-            .padding(15.dp)) {
-            items(shipment.products){
-                product ->
-                ProductItem(viewModel,product,
+        LazyColumn(
+            modifier = Modifier
+                .padding(15.dp)
+        ) {
+            items(shipment.products) { product ->
+                ProductItem(
+                    viewModel, product,
                     onProductClick = { clickedProduct ->
                         navController.navigate(Screen.ProductDetail.route + "/${clickedProduct.id}")
                     })
                 Spacer(modifier = Modifier.height(5.dp))
             }
         }
-        Spacer(modifier = Modifier
-            .height(10.dp))
+        Spacer(
+            modifier = Modifier
+                .height(10.dp)
+        )
 
     }
+}
 }
 
 @Composable
@@ -173,11 +206,11 @@ fun ProductItem(viewModel:ShipmentViewModel,product:Product,
                 Spacer(modifier = Modifier
                     .height(10.dp))
                 Row {
-                    Text(text = "${product.quantity} Requeridos", style = MaterialTheme.typography.bodySmall)
+                    Text(text = stringResource(R.string.shipment_detail_screen_quantity_required, product.quantity), style = MaterialTheme.typography.bodySmall)
                     Spacer(modifier = Modifier.width(60.dp))
                     Box(contentAlignment = Alignment.Center
                             ){
-                        Text(text="${viewModel.getLoadedQuantityProduct(product.id)} Cargados", style = MaterialTheme.typography.bodySmall)
+                        Text(text= stringResource(R.string.shipment_detail_screen_quantity_loaded, viewModel.getLoadedQuantityProduct(product.id)), style = MaterialTheme.typography.bodySmall)
                     }
                 }
             }
@@ -211,7 +244,7 @@ fun ButtonBox(viewModel:ShipmentViewModel, navController: NavController){
                     modifier = Modifier
                         .fillMaxSize()
                         .weight(1f)){
-                    Text(text = "Siguiente", style = MaterialTheme.typography.titleMedium, fontSize = 25.sp,
+                    Text(text = stringResource(R.string.shipment_detail_screen_next_button), style = MaterialTheme.typography.titleMedium, fontSize = 25.sp,
                         fontWeight = FontWeight.Bold)
                 }
                 Button(colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onSecondaryContainer),
@@ -220,7 +253,7 @@ fun ButtonBox(viewModel:ShipmentViewModel, navController: NavController){
                     .fillMaxSize()
                     .weight(1f)
                 ){
-                    Text(text = "Scan", style = MaterialTheme.typography.titleMedium, fontSize = 25.sp,
+                    Text(text = stringResource(R.string.shipment_detail_screen_scan_button), style = MaterialTheme.typography.titleMedium, fontSize = 25.sp,
                         fontWeight = FontWeight.Bold)
                 }
             }
@@ -241,34 +274,6 @@ fun vistaFinal(){
 fun vistaFinalDark(){
     ShipmentScreen(navController = rememberNavController(), id = "S01-3")
 }
-
-//@Preview
-//@Composable
-//fun vistaProd(){
-//    ElevatedCard(modifier = Modifier
-//        .fillMaxWidth()
-//        .padding(2.dp)){
-//        Column (modifier = Modifier
-//            .padding(15.dp)){
-//            Text("Pendrive 32gb kingston")
-//            Spacer(modifier = Modifier
-//                .height(10.dp))
-//            Row {
-//                Text("x5")
-//                Spacer(modifier = Modifier.width(25.dp)
-//                    .weight(2f))
-//                Box(contentAlignment = Alignment.Center,
-//                    modifier = Modifier
-//                        .background(color = Color.White)){
-//                    Text(text="Cargado: 0")
-//                }
-//
-//
-//            }
-//        }
-//    }
-//
-//}
 
 
 

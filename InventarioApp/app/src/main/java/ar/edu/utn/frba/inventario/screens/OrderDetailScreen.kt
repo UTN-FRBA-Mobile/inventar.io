@@ -31,6 +31,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.viewmodels.OrderDetailViewModel
@@ -69,7 +71,7 @@ fun OrderDetailScreen(viewModel:OrderDetailViewModel = hiltViewModel(), navContr
                         )
                     }
                     Text(
-                        text = "Detalle del Pedido",
+                        text = stringResource(R.string.order_detail_screen_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -103,13 +105,13 @@ fun OrderDetailBodyContent(viewModel:OrderDetailViewModel, navController: NavCon
             Column (modifier = Modifier
                 .padding(20.dp)){
                 Text(
-                    text = "Pedido ${order.number}",
+                    text = stringResource(R.string.order_detail_screen_order, order.number),
                     style = MaterialTheme.typography.titleLarge,
                     fontSize = 25.sp,
                     fontWeight = FontWeight.Bold
                 )
-                Text(text = "Remitente: ${order.sender}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-                Text(text = "Total de productos unicos: ${order.products.size}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                Text(text = stringResource(R.string.order_detail_screen_sender, order.sender), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                Text(text = stringResource(R.string.order_detail_screen_total, order.products.size), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
             }
         }
         LazyColumn(modifier = Modifier
@@ -144,7 +146,7 @@ fun ProductItem(product:Product){
             Box(modifier = Modifier
                 .weight(1f)
                 .padding(15.dp)) {
-                Text(text = "Cantidad ${product.quantity}", style = MaterialTheme.typography.bodyMedium)
+                Text(text = stringResource(R.string.order_detail_screen_quantity, product.quantity), style = MaterialTheme.typography.bodyMedium)
             }
         }
     }
