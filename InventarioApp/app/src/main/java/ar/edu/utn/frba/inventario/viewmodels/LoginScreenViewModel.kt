@@ -89,6 +89,9 @@ class LoginScreenViewModel @Inject constructor(
                             loginResult.data.refreshToken
                         )
 
+                        // Log access token
+                        Log.d("LoginViewModel", "Access Token: ${loginResult.data.accessToken}")
+
                         _user.value = ""
                         _password.value = ""
 
