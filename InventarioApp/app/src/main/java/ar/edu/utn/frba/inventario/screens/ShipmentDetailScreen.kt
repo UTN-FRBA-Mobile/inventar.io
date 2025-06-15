@@ -54,14 +54,14 @@ import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.utils.Screen
 
-import ar.edu.utn.frba.inventario.viewmodels.ShipmentViewModel
+import ar.edu.utn.frba.inventario.viewmodels.ShipmentDetailViewModel
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShipmentScreen(
-    viewModel: ShipmentViewModel = hiltViewModel(),
+fun ShipmentDetailScreen(
+    viewModel: ShipmentDetailViewModel = hiltViewModel(),
     navController: NavController,
     id: String
 ) {
@@ -80,7 +80,7 @@ fun ShipmentScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(
-                        onClick = {navController.navigate(Screen.Home.route)},
+                        onClick = {navController.navigate(Screen.Shipments.route)},
                         modifier = Modifier.size(48.dp)
                     ) {
                         Icon(
@@ -103,13 +103,13 @@ fun ShipmentScreen(
             }
         }
     ) { innerPadding ->
-        ShipmentBodyContent(viewModel, navController, id, innerPadding)
+        ShipmentDetailBodyContent(viewModel, navController, id, innerPadding)
     }
 }
 
 @Composable
-fun ShipmentBodyContent(
-    viewModel: ShipmentViewModel,
+fun ShipmentDetailBodyContent(
+    viewModel: ShipmentDetailViewModel,
     navController: NavController,
     id: String,
     innerPadding: PaddingValues
@@ -188,7 +188,7 @@ fun ShipmentBodyContent(
 }
 
 @Composable
-fun ProductItem(viewModel:ShipmentViewModel,product:Product,
+fun ProductItem(viewModel:ShipmentDetailViewModel, product:Product,
                 onProductClick: (Product) -> Unit){
     val  statusProd = viewModel.getProductStatus(product.id)
 
@@ -231,7 +231,7 @@ fun ProductItem(viewModel:ShipmentViewModel,product:Product,
 }
 
 @Composable
-fun ButtonBox(viewModel:ShipmentViewModel, navController: NavController){
+fun ButtonBox(viewModel:ShipmentDetailViewModel, navController: NavController){
     Column {
         Box(contentAlignment = Alignment.Center, modifier = Modifier
             .fillMaxWidth()
@@ -267,12 +267,12 @@ fun ButtonBox(viewModel:ShipmentViewModel, navController: NavController){
 @Preview
 @Composable
 fun vistaFinal(){
-    ShipmentScreen(navController = rememberNavController(), id = "S01-3")
+    ShipmentDetailScreen(navController = rememberNavController(), id = "S01-3")
 }
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun vistaFinalDark(){
-    ShipmentScreen(navController = rememberNavController(), id = "S01-3")
+    ShipmentDetailScreen(navController = rememberNavController(), id = "S01-3")
 }
 
 

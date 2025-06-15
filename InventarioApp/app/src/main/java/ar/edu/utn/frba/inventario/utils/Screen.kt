@@ -4,10 +4,10 @@ import android.net.Uri
 
 enum class Screen(val route: String) {
     Login("login"),
-    Home("home"),
+    Shipments("shipments"),
     Orders("orders"),
     User("user"),
-    Shipment("shipment"),
+    ShipmentDetail("shipment_detail"),
     OrderDetail("order_detail"),
     Scan("scan"),
     ProductResult("product_result"),

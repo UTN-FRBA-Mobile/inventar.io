@@ -23,7 +23,7 @@ fun BottomNavigationBar(navController: NavController, items: List<Screen> ) {
             NavigationBarItem(
                 icon = {
                     when (screen) {
-                        Screen.Home -> Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null)
+                        Screen.Shipments -> Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null)
                         Screen.Orders -> Icon(Icons.Default.ShoppingCart, contentDescription = null)
                         Screen.User -> Icon(Icons.Default.AccountCircle, contentDescription = null)
                         else -> throw IllegalArgumentException("Unknown screen: ${screen.route}")

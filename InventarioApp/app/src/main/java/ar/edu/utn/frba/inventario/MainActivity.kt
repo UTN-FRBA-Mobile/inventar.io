@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
                 val currentRoute = currentBackStack?.destination?.route
 
                 val navBarItems: List<Screen> = listOf(
-                    Screen.Home,
+                    Screen.Shipments,
                     Screen.Orders,
                     Screen.User
                 )

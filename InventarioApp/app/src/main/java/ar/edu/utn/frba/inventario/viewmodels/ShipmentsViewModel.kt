@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
 import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.api.model.shipment.Shipment
@@ -21,8 +20,8 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val shipmentRepository: ShipmentRepository,
-    savedStateHandle: SavedStateHandle
+class ShipmentsViewModel @Inject constructor(private val shipmentRepository: ShipmentRepository,
+                                             savedStateHandle: SavedStateHandle
 ) : BaseItemViewModel<Shipment>(
     savedStateHandle = savedStateHandle,
     filterKey = "shipment_filter"
