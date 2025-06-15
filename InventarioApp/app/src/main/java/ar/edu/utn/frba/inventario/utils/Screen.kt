@@ -22,6 +22,10 @@ enum class ProductResultArgs(override val code: String) : HasCode {
     Origin("origin"),
 }
 
+enum class ScanArgs(override val code: String) : HasCode {
+    Origin("origin"),
+}
+
 fun Screen.withArgsDefinition(args: Array<out HasCode>): String {
     val query = args.joinToString("&") { "${it.code}={${it.code}}" }
     return if (query.isNotEmpty()) "$route?$query" else route

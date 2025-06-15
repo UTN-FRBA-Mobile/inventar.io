@@ -16,10 +16,10 @@ import retrofit2.http.Query
 
 interface ApiService {
     /* Authentication */
-    @POST("auth/login")
+    @POST("/api/v1/auth/login")
     suspend fun login(@Body request: LoginRequest): Response<LoginResponse>
 
-    @POST("auth/refresh")
+    @POST("/api/v1/auth/refresh")
     fun refreshToken(@Body refreshToken: String): Call<LoginResponse>
 
     /* Self location & user */

@@ -1,6 +1,5 @@
 package ar.edu.utn.frba.inventario.screens
 
-import android.R
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.inventario.utils
 
 import android.graphics.BitmapFactory
+import android.util.Base64
 import androidx.compose.foundation.Image
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -9,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import kotlin.io.encoding.ExperimentalEncodingApi
-import android.util.Base64
 
 @OptIn(ExperimentalEncodingApi::class)
 @Composable

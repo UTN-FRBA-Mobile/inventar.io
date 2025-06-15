@@ -53,6 +53,8 @@ import androidx.navigation.compose.rememberNavController
 import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.utils.Screen
+import androidx.compose.ui.res.stringResource
+
 
 import ar.edu.utn.frba.inventario.viewmodels.ShipmentDetailViewModel
 
@@ -248,7 +250,7 @@ fun ButtonBox(viewModel:ShipmentDetailViewModel, navController: NavController){
                         fontWeight = FontWeight.Bold)
                 }
                 Button(colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onSecondaryContainer),
-                    onClick = { },
+                    onClick = { navController.navigate(Screen.Scan.route + "?origin=shipment") },
                     modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)

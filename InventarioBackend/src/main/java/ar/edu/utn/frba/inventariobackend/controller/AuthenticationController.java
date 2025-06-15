@@ -24,7 +24,7 @@ import java.util.Optional;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/api/v1/auth")
 public class AuthenticationController {
     private final JwtUtil jwtUtil;
     private final LocationService locationService;
@@ -61,7 +61,7 @@ public class AuthenticationController {
     /**
      * Refreshes the access token using a valid refresh token.
      *
-     * @param refreshToken the refresh token provided by the client
+     * @param originalRefreshToken the refresh token provided by the client
      * @return a {@link ResponseEntity} containing a new access token and the same refresh token if valid;
      *         otherwise, returns HTTP 401 Unauthorized
      */
