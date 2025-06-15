@@ -58,7 +58,6 @@ import androidx.compose.ui.res.stringResource
 
 import ar.edu.utn.frba.inventario.viewmodels.ShipmentDetailViewModel
 
-
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
