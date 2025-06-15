@@ -17,6 +17,7 @@ import java.util.Map;
  * @param idLocation       The location of this order
  * @param sender           Identifier for who or what originated this order.
  * @param productAmount    A map with id as key and amount as value.
+ * @param productNames     A map with id as key and names as value.
  */
 public record OrderResponse(
     Long id,
@@ -26,17 +27,23 @@ public record OrderResponse(
     LocalDateTime lastModifiedDate,
     Long idLocation,
     String sender,
-    Map<Long, Integer> productAmount
+    Map<Long, Integer> productAmount,
+    Map<Long, String> productNames
 ) {
 
     /**
      * Creates an OrderResponse DTO from an Orders entity.
      *
-     * @param order The Order entity.
-     * @param productAmount the amount of products for the order.
+     * @param order         The Order entity.
+     * @param productAmount The amount of products for the order.
+     * @param productNames  The names of the products.
      * @return An OrderResponse DTO.
      */
-    public static OrderResponse fromOrder(Order order, Map<Long, Integer> productAmount) {
+    public static OrderResponse fromOrder(
+        Order order,
+        Map<Long, Integer> productAmount,
+        Map<Long, String> productNames
+    ) {
         return new OrderResponse(
             order.getId(),
             order.getStatus(),
@@ -45,6 +52,7 @@ public record OrderResponse(
             order.getLastModifiedDate(),
             order.getIdLocation(),
             order.getSender(),
-            productAmount);
+            productAmount,
+            productNames);
     }
 }
