@@ -44,8 +44,6 @@ class LoginScreenViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
-    val location: StateFlow<Location?> = locationRepository.location
-
     fun changeUser(newUser: String) {
         _user.value = newUser
     }
