@@ -26,8 +26,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final List<String> PUBLIC_ENDPOINTS = List.of(
-        "/auth/login",
-        "/auth/refresh",
+        "/api/v1/auth/login",
+        "/api/v1/auth/refresh",
         "/api/v1/user",
         "/api/v1/location",
         "/api/v1/shipments",

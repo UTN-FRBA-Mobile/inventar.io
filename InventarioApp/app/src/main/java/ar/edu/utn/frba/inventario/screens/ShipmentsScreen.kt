@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -25,12 +26,12 @@ import ar.edu.utn.frba.inventario.components.CardItem
 import ar.edu.utn.frba.inventario.components.EmptyResultsMessage
 import ar.edu.utn.frba.inventario.components.StatusFilter
 import ar.edu.utn.frba.inventario.utils.Screen
-import ar.edu.utn.frba.inventario.viewmodels.HomeViewModel
+import ar.edu.utn.frba.inventario.viewmodels.ShipmentsViewModel
 
 @Composable
-fun HomeScreen(
+fun ShipmentsScreen(
     navController: NavController,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: ShipmentsViewModel = hiltViewModel()
 ) {
     Column(
         modifier = Modifier
@@ -53,12 +54,16 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxWidth()
         )
-        HomeBodyContent(navController, viewModel.getFilteredItems())
+
+        LaunchedEffect(Unit) {
+            viewModel.getShipments()
+        }
+        ShipmentsBodyContent(navController, viewModel.getFilteredItems())
     }
 }
 
 @Composable
-fun HomeBodyContent(
+fun ShipmentsBodyContent(
     navController: NavController,
     shipments: List<Shipment>
 ) {
@@ -82,7 +87,7 @@ fun HomeBodyContent(
             ) {
                 itemsIndexed(shipments) { _, shipment ->
                     CardItem(navController, shipment, onItemClick = { clickedItem ->
-                        navController.navigate(Screen.Shipment.route + "/${clickedItem.id}")
+                        navController.navigate(Screen.ShipmentDetail.route + "/${clickedItem.id}")
                     })
                 }
             }

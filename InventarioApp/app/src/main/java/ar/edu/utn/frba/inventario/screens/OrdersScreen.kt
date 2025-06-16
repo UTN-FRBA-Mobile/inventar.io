@@ -104,7 +104,7 @@ fun OrderBodyContent(
         }
 
             FloatingActionButton(
-                onClick = { navController.navigate(Screen.Scan.route) },
+                onClick = { navController.navigate(Screen.Scan.route + "?origin=order") },
                 shape = RoundedCornerShape(50),
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -120,7 +120,7 @@ fun OrderBodyContent(
             }
 
             BackHandler {
-                navController.navigate(Screen.Home.route) {
+                navController.navigate(Screen.Shipments.route) {
                     popUpTo(navController.graph.startDestinationId) {
                         saveState = true
                     }

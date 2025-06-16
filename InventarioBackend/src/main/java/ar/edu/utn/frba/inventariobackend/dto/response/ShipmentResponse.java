@@ -16,25 +16,32 @@ import java.util.Map;
  * @param idLocation       The location of this shipment
  * @param customerName     The customer for this shipment.
  * @param productAmount    A map with id as key and amount as value.
+ * @param productNames     A map with id as key and names as value.
  */
 public record ShipmentResponse(
-        Long id,
-        Status status,
-        LocalDateTime creationDate,
-        LocalDateTime lastModifiedDate,
-        Long idLocation,
-        String customerName,
-        Map<Long, Integer> productAmount
+    Long id,
+    Status status,
+    LocalDateTime creationDate,
+    LocalDateTime lastModifiedDate,
+    Long idLocation,
+    String customerName,
+    Map<Long, Integer> productAmount,
+    Map<Long, String> productNames
 ) {
 
     /**
      * Creates an ShipmentResponse DTO from a Shipment entity.
      *
-     * @param shipment The Order entity.
-     * @param productAmount the amount of products for the shipment.
+     * @param shipment      The Shipment entity.
+     * @param productAmount The amount of products for the shipment.
+     * @param productNames  The names of the products.
      * @return A ShipmentResponse DTO.
      */
-    public static ShipmentResponse fromShipment(Shipment shipment, Map<Long, Integer> productAmount) {
+    public static ShipmentResponse fromShipment(
+        Shipment shipment,
+        Map<Long, Integer> productAmount,
+        Map<Long, String> productNames
+    ) {
         return new ShipmentResponse(
             shipment.getId(),
             shipment.getStatus(),
@@ -42,6 +49,7 @@ public record ShipmentResponse(
             shipment.getLastModifiedDate(),
             shipment.getIdLocation(),
             shipment.getCustomerName(),
-            productAmount);
+            productAmount,
+            productNames);
     }
 }

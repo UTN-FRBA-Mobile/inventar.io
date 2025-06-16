@@ -2,8 +2,6 @@ package ar.edu.utn.frba.inventario.viewmodels
 
 import android.location.Location
 import android.util.Log
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ar.edu.utn.frba.inventario.api.model.auth.LoginRequest
@@ -83,6 +81,8 @@ class LoginScreenViewModel @Inject constructor(
                     authRepository.login(LoginRequest(currentUser, hashedPassword, latitude, longitude))
                 }
 
+                Log.d("LoginViewModel", "Login ejecutado")
+
                 when (loginResult) {
                     is NetworkResult.Success -> {
                         Log.d("LoginViewModel", "Login exitoso")
@@ -91,6 +91,9 @@ class LoginScreenViewModel @Inject constructor(
                             loginResult.data.accessToken,
                             loginResult.data.refreshToken
                         )
+
+                        // Log access token
+                        Log.d("LoginViewModel", "Access Token: ${loginResult.data.accessToken}")
 
                         _user.value = ""
                         _password.value = ""

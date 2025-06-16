@@ -7,10 +7,11 @@ enum class Screen(val route: String) {
     Welcome("welcome"),
     RetryLogin("retryLogin"),
     Home("home"),
+    Shipments("shipments"),
     Orders("orders"),
     User("user"),
-    Shipment("shipment"),
-    OrderDetail("orderdetail"),
+    ShipmentDetail("shipment_detail"),
+    OrderDetail("order_detail"),
     Scan("scan"),
     ProductResult("product_result"),
     ManualCode("manual_code"),
@@ -21,6 +22,10 @@ enum class ProductResultArgs(override val code: String) : HasCode {
     Code("result"),
     ErrorMessage("errorMessage"),
     CodeType("codeType"),
+    Origin("origin"),
+}
+
+enum class ScanArgs(override val code: String) : HasCode {
     Origin("origin"),
 }
 

@@ -14,13 +14,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import ar.edu.utn.frba.inventario.api.utils.TokenManager
-import ar.edu.utn.frba.inventario.screens.HomeScreen
+import ar.edu.utn.frba.inventario.screens.ShipmentsScreen
 import ar.edu.utn.frba.inventario.screens.LoginScreen
 import ar.edu.utn.frba.inventario.screens.OrderDetailScreen
 import ar.edu.utn.frba.inventario.screens.OrdersScreen
 import ar.edu.utn.frba.inventario.screens.ProductDetailScreen
 import ar.edu.utn.frba.inventario.screens.RetryLoginScreen
-import ar.edu.utn.frba.inventario.screens.ShipmentScreen
+import ar.edu.utn.frba.inventario.screens.ShipmentDetailScreen
 import ar.edu.utn.frba.inventario.screens.UserScreen
 import ar.edu.utn.frba.inventario.screens.WelcomeScreen
 import ar.edu.utn.frba.inventario.screens.scan.ManualCodeScreen
@@ -28,9 +28,10 @@ import ar.edu.utn.frba.inventario.screens.scan.ProductResultScreen
 import ar.edu.utn.frba.inventario.screens.scan.ScanScreen
 import ar.edu.utn.frba.inventario.utils.HasCode
 import ar.edu.utn.frba.inventario.utils.ProductResultArgs
+import ar.edu.utn.frba.inventario.utils.ScanArgs
 import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.utils.withArgsDefinition
-import ar.edu.utn.frba.inventario.viewmodels.ShipmentViewModel
+import ar.edu.utn.frba.inventario.viewmodels.ShipmentDetailViewModel
 
 @Composable
 fun AppNavigation(navController: NavHostController) {
@@ -38,6 +39,7 @@ fun AppNavigation(navController: NavHostController) {
     val startDestination = if (tokenManager.hasSession()) Screen.Welcome.route else Screen.Login.route
 
     val productResultArgs = ProductResultArgs.entries.toTypedArray()
+    val scanArgs = ScanArgs.entries.toTypedArray()
 
     printCurrentBackStack(navController)
 
@@ -51,17 +53,20 @@ fun AppNavigation(navController: NavHostController) {
         composable(Screen.RetryLogin.route) {
             RetryLoginScreen(navController)
         }
-        composable(Screen.Home.route) {
-            HomeScreen(navController)
-        }
         composable(Screen.Orders.route) {
             OrdersScreen(navController)
         }
         composable(Screen.User.route) {
             UserScreen(navController)
         }
-        composable(Screen.Scan.route) {
-            ScanScreen(navController)
+        composable(
+            Screen.Scan.withArgsDefinition(scanArgs),
+            arguments = navArgsOf(scanArgs)
+        ) { backStackEntry ->
+            ScanScreen(
+                navController,
+                backStackEntry.arguments?.getString(ScanArgs.Origin.code) ?: "shipment"
+            )
         }
         composable(Screen.ManualCode.route) {
             ManualCodeScreen(navController)
@@ -78,14 +83,14 @@ fun AppNavigation(navController: NavHostController) {
                 backStackEntry.arguments?.getString(ProductResultArgs.Origin.code) ?: "scan"
             )
         }
-        composable(route=Screen.Shipment.route+"/{id}",
+        composable(route=Screen.ShipmentDetail.route+"/{id}",
         arguments = listOf(
             navArgument(name = "id"){
                 type= NavType.StringType
             }
         )) { backStackEntry->
             val idShipment = backStackEntry.arguments?.getString("id")?:""
-            ShipmentScreen(navController = navController, id = idShipment)
+            ShipmentDetailScreen(navController = navController, id = idShipment)
         }
         composable(route=Screen.OrderDetail.route+"/{orderId}",
             arguments = listOf(
@@ -101,7 +106,7 @@ fun AppNavigation(navController: NavHostController) {
             arguments = listOf(navArgument("productId") { type = NavType.StringType })
         ) { backStackEntry ->
             val productId = backStackEntry.arguments?.getString("productId") ?: ""
-            val viewModel: ShipmentViewModel = hiltViewModel()
+            val viewModel: ShipmentDetailViewModel = hiltViewModel()
             ProductDetailScreen(
                 product = viewModel.getProductById(productId),
                 onBackClick = { navController.popBackStack() }
