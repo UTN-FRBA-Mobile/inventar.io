@@ -43,17 +43,10 @@ fun WelcomeBodyContent(
     navController: NavController,
     userScreenViewModel: UserScreenViewModel,
     locationViewModel: LocationViewModel
-
 ){
-    val context = LocalContext.current
     val user by userScreenViewModel.user.collectAsState()
+    val location by locationViewModel.location.collectAsState()
 
-
-    if(locationViewModel.hasLocationPermission(context)){
-        Log.d("WelcomeScreen", "user has Location Permitions")
-    }else{
-        Log.d("WelcomeScreen", "user doesnt have Location Permitions")
-    }
     Column (
         modifier = Modifier
             .fillMaxSize()
@@ -63,16 +56,13 @@ fun WelcomeBodyContent(
     )
     {
         Text(
-            text = "Bienvenido username",
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.primary
-        )
-        Text(
-            text = "Actualmente te encuentras en la sucursal locationName",
+            text = "Bienvenido ${user?.username}. ${location?.latitude} ${location?.longitude}",
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.primary
         )
         Button(
+            modifier = Modifier
+                .padding(8.dp),
             onClick = {
                 navController.navigate(Screen.Home.route) {
                     popUpTo(0) { saveState = true }

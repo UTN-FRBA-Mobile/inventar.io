@@ -55,14 +55,16 @@ import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.utils.Spinner
 import ar.edu.utn.frba.inventario.viewmodels.LoginScreenViewModel
 import android.Manifest
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.collectAsState
+import ar.edu.utn.frba.inventario.viewmodels.LocationViewModel
 
 @Composable
 fun LoginScreen(
     navController: NavController,
     loginScreenViewModel: LoginScreenViewModel = hiltViewModel(),
+    locationViewModel: LocationViewModel = hiltViewModel()
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
     val user by loginScreenViewModel.user.collectAsStateWithLifecycle()
@@ -82,21 +84,18 @@ fun LoginScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val locationPermission = Manifest.permission.ACCESS_FINE_LOCATION
-    val locationPermissionGranted by loginScreenViewModel.locationPermissionGranted.collectAsStateWithLifecycle()
+    val locationPermissionGranted by locationViewModel.locationPermissionGranted.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val locationPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            loginScreenViewModel.setLocationPermissionGranted(true)
-            Log.d("LoginScreen", "Permiso de ubicación concedido")
+            locationViewModel.setLocationPermissionGranted(true)
+            locationViewModel.startLocationUpdates()
         } else {
             Log.d("LoginScreen", "Permiso de ubicación denegado")
         }
     }
-
-
-
     LaunchedEffect(Unit) {
         loginScreenViewModel.navigationEvent.collect { event ->
             if (event is NavigationEvent.NavigateTo) {
@@ -108,21 +107,17 @@ fun LoginScreen(
             }
         }
     }
-
     LaunchedEffect(Unit) {
         loginScreenViewModel.snackbarMessage.collect { message ->
             snackBarHostState.showSnackbar(message)
         }
     }
-
     LaunchedEffect(Unit) {
         if (ContextCompat.checkSelfPermission(context, locationPermission) != PackageManager.PERMISSION_GRANTED) {
             locationPermissionLauncher.launch(locationPermission)
         }
     }
-
     LaunchedEffect(Unit) {
-        Log.d("LoginScreen", "Permiso de ubicación $locationPermissionGranted")
         if(!locationPermissionGranted){
             locationPermissionLauncher.launch(locationPermission)
         }
@@ -137,25 +132,46 @@ fun LoginScreen(
                 .fillMaxSize()
                 .padding(WindowInsets.ime.asPaddingValues())
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .fillMaxSize()
-            ) {
-                if(!locationPermissionGranted) {
+            // si llega a cancelar permisos y quiere loguearse de vuelta, no muestra el login
+            // y muestra un botón para solicitar permisos
+            if(!locationPermissionGranted) {
+                Column (
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ){
                     Text(
                         text = "Activar permisos de ubicacion",
                         style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.primary,
                     )
-                }else{
-
+                    Button(
+                        modifier = Modifier
+                            .padding(top = 8.dp),
+                        onClick = {
+                            locationPermissionLauncher.launch(locationPermission)
+                        }
+                    ) {
+                        Text(
+                            text = "Activar ubicacion",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.secondaryContainer,
+                        )
+                    }
+                }
+            }else {
+                Column(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .fillMaxSize()
+                ) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1f),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
+                        verticalArrangement = Arrangement.Center
                     ) {
                         Image(
                             painter = painterResource(id = logoResourceId),
@@ -165,7 +181,6 @@ fun LoginScreen(
                             contentScale = ContentScale.Fit
                         )
                     }
-
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -186,7 +201,7 @@ fun LoginScreen(
                                     focusManager.moveFocus(FocusDirection.Down)
                                 }
                             ),
-                            singleLine = true,
+                            singleLine = true
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         OutlinedTextField(
@@ -200,13 +215,23 @@ fun LoginScreen(
                             ),
                             keyboardActions = KeyboardActions(
                                 onDone = {
-                                    executeLogin(loginScreenViewModel, keyboardController, focusManager)
+                                    executeLogin(
+                                        loginScreenViewModel,
+                                        keyboardController,
+                                        focusManager
+                                    )
                                 }
                             ),
-                            singleLine = true,
+                            singleLine = true
                         )
                         Spacer(modifier = Modifier.height(32.dp))
-                        Button(onClick = { executeLogin(loginScreenViewModel, keyboardController, focusManager) }) {
+                        Button(onClick = {
+                            executeLogin(
+                                loginScreenViewModel,
+                                keyboardController,
+                                focusManager
+                            )
+                        }) {
                             Text("Login")
                         }
                     }

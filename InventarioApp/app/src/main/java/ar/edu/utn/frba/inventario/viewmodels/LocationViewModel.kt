@@ -12,8 +12,10 @@ import kotlinx.coroutines.launch
 
 import android.content.Context
 import android.location.Geocoder
+import android.location.Location
 import android.os.Looper
 import androidx.lifecycle.ViewModel
+import ar.edu.utn.frba.inventario.api.repository.LocationRepository
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,53 +26,30 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.util.Locale
 import javax.inject.Inject
-import javax.inject.Singleton
 
 
 @HiltViewModel
 class LocationViewModel @Inject constructor(
-    private val fusedLocationClient: FusedLocationProviderClient
+    private val locationRepository: LocationRepository
 ): ViewModel() {
-    private val _location = MutableStateFlow<LatLng?>(null)
-    val location: StateFlow<LatLng?> = _location
+    val location: StateFlow<Location?> = locationRepository.location
 
-    private var locationCallback: LocationCallback? = null
+    private val _locationPermissionGranted = MutableStateFlow(false)
+    var locationPermissionGranted: StateFlow<Boolean> = _locationPermissionGranted
 
+    fun setLocationPermissionGranted(flag: Boolean){
+        _locationPermissionGranted.value = flag;
+    }
 
-    fun startLocationUpdates(context: Context) {
-
-        val request = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000).build()
-
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(result: LocationResult) {
-                result.lastLocation?.let {
-                    val latLng = LatLng(it.latitude, it.longitude)
-                    viewModelScope.launch {
-                        _location.emit(latLng)
-
-                    }
-                }
-            }
-        }
-        try{
-            if(hasLocationPermission(context = context)){
-                fusedLocationClient?.requestLocationUpdates(
-                    request,
-                    locationCallback!!,
-                    Looper.getMainLooper()
-                )
-            }
-        }catch (e: SecurityException){
-            e.printStackTrace()
-        }
+    fun startLocationUpdates() {
+        locationRepository.startLocationUpdates()
     }
 
     override fun onCleared() {
         super.onCleared()
-        if(locationCallback != null){
-            fusedLocationClient?.removeLocationUpdates(locationCallback!!)
-        }
+        locationRepository.stopLocationUpdates()
     }
+
     fun hasLocationPermission(context: Context): Boolean {
         return ContextCompat.checkSelfPermission(
             context,
