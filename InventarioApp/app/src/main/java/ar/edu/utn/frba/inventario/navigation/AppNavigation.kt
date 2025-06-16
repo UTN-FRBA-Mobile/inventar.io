@@ -19,7 +19,6 @@ import ar.edu.utn.frba.inventario.screens.LoginScreen
 import ar.edu.utn.frba.inventario.screens.OrderDetailScreen
 import ar.edu.utn.frba.inventario.screens.OrdersScreen
 import ar.edu.utn.frba.inventario.screens.ProductDetailScreen
-import ar.edu.utn.frba.inventario.screens.RetryLoginScreen
 import ar.edu.utn.frba.inventario.screens.ShipmentDetailScreen
 import ar.edu.utn.frba.inventario.screens.UserScreen
 import ar.edu.utn.frba.inventario.screens.WelcomeScreen
@@ -50,8 +49,8 @@ fun AppNavigation(navController: NavHostController) {
         composable(Screen.Welcome.route) {
             WelcomeScreen(navController)
         }
-        composable(Screen.RetryLogin.route) {
-            RetryLoginScreen(navController)
+        composable(Screen.Shipments.route) {
+            ShipmentsScreen(navController)
         }
         composable(Screen.Orders.route) {
             OrdersScreen(navController)
