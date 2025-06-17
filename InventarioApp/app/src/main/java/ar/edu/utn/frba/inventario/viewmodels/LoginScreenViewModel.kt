@@ -1,11 +1,13 @@
 package ar.edu.utn.frba.inventario.viewmodels
 
+import android.location.Location
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ar.edu.utn.frba.inventario.api.model.auth.LoginRequest
 import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
 import ar.edu.utn.frba.inventario.api.repository.AuthRepository
+import ar.edu.utn.frba.inventario.api.repository.LocationRepository
 import ar.edu.utn.frba.inventario.api.utils.TokenManager
 import ar.edu.utn.frba.inventario.events.NavigationEvent
 import ar.edu.utn.frba.inventario.utils.Screen
@@ -24,7 +26,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginScreenViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val tokenManager: TokenManager
+    private val tokenManager: TokenManager,
+    private val locationRepository: LocationRepository
 ) : ViewModel() {
     private val _navigationEvent = MutableSharedFlow<NavigationEvent?>()
     val navigationEvent = _navigationEvent.asSharedFlow()
@@ -53,7 +56,7 @@ class LoginScreenViewModel @Inject constructor(
         val currentUser = _user.value
         val currentPassword = _password.value
 
-        // Ambos capos deben tener valor
+        // Ambos campos deben tener valor
         if (currentUser.isBlank() || currentPassword.isBlank()) {
             viewModelScope.launch {
                 _snackbarMessage.emit("Debe completar ambos campos")
@@ -68,11 +71,9 @@ class LoginScreenViewModel @Inject constructor(
                 // Formato de contraseña: sha256({pass}{user})
                 val hashedPassword = sha256(currentPassword + currentUser)
 
-                // TODO: obtener desde la API de geolocalización
-                val latitude = -34.6297674
-                val longitude = -58.4521302
-
-                Log.d("LoginViewModel", "Iniciando login con backend para usuario: $currentUser")
+                val latitude = locationRepository.getLatitude()
+                val longitude = locationRepository.getLongitude()
+                Log.d("LoginViewModel", "Latitud: $latitude, Longitud: $longitude")
 
                 val loginResult = withContext(Dispatchers.Default) {
                     authRepository.login(LoginRequest(currentUser, hashedPassword, latitude, longitude))
@@ -94,8 +95,9 @@ class LoginScreenViewModel @Inject constructor(
 
                         _user.value = ""
                         _password.value = ""
-
-                        _navigationEvent.emit(NavigationEvent.NavigateTo(Screen.Shipments.route))
+                        Log.d("LoginScreenViewModel", "Redireccionando a Welcome")
+                        _navigationEvent.emit(NavigationEvent.NavigateTo(Screen.Welcome.route))
+                        Log.d("LoginScreenViewModel", "Listo a Welcome")
 
                     }
                     is NetworkResult.Error -> {

@@ -1,5 +1,9 @@
 package ar.edu.utn.frba.inventario.screens
 
+import android.content.pm.PackageManager
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -32,6 +36,7 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
@@ -41,6 +46,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -49,11 +55,17 @@ import ar.edu.utn.frba.inventario.events.NavigationEvent
 import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.utils.Spinner
 import ar.edu.utn.frba.inventario.viewmodels.LoginScreenViewModel
+import android.Manifest
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.collectAsState
+import ar.edu.utn.frba.inventario.viewmodels.LocationViewModel
 
 @Composable
 fun LoginScreen(
     navController: NavController,
     loginScreenViewModel: LoginScreenViewModel = hiltViewModel(),
+    locationViewModel: LocationViewModel = hiltViewModel()
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
     val user by loginScreenViewModel.user.collectAsStateWithLifecycle()
@@ -72,6 +84,19 @@ fun LoginScreen(
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
+    val locationPermission = Manifest.permission.ACCESS_FINE_LOCATION
+    val locationPermissionGranted by locationViewModel.locationPermissionGranted.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val locationPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            locationViewModel.setLocationPermissionGranted(true)
+            locationViewModel.startLocationUpdates()
+        } else {
+            Log.d("LoginScreen", "Permiso de ubicación denegado")
+        }
+    }
     LaunchedEffect(Unit) {
         loginScreenViewModel.navigationEvent.collect { event ->
             if (event is NavigationEvent.NavigateTo) {
@@ -83,10 +108,19 @@ fun LoginScreen(
             }
         }
     }
-
     LaunchedEffect(Unit) {
         loginScreenViewModel.snackbarMessage.collect { message ->
             snackBarHostState.showSnackbar(message)
+        }
+    }
+    LaunchedEffect(Unit) {
+        if (ContextCompat.checkSelfPermission(context, locationPermission) != PackageManager.PERMISSION_GRANTED) {
+            locationPermissionLauncher.launch(locationPermission)
+        }
+    }
+    LaunchedEffect(Unit) {
+        if(!locationPermissionGranted){
+            locationPermissionLauncher.launch(locationPermission)
         }
     }
 
@@ -99,69 +133,108 @@ fun LoginScreen(
                 .fillMaxSize()
                 .padding(WindowInsets.ime.asPaddingValues())
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .fillMaxSize()
-            ) {
-                Column(
+            // si llega a cancelar permisos y quiere loguearse de vuelta, no muestra el login
+            // y muestra un botón para solicitar permisos
+            if(!locationPermissionGranted) {
+                Column (
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    Image(
-                        painter = painterResource(id = logoResourceId),
-                        contentDescription = stringResource(R.string.logo),
-                        modifier = Modifier
-                            .size(screenWidth * 0.8f),
-                        contentScale = ContentScale.Fit
-                    )
-                }
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(2f),
+                        .fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
+                ){
+                    Text(
+                        text = "Activar permisos de ubicacion",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                    Button(
+                        modifier = Modifier
+                            .padding(top = 8.dp),
+                        onClick = {
+                            locationPermissionLauncher.launch(locationPermission)
+                        }
+                    ) {
+                        Text(
+                            text = "Activar ubicacion",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.secondaryContainer,
+                        )
+                    }
+                }
+            }else {
+                Column(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .fillMaxSize()
                 ) {
-                    OutlinedTextField(
-                        value = user,
-                        onValueChange = { loginScreenViewModel.changeUser(it) },
-                        label = { Text("Usuario") },
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Next
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onNext = {
-                                focusManager.moveFocus(FocusDirection.Down)
-                            }
-                        ),
-                        singleLine = true,
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    OutlinedTextField(
-                        value = password,
-                        onValueChange = { loginScreenViewModel.changePassword(it) },
-                        label = { Text("Contraseña") },
-                        visualTransformation = PasswordVisualTransformation(),
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            keyboardType = KeyboardType.Password,
-                            imeAction = ImeAction.Done
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onDone = {
-                                executeLogin(loginScreenViewModel, keyboardController, focusManager)
-                            }
-                        ),
-                        singleLine = true,
-                    )
-                    Spacer(modifier = Modifier.height(32.dp))
-                    Button(onClick = { executeLogin(loginScreenViewModel, keyboardController, focusManager) }) {
-                        Text("Login")
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Image(
+                            painter = painterResource(id = logoResourceId),
+                            contentDescription = stringResource(R.string.logo),
+                            modifier = Modifier
+                                .size(screenWidth * 0.8f),
+                            contentScale = ContentScale.Fit
+                        )
+                    }
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(2f),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        OutlinedTextField(
+                            value = user,
+                            onValueChange = { loginScreenViewModel.changeUser(it) },
+                            label = { Text("Usuario") },
+                            keyboardOptions = KeyboardOptions.Default.copy(
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Next
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onNext = {
+                                    focusManager.moveFocus(FocusDirection.Down)
+                                }
+                            ),
+                            singleLine = true
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        OutlinedTextField(
+                            value = password,
+                            onValueChange = { loginScreenViewModel.changePassword(it) },
+                            label = { Text("Contraseña") },
+                            visualTransformation = PasswordVisualTransformation(),
+                            keyboardOptions = KeyboardOptions.Default.copy(
+                                keyboardType = KeyboardType.Password,
+                                imeAction = ImeAction.Done
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onDone = {
+                                    executeLogin(
+                                        loginScreenViewModel,
+                                        keyboardController,
+                                        focusManager
+                                    )
+                                }
+                            ),
+                            singleLine = true
+                        )
+                        Spacer(modifier = Modifier.height(32.dp))
+                        Button(onClick = {
+                            executeLogin(
+                                loginScreenViewModel,
+                                keyboardController,
+                                focusManager
+                            )
+                        }) {
+                            Text("Login")
+                        }
                     }
                 }
             }

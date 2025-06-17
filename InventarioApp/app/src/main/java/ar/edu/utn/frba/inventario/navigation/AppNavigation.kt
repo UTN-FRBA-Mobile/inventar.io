@@ -21,6 +21,7 @@ import ar.edu.utn.frba.inventario.screens.ProductDetailScreen
 import ar.edu.utn.frba.inventario.screens.ShipmentDetailScreen
 import ar.edu.utn.frba.inventario.screens.ShipmentsScreen
 import ar.edu.utn.frba.inventario.screens.UserScreen
+import ar.edu.utn.frba.inventario.screens.WelcomeScreen
 import ar.edu.utn.frba.inventario.screens.scan.ManualCodeScreen
 import ar.edu.utn.frba.inventario.screens.scan.ProductResultScreen
 import ar.edu.utn.frba.inventario.screens.scan.ScanScreen
@@ -34,7 +35,7 @@ import ar.edu.utn.frba.inventario.viewmodels.ShipmentDetailViewModel
 @Composable
 fun AppNavigation(navController: NavHostController) {
     val tokenManager = rememberTokenManager()
-    val startDestination = if (tokenManager.hasSession()) Screen.Shipments.route else Screen.Login.route
+    val startDestination = if (tokenManager.hasSession()) Screen.Welcome.route else Screen.Login.route
 
     val productResultArgs = ProductResultArgs.entries.toTypedArray()
     val scanArgs = ScanArgs.entries.toTypedArray()
@@ -44,6 +45,9 @@ fun AppNavigation(navController: NavHostController) {
     NavHost(navController, startDestination = startDestination) {
         composable(Screen.Login.route) {
             LoginScreen(navController)
+        }
+        composable(Screen.Welcome.route) {
+            WelcomeScreen(navController)
         }
         composable(Screen.Shipments.route) {
             ShipmentsScreen(navController)
