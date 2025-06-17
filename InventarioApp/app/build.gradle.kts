@@ -101,12 +101,11 @@ dependencies {
     implementation(libs.play.services.location)
     implementation(libs.play.services.maps)
     implementation(libs.maps.compose)
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.0")
+    implementation(libs.kotlinx.coroutines.play.services)
 
     // For reading barcode
     implementation(libs.barcode.scanning)
 
-    //for maps
-    implementation(libs.maps.compose)
-    //implementation(libs.play.services.maps)
+    // For displaying images from URL
+    implementation(libs.coil.compose)
 }

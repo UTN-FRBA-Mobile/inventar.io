@@ -61,7 +61,7 @@ ALTER SEQUENCE public.location_seq OWNER TO inventario;
 
 CREATE TABLE public.user_account (
     id bigint NOT NULL,
-    base64image oid,
+    imageURL varying(255),
     name character varying(255),
     password character varying(255),
     username character varying(255)

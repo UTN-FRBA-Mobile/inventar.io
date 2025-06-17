@@ -1,21 +1,19 @@
-version: '2'
-
 services:
-  app:
+  inventario-back:
     image: 'inventario-backend:latest'
     build:
       context: .
-    container_name: app
+    container_name: inventario-back
     ports:
       - "8080:8080"
     depends_on:
-      - db
+      - inventario-db
     environment:
       - SPRING_PROFILES_ACTIVE=docker
 
-  db:
+  inventario-db:
     image: 'postgres:17.4-alpine'
-    container_name: db
+    container_name: inventario-db
     ports:
       - "5432:5432"
     environment:
@@ -25,13 +23,21 @@ services:
     volumes:
       - ./data:/var/lib/postgresql/data
 
-  pgadmin:
+  inventario-pgadmin:
     image: 'dpage/pgadmin4:9.3'
-    container_name: pgadmin
+    container_name: inventario-pgadmin
     ports:
       - "8081:80"
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
     depends_on:
-      - db
+      - inventario-db
+
+  inventario-image-server:
+    image: nginx:alpine
+    container_name: inventario-image-server
+    ports:
+      - "8082:80"
+    volumes:
+      - ./images:/usr/share/nginx/html/images:ro

@@ -73,7 +73,7 @@ fun ProductDetailScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Volver",
+                            contentDescription = stringResource(R.string.go_back),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -119,7 +119,7 @@ fun ProductDetailScreen(
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.resma_test),//TODO actualizar de acuerdo a lo que devuelva el back
-                        contentDescription = "Imagen del producto",
+                        contentDescription = stringResource(R.string.product_image),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()
                     )

@@ -14,12 +14,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import ar.edu.utn.frba.inventario.api.utils.TokenManager
-import ar.edu.utn.frba.inventario.screens.ShipmentsScreen
 import ar.edu.utn.frba.inventario.screens.LoginScreen
 import ar.edu.utn.frba.inventario.screens.OrderDetailScreen
 import ar.edu.utn.frba.inventario.screens.OrdersScreen
 import ar.edu.utn.frba.inventario.screens.ProductDetailScreen
 import ar.edu.utn.frba.inventario.screens.ShipmentDetailScreen
+import ar.edu.utn.frba.inventario.screens.ShipmentsScreen
 import ar.edu.utn.frba.inventario.screens.UserScreen
 import ar.edu.utn.frba.inventario.screens.WelcomeScreen
 import ar.edu.utn.frba.inventario.screens.scan.ManualCodeScreen

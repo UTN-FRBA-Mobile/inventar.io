@@ -26,7 +26,7 @@ fun BranchLocationBar(
         modifier = modifier
             .padding(horizontal = 16.dp, vertical = 2.dp)
             .background(
-                color = MaterialTheme.colorScheme.secondaryContainer ,
+                color = MaterialTheme.colorScheme.secondaryContainer,
                 shape = MaterialTheme.shapes.small
             ),
         verticalAlignment = Alignment.CenterVertically
@@ -34,7 +34,7 @@ fun BranchLocationBar(
     ) {
         Icon(
             imageVector = Icons.Outlined.LocationOn,
-            contentDescription = "Ubicación sucursal",
+            contentDescription = stringResource(R.string.location_place),
             tint = MaterialTheme.colorScheme.onSurfaceVariant
         )
 

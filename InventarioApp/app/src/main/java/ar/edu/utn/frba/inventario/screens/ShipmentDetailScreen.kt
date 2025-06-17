@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.inventario.screens
 
+
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
@@ -27,10 +28,10 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,12 +51,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.R
+import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.utils.Screen
-import androidx.compose.ui.res.stringResource
-
-
 import ar.edu.utn.frba.inventario.viewmodels.ShipmentDetailViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -86,7 +84,7 @@ fun ShipmentDetailScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Volver",
+                            contentDescription = stringResource(R.string.go_back),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -195,9 +193,9 @@ fun ProductItem(viewModel:ShipmentDetailViewModel, product:Product,
 
     ElevatedCard(colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
         ,modifier = Modifier
-        .fillMaxSize()
-        .padding(2.dp)
-            .clickable { onProductClick(product)}){
+            .fillMaxSize()
+            .padding(2.dp)
+            .clickable { onProductClick(product) }){
         Row(modifier = Modifier
             .fillMaxSize()){
             Column(modifier = Modifier
@@ -222,7 +220,7 @@ fun ProductItem(viewModel:ShipmentDetailViewModel, product:Product,
                 .align(alignment = Alignment.CenterVertically),
                 contentAlignment = Alignment.Center){
                 Image(painter = painterResource(id = statusProd.iconResourceId),
-                    contentDescription = "icono del estado de la carga de productos",
+                    contentDescription = stringResource(R.string.product_state_icon),
                     modifier = Modifier.fillMaxSize(0.9f),
                     contentScale = ContentScale.Fit)
 
@@ -251,8 +249,8 @@ fun ButtonBox(viewModel:ShipmentDetailViewModel, navController: NavController){
                 Button(colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onSecondaryContainer),
                     onClick = { navController.navigate(Screen.Scan.route + "?origin=shipment") },
                     modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f)
+                        .fillMaxSize()
+                        .weight(1f)
                 ){
                     Text(text = stringResource(R.string.shipment_detail_screen_scan_button), style = MaterialTheme.typography.titleMedium, fontSize = 25.sp,
                         fontWeight = FontWeight.Bold)

@@ -9,14 +9,14 @@ import ar.edu.utn.frba.inventariobackend.model.Product;
  * @param name         The name of the product.
  * @param description  A detailed description of the product.
  * @param ean13        The EAN-13 barcode of the product.
- * @param base64image  A Base64 encoded string representing the product's image.
+ * @param imageURL     The URL of the product's image
  */
 public record ProductResponse(
     Long id,
     String name,
     String description,
     String ean13,
-    String base64image
+    String imageURL
 ) {
     /**
      * Creates a {@link ProductResponse} from a {@link Product} domain object.
@@ -30,6 +30,6 @@ public record ProductResponse(
             product.getName(),
             product.getDescription(),
             product.getEan13(),
-            product.getBase64image());
+            product.getImageURL());
     }
 }
