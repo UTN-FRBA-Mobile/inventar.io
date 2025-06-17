@@ -5,22 +5,15 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
 import ar.edu.utn.frba.inventario.api.model.order.Order
-import ar.edu.utn.frba.inventario.api.model.order.OrderResponse
-import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.api.repository.OrderRepository
-import ar.edu.utn.frba.inventario.utils.toLocalDateTime
+import ar.edu.utn.frba.inventario.utils.OrderMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.LocalDateTime
 
 @HiltViewModel
 class OrdersViewModel @Inject constructor(
@@ -30,9 +23,6 @@ class OrdersViewModel @Inject constructor(
     savedStateHandle = savedStateHandle,
     filterKey = "orders_filter"
 ) {
-
-    private val _orders = MutableStateFlow<List<OrderResponse>>(emptyList())
-    val orders: StateFlow<List<OrderResponse>> = _orders.asStateFlow()
 
     private val _items: SnapshotStateList<Order> = mutableStateListOf()
     override val items: SnapshotStateList<Order> get() = _items
@@ -47,9 +37,9 @@ class OrdersViewModel @Inject constructor(
             when (val ordersResult = orderRepository.getOrdersList()) {
                 is NetworkResult.Success -> {
                     Log.d("OrdersViewModel", "Success: ${ordersResult.data}")
-                    val ordersParsed = ordersResult.data?.map { response ->
-                        parseMapOrder(response)
-                    } ?: emptyList()
+                    val ordersParsed = ordersResult.data.map { response ->
+                        OrderMapper.toOrder(response)
+                    }
 
                     withContext(Dispatchers.Main) {
                         _items.clear()
@@ -66,39 +56,4 @@ class OrdersViewModel @Inject constructor(
             }
         }
     }
-
-    fun parseMapOrder(orderResponse: OrderResponse): Order{
-        return Order(
-            id = orderResponse.id.toString(),
-            number = "P-0002",
-            sender = orderResponse.sender,
-            status = orderResponse.status,
-            products = listOf(
-                Product("P-201", "Monitor", 1,
-                    imageUrl = "a",
-                    innerLocation = "Pasillo 3, estante 2",
-                    currentStock = 100),
-                Product("P-202", "Teclado", 1,
-                    imageUrl = "a",
-                    innerLocation = "Pasillo 3, estante 2",
-                    currentStock = 100)
-            ),
-            creationDate = orderResponse.creationDate.toLocalDateTime()
-        )
-    }
-
-
-
-    /*
-    val creationDate: String,
-    val scheduledDate: String,
-    val lastModifiedDate: String,
-
-     override val confirmedReceiptDate: LocalDateTime? = null,
-    override val estimatedReceiptDate: LocalDateTime? = null,
-    override val cancellationDate: LocalDateTime? = null,
-    override val creationDate: LocalDateTime = LocalDateTime.now()
-     */
-
-
 }

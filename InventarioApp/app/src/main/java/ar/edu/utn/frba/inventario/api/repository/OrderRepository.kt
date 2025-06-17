@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class OrderRepository @Inject constructor(
     private val apiService: ApiService):Repository() {
-    suspend fun getOrder(orderId: Long): NetworkResult<OrderResponse> {
+    suspend fun getOrderById(orderId: String): NetworkResult<OrderResponse> {
         return safeApiCall {apiService.getOrder(orderId)}
     }
 

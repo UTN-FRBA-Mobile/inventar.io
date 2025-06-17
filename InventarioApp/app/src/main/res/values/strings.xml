@@ -15,6 +15,8 @@
     <string name="state_icon">Ícono de estado</string>
     <string name="product_image">Imagen del producto</string>
     <string name="product_state_icon">icono del estado de la carga de productos</string>
+    <string name="unknown_error">Error desconocido</string>
+    <string name="critical_error">Error crítico</string>
 
     <!-- ProductDetailScreen -->
     <string name="product_detail_screen_title">Detalle del producto</string>
@@ -45,7 +47,6 @@
     <string name="scan_error_expected_qr">Debe escanear un código QR</string>
 
     <!-- ManualCodeScreen -->
-
     <string name="manual_code_error_invalid_code">Debe ingresar un código EAN-13 válido.</string>
     <string name="manual_code_insert_code_title">Ingrese el código EAN-13</string>
     <string name="manual_code_input">Código EAN-13</string>
@@ -81,5 +82,6 @@
     <string name="order_detail_screen_sender">Remitente: %1$s</string>
     <string name="order_detail_screen_total">Total de productos unicos: %1$s</string>
     <string name="order_detail_screen_quantity">Cantidad %1$s</string>
+    <string name="order_not_found">No se encontró la orden</string>
 
 </resources>

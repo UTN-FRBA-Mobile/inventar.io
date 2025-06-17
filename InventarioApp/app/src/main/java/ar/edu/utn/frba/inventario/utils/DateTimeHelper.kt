@@ -1,8 +1,6 @@
 package ar.edu.utn.frba.inventario.utils
 
-import java.time.Instant
 import java.time.LocalDateTime
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -12,7 +10,5 @@ fun LocalDateTime.format(): String {
 }
 
 fun String.toLocalDateTime(): LocalDateTime {
-    return Instant.parse(this)          // Parsea el string a Instant (UTC)
-        .atZone(ZoneId.systemDefault()) // Convierte a zona horaria local
-        .toLocalDateTime()              // Obtiene LocalDateTime
+    return LocalDateTime.parse(this, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
 }

@@ -1,7 +1,6 @@
 package ar.edu.utn.frba.inventario.screens
 
 import android.annotation.SuppressLint
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,6 +25,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -33,20 +33,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import ar.edu.utn.frba.inventario.R
-import ar.edu.utn.frba.inventario.api.model.product.Product
+import ar.edu.utn.frba.inventario.api.model.order.Order
+import ar.edu.utn.frba.inventario.api.model.product.ProductOrder
 import ar.edu.utn.frba.inventario.utils.Screen
+import ar.edu.utn.frba.inventario.utils.Spinner
 import ar.edu.utn.frba.inventario.viewmodels.OrderDetailViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun OrderDetailScreen(viewModel:OrderDetailViewModel = hiltViewModel(), navController: NavController, id:String){
+
+    LaunchedEffect(id) {
+        viewModel.loadOrder(id)
+    }
+
+    val order by viewModel.order.collectAsState()
+    val loading by viewModel.loading.collectAsState()
+    val error by viewModel.error.collectAsState()
+
     Scaffold(
         topBar = {
             Column(modifier = Modifier.fillMaxWidth()) {
@@ -83,21 +92,65 @@ fun OrderDetailScreen(viewModel:OrderDetailViewModel = hiltViewModel(), navContr
             }
         }
     ) {
-            innerPadding ->
-        OrderDetailBodyContent(viewModel, navController, id,innerPadding)
-    }
+    innerPadding ->
+        when {
+            loading -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Spinner(true)
+                }
+            }
 
+            error != null -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = error!!,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
+
+            order != null -> {
+                OrderDetailBodyContent(
+                    viewModel = viewModel,
+                    navController = navController,
+                    order = order!!,
+                    innerPadding = innerPadding
+                )
+            }
+
+            else -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(stringResource(R.string.order_not_found))
+                }
+            }
+        }
+    }
 }
+
 @Composable
-fun OrderDetailBodyContent(viewModel:OrderDetailViewModel, navController: NavController, id:String, innerPadding: PaddingValues){
-    viewModel.loadOrder(id)
-    val order by viewModel.order.collectAsState()
+fun OrderDetailBodyContent(viewModel:OrderDetailViewModel, navController: NavController, order:Order, innerPadding: PaddingValues){
 
     Column(modifier = Modifier
         .fillMaxSize()
         .background(MaterialTheme.colorScheme.secondaryContainer)
         .padding(innerPadding)
     ) {
+
         Box(modifier = Modifier
             .fillMaxWidth()
             .background(color = MaterialTheme.colorScheme.primaryContainer)){
@@ -110,12 +163,12 @@ fun OrderDetailBodyContent(viewModel:OrderDetailViewModel, navController: NavCon
                     fontWeight = FontWeight.Bold
                 )
                 Text(text = stringResource(R.string.order_detail_screen_sender, order.sender), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-                Text(text = stringResource(R.string.order_detail_screen_total, order.products.size), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                Text(text = stringResource(R.string.order_detail_screen_total, order.productsInOrder.size), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
             }
         }
         LazyColumn(modifier = Modifier
             .padding(15.dp)) {
-            items(order.products){
+            items(order.productsInOrder){
                     product ->
                 ProductItem(product)
                 Spacer(modifier = Modifier.height(5.dp))
@@ -127,7 +180,7 @@ fun OrderDetailBodyContent(viewModel:OrderDetailViewModel, navController: NavCon
 }
 
 @Composable
-fun ProductItem(product:Product){
+fun ProductItem(product:ProductOrder){
     ElevatedCard(colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
         ,modifier = Modifier
             .fillMaxSize()
@@ -149,15 +202,4 @@ fun ProductItem(product:Product){
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun vistaPedidoFinal(){
-    OrderDetailScreen(navController = rememberNavController(), id = "ORD-003")
-}
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun vistaPedidoFinalDark(){
-    OrderDetailScreen(navController = rememberNavController(), id = "ORD-003")
 }

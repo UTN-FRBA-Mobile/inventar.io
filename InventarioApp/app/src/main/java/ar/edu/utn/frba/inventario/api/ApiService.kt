@@ -32,7 +32,7 @@ interface ApiService {
 
     /*Order*/
     @GET("/api/v1/orders/{id}")
-    suspend fun getOrder(@Path("id") id:Long): Response<OrderResponse>
+    suspend fun getOrder(@Path("id") id:String): Response<OrderResponse>
 
     @GET("/api/v1/orders")
     suspend fun getOrdersList(): Response<List<OrderResponse>>
