@@ -65,7 +65,7 @@ fun OrderDetailScreen(viewModel:OrderDetailViewModel = hiltViewModel(), navContr
                     ) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Volver",
+                            contentDescription = stringResource(R.string.go_back),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }

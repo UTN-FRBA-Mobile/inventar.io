@@ -113,7 +113,7 @@ fun OrderBodyContent(
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
                 Text(
-                    text = "Escanear",
+                    text = stringResource(R.string.scan),
                     style = MaterialTheme.typography.labelLarge,
                     modifier = Modifier.padding(horizontal = 15.dp, vertical = 0.dp)
                 )
