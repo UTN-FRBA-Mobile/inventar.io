@@ -5,6 +5,7 @@ import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.item.Item
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import ar.edu.utn.frba.inventario.api.model.product.Product
+import ar.edu.utn.frba.inventario.api.model.product.ProductOrder
 import ar.edu.utn.frba.inventario.utils.format
 import java.time.LocalDateTime
 
@@ -13,17 +14,22 @@ data class Order(
     val number: String,
     override val sender: String,
     override val status: ItemStatus,
-    override val products : List<Product>,
+    override val products: List<Product>,
+    val productsInOrder: List<ProductOrder>,
+    val productAmount: Map<Long, Int>,
+    val productNames: Map<Long, String>,
     override val confirmedReceiptDate: LocalDateTime? = null,
     override val estimatedReceiptDate: LocalDateTime? = null,
     override val cancellationDate: LocalDateTime? = null,
-    override val creationDate: LocalDateTime = LocalDateTime.now()
+    override val creationDate: LocalDateTime,
+    val scheduledDate: LocalDateTime,
+    val lastModifiedDate: LocalDateTime
 ) : Item {
     override fun getRelevantDate() = when(status) {
-        ItemStatus.COMPLETED -> confirmedReceiptDate
-        ItemStatus.CANCELLED -> cancellationDate
-        ItemStatus.BLOCKED -> estimatedReceiptDate
-        ItemStatus.PENDING,
+        ItemStatus.COMPLETED -> lastModifiedDate
+        ItemStatus.CANCELLED -> lastModifiedDate
+        ItemStatus.BLOCKED,
+        ItemStatus.PENDING -> scheduledDate
         ItemStatus.IN_PROGRESS -> creationDate
     }
 

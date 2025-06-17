@@ -3,6 +3,7 @@ package ar.edu.utn.frba.inventario.api
 import ar.edu.utn.frba.inventario.api.model.auth.LoginRequest
 import ar.edu.utn.frba.inventario.api.model.auth.LoginResponse
 import ar.edu.utn.frba.inventario.api.model.product.ProductResponse
+import ar.edu.utn.frba.inventario.api.model.order.OrderResponse
 import ar.edu.utn.frba.inventario.api.model.self.LocationResponse
 import ar.edu.utn.frba.inventario.api.model.self.UserResponse
 import ar.edu.utn.frba.inventario.api.model.shipment.ShipmentResponse
@@ -28,6 +29,13 @@ interface ApiService {
 
     @GET("/api/v1/location/self")
     suspend fun getMyLocation(): Response<LocationResponse>
+
+    /*Order*/
+    @GET("/api/v1/orders/{id}")
+    suspend fun getOrder(@Path("id") id:String): Response<OrderResponse>
+
+    @GET("/api/v1/orders")
+    suspend fun getOrdersList(): Response<List<OrderResponse>>
 
     /*Shipment*/
     @GET("/api/v1/shipments/{id}")
