@@ -28,7 +28,6 @@ public class Product {
     /**
      * A detailed description of the product.
      */
-    @Lob
     private String description;
 
     /**
@@ -40,8 +39,7 @@ public class Product {
     /**
      * Base64 encoded string representing the product's image.
      */
-    @Lob
-    private String base64image;
+    private String imageURL;
 
     /**
      * Default constructor required by JPA.
@@ -54,12 +52,12 @@ public class Product {
      * @param name        the name of the product
      * @param description a detailed description of the product
      * @param ean13       the EAN-13 barcode of the product
-     * @param base64image a base64-encoded image of the product
+     * @param imageURL    link to the product's image
      */
-    public Product(String name, String description, String ean13, String base64image) {
+    public Product(String name, String description, String ean13, String imageURL) {
         this.name = name;
         this.description = description;
         this.ean13 = ean13;
-        this.base64image = base64image;
+        this.imageURL = imageURL;
     }
 }

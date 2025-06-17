@@ -5,5 +5,5 @@ data class ProductResponse(
     val name: String,
     val description: String,
     val ean13: String,
-    val base64image: String
+    val imageURL: String
 )

@@ -104,4 +104,7 @@ dependencies {
 
     // For reading barcode
     implementation(libs.barcode.scanning)
+
+    // For displaying images from URL
+    implementation(libs.coil.compose)
 }

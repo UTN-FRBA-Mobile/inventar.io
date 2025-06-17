@@ -11,7 +11,7 @@ import jakarta.validation.constraints.Size;
  * @param name         The name of the product (required, non-blank).
  * @param description  A detailed description of the product (optional).
  * @param ean13        The EAN-13 barcode of the product (optional, must be 13 digits if provided).
- * @param base64image  A Base64 encoded string representing the product's image (optional).
+ * @param imageURL     Image URL of the product (optional).
  */
 public record ProductCreationRequest(
     @NotBlank(message = "Product name cannot be blank.")
@@ -24,7 +24,7 @@ public record ProductCreationRequest(
     @Pattern(regexp = "^[0-9]{13}$", message = "EAN-13 must be exactly 13 digits.")
     String ean13,
 
-    String base64image
+    String imageURL
 ) {
     /**
      * Converts this request to a {@link Product} entity.
@@ -37,6 +37,6 @@ public record ProductCreationRequest(
             productCreationRequest.name(),
             productCreationRequest.description(),
             productCreationRequest.ean13(),
-            productCreationRequest.base64image());
+            productCreationRequest.imageURL());
     }
 }

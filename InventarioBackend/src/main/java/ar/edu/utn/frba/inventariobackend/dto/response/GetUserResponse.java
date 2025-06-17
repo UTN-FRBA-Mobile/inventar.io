@@ -12,14 +12,14 @@ import java.util.List;
  * @param id               the unique identifier of the user
  * @param username         the username of the user
  * @param name             the full name of the user
- * @param base64image      a base64-encoded image of the user
+ * @param imageURL         link to the user's image
  * @param allowedLocations a list of locations the user is allowed to work from
  */
 public record GetUserResponse(
     Long id,
     String username,
     String name,
-    String base64image,
+    String imageURL,
     List<LocationResponse> allowedLocations
 ) {
     /**
@@ -33,7 +33,7 @@ public record GetUserResponse(
             user.getId(),
             user.getUsername(),
             user.getName(),
-            user.getBase64image(),
+            user.getImageURL(),
             locations.stream().map(LocationResponse::fromLocation).toList()
         );
     }
