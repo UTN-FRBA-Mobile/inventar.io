@@ -69,8 +69,6 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
-    //implementation ("io.coil-kt:coil-compose:2.7.0") // image loader para compose
-    //implementation ("com.squareup.picasso:picasso:2.71828") // image loader para views
     implementation(libs.retrofit)
     implementation(libs.logging.interceptor)
     implementation(libs.converter.gson)
