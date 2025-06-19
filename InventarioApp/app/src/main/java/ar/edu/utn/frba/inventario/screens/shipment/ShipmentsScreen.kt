@@ -19,6 +19,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.R
+import ar.edu.utn.frba.inventario.api.model.item.Item
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import ar.edu.utn.frba.inventario.api.model.shipment.Shipment
 import ar.edu.utn.frba.inventario.composables.utils.BranchLocationBar
@@ -89,7 +90,7 @@ fun ShipmentsBodyContent(
                 modifier = Modifier.weight(1f)
             ) {
                 itemsIndexed(shipments) { _, shipment ->
-                    CardItem(navController, shipment, onItemClick = { clickedItem ->
+                    CardItem(navController, shipment, onItemClick = { clickedItem: Item ->
                         navController.navigate(Screen.ShipmentDetail.route + "/${clickedItem.id}")
                     })
                 }
