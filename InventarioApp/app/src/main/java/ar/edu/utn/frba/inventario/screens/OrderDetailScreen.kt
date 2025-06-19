@@ -46,7 +46,10 @@ import ar.edu.utn.frba.inventario.viewmodels.OrderDetailViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun OrderDetailScreen(viewModel:OrderDetailViewModel = hiltViewModel(), navController: NavController, id:String){
+fun OrderDetailScreen(
+    viewModel:OrderDetailViewModel = hiltViewModel(),
+    navController: NavController, id:String
+){
 
     LaunchedEffect(id) {
         viewModel.loadOrder(id)

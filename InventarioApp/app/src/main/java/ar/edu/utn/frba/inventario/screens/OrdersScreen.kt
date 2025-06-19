@@ -33,17 +33,20 @@ import ar.edu.utn.frba.inventario.components.EmptyResultsMessage
 import ar.edu.utn.frba.inventario.components.StatusFilter
 import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.viewmodels.OrdersViewModel
+import ar.edu.utn.frba.inventario.viewmodels.UserScreenViewModel
 
 
 @Composable
 fun OrdersScreen(
     navController: NavController,
-    viewModel: OrdersViewModel = hiltViewModel()
+    ordersViewModel: OrdersViewModel = hiltViewModel(),
+    userScreenViewModel: UserScreenViewModel = hiltViewModel()
 ) {
-    val selectedStatusList by viewModel.selectedStatusList.collectAsStateWithLifecycle()
+    val selectedStatusList by ordersViewModel.selectedStatusList.collectAsStateWithLifecycle()
+    val branchName by userScreenViewModel.branchLocationName.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.getOrders()
+        ordersViewModel.getOrders()
     }
 
     Column(
@@ -52,7 +55,7 @@ fun OrdersScreen(
             .background(MaterialTheme.colorScheme.secondaryContainer)
     ) {
         BranchLocationBar(
-            branchName = "Centro", //TODO Harcodeado, luego deberíamos obtenerlo a partir del dato del usuario
+            branchName = branchName,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 12.dp)
@@ -60,14 +63,14 @@ fun OrdersScreen(
         StatusFilter(
             statusList = ItemStatus.entries,
             selectedStatusList = selectedStatusList,
-            onStatusSelected = { viewModel.updateSelectedStatusList(it) },
-            onClearFilters = { viewModel.clearFilters() },
+            onStatusSelected = { ordersViewModel.updateSelectedStatusList(it) },
+            onClearFilters = { ordersViewModel.clearFilters() },
             modifier = Modifier
                 .fillMaxWidth()
         )
         OrderBodyContent(
             navController,
-            viewModel.getFilteredItems(),
+            ordersViewModel.getFilteredItems(),
             Modifier.weight(1f)
         )
     }

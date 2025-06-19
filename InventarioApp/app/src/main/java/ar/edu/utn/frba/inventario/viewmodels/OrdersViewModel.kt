@@ -8,17 +8,21 @@ import androidx.lifecycle.viewModelScope
 import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
 import ar.edu.utn.frba.inventario.api.model.order.Order
 import ar.edu.utn.frba.inventario.api.repository.OrderRepository
+import ar.edu.utn.frba.inventario.api.repository.SelfRepository
 import ar.edu.utn.frba.inventario.utils.OrderMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @HiltViewModel
 class OrdersViewModel @Inject constructor(
     private val orderRepository: OrderRepository,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    private val selfRepository: SelfRepository
 ) : BaseItemViewModel<Order>(
     savedStateHandle = savedStateHandle,
     filterKey = "orders_filter"
@@ -27,6 +31,8 @@ class OrdersViewModel @Inject constructor(
     private val _items: SnapshotStateList<Order> = mutableStateListOf()
     override val items: SnapshotStateList<Order> get() = _items
 
+    private val _locationName = MutableStateFlow("")
+    val locationName: StateFlow<String> = _locationName
 
     override fun getStatus(item: Order) = item.status
 

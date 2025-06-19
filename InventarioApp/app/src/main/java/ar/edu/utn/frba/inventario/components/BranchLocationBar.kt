@@ -16,6 +16,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ar.edu.utn.frba.inventario.R
+import ar.edu.utn.frba.inventario.api.repository.SelfRepository
+import jakarta.inject.Inject
 
 @Composable
 fun BranchLocationBar(
@@ -39,7 +41,7 @@ fun BranchLocationBar(
         )
 
         Text(
-            text = stringResource(R.string.branch_name, branchName),
+            text = branchName,
             style = MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.onSurfaceVariant,

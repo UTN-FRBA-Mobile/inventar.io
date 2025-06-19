@@ -27,38 +27,41 @@ import ar.edu.utn.frba.inventario.components.EmptyResultsMessage
 import ar.edu.utn.frba.inventario.components.StatusFilter
 import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.viewmodels.ShipmentsViewModel
+import ar.edu.utn.frba.inventario.viewmodels.UserScreenViewModel
 
 @Composable
 fun ShipmentsScreen(
     navController: NavController,
-    viewModel: ShipmentsViewModel = hiltViewModel()
+    shipmentsViewModel: ShipmentsViewModel = hiltViewModel(),
+    userScreenViewModel: UserScreenViewModel = hiltViewModel()
 ) {
+    val selectedStatusListVM by shipmentsViewModel.selectedStatusList.collectAsStateWithLifecycle()
+    val branchName by userScreenViewModel.branchLocationName.collectAsStateWithLifecycle()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.secondaryContainer)
     ) {
         BranchLocationBar(
-            branchName = "Centro", //TODO Harcodeado, luego deberíamos obtenerlo a partir del dato del usuario
+            branchName = branchName,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 12.dp)
         )
-        val selectedStatusListVM by viewModel.selectedStatusList.collectAsStateWithLifecycle()
-
         StatusFilter(
             statusList = ItemStatus.entries,
             selectedStatusList = selectedStatusListVM,
-            onStatusSelected = { viewModel.updateSelectedStatusList(it) },
-            onClearFilters = { viewModel.clearFilters() },
+            onStatusSelected = { shipmentsViewModel.updateSelectedStatusList(it) },
+            onClearFilters = { shipmentsViewModel.clearFilters() },
             modifier = Modifier
                 .fillMaxWidth()
         )
 
         LaunchedEffect(Unit) {
-            viewModel.getShipments()
+            shipmentsViewModel.getShipments()
         }
-        ShipmentsBodyContent(navController, viewModel.getFilteredItems())
+        ShipmentsBodyContent(navController, shipmentsViewModel.getFilteredItems())
     }
 }
 
