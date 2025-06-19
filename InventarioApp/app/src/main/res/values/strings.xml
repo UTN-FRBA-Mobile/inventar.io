@@ -67,8 +67,8 @@
     </plurals>
 
     <!-- ShipmentDetailScreen -->
-    <string name="shipment_detail_screen_title">Detalle del envio</string>
-    <string name="shipment_detail_screen_shipment">Envio %1$s</string>
+    <string name="shipment_detail_screen_title">Detalle del envío</string>
+    <string name="shipment_detail_screen_shipment">Envío %1$s</string>
     <string name="shipment_detail_screen_customer">Comprador: %1$s</string>
     <string name="shipment_detail_screen_total">Total de productos unicos: %1$s</string>
     <string name="shipment_detail_screen_quantity_required">%1$s Requeridos</string>
@@ -83,5 +83,10 @@
     <string name="order_detail_screen_total">Total de productos unicos: %1$s</string>
     <string name="order_detail_screen_quantity">Cantidad %1$s</string>
     <string name="order_not_found">No se encontró el pedido</string>
+
+    <!-- UserScreenViewModel -->
+    <string name="loading_location">Cargando ubicación...</string>
+    <string name="unknown_location">Ubicación desconocida</string>
+    <string name="error_loading_location">Error al cargar ubicación</string>
 
 </resources>

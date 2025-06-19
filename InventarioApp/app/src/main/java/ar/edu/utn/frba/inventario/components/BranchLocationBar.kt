@@ -39,7 +39,7 @@ fun BranchLocationBar(
         )
 
         Text(
-            text = stringResource(R.string.branch_name, branchName),
+            text = branchName,
             style = MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.onSurfaceVariant,

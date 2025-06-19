@@ -149,7 +149,7 @@ class ShipmentDetailViewModel @Inject constructor(private val shipmentRepository
             imageUrl = "a") }
         val shipment  = Shipment(
             id=shipmentResponse.id.toString(),
-            number = "S${shipmentResponse.idLocation}E${shipmentResponse.id}",
+            number = "D${shipmentResponse.idLocation}-E${shipmentResponse.id}",
             customerName = shipmentResponse.customerName,
             products = shipmentProducts
         )
