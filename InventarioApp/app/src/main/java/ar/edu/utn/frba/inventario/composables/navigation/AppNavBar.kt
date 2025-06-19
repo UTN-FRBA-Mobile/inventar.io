@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.inventario.screens
+package ar.edu.utn.frba.inventario.composables.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
@@ -14,7 +14,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import ar.edu.utn.frba.inventario.utils.Screen
 
 @Composable
-fun BottomNavigationBar(navController: NavController, items: List<Screen> ) {
+fun AppNavBar(navController: NavController, items: List<Screen> ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 

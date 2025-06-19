@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.inventario.screens
+package ar.edu.utn.frba.inventario.screens.shipment
 
 
 import android.annotation.SuppressLint

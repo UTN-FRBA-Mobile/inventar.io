@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.inventario.components
+package ar.edu.utn.frba.inventario.composables.utils
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

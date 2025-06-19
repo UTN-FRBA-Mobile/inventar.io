@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.inventario.utils
+package ar.edu.utn.frba.inventario.composables.utils
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
