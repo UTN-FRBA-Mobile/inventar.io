@@ -1,8 +1,9 @@
-package ar.edu.utn.frba.inventario.screens
+package ar.edu.utn.frba.inventario.screens.shipment
 
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,7 +23,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
@@ -53,7 +54,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.product.Product
+import ar.edu.utn.frba.inventario.api.model.shipment.Shipment
 import ar.edu.utn.frba.inventario.utils.Screen
+import ar.edu.utn.frba.inventario.utils.ShipmentScanFlowState
 import ar.edu.utn.frba.inventario.viewmodels.ShipmentDetailViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -83,7 +86,7 @@ fun ShipmentDetailScreen(
                         modifier = Modifier.size(48.dp)
                     ) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.go_back),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -116,9 +119,10 @@ fun ShipmentDetailBodyContent(
     LaunchedEffect(id) {
         viewModel.loadShipment(id)
     }
-    val shipment by viewModel.shipment.collectAsState()
 
-    if (shipment.id == "0") {
+    val selectedShipment: Shipment by viewModel.selectedShipment.collectAsState()
+
+    if (selectedShipment.id == "0") {
         CircularProgressIndicator()
     } else {
 
@@ -140,7 +144,7 @@ fun ShipmentDetailBodyContent(
                 Text(
                     text = stringResource(
                         R.string.shipment_detail_screen_shipment,
-                        shipment.number
+                        selectedShipment.number
                     ),
                     style = MaterialTheme.typography.titleLarge,
                     fontSize = 25.sp,
@@ -149,7 +153,7 @@ fun ShipmentDetailBodyContent(
                 Text(
                     text = stringResource(
                         R.string.shipment_detail_screen_customer,
-                        shipment.customerName
+                        selectedShipment.customerName
                     ),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
@@ -157,7 +161,7 @@ fun ShipmentDetailBodyContent(
                 Text(
                     text = stringResource(
                         R.string.shipment_detail_screen_total,
-                        shipment.products.size
+                        selectedShipment.products.size
                     ),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
@@ -168,7 +172,7 @@ fun ShipmentDetailBodyContent(
             modifier = Modifier
                 .padding(15.dp)
         ) {
-            items(shipment.products) { product ->
+            items(selectedShipment.products) { product ->
                 ProductItem(
                     viewModel, product,
                     onProductClick = { clickedProduct ->
@@ -181,7 +185,6 @@ fun ShipmentDetailBodyContent(
             modifier = Modifier
                 .height(10.dp)
         )
-
     }
 }
 }
@@ -247,7 +250,19 @@ fun ButtonBox(viewModel:ShipmentDetailViewModel, navController: NavController){
                         fontWeight = FontWeight.Bold)
                 }
                 Button(colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onSecondaryContainer),
-                    onClick = { navController.navigate(Screen.Scan.route + "?origin=shipment") },
+                    onClick = {
+                        // Reset singleton
+                        ShipmentScanFlowState.reset()
+
+                        // Set variable of singleton
+                        ShipmentScanFlowState.selectedShipment = viewModel.selectedShipment.value
+
+                        // Log selectedShipment
+                        Log.d("ShipmentDetailScreen", "Selected Shipment: ${ShipmentScanFlowState.selectedShipment}")
+
+                        navController.navigate(Screen.Scan.route + "?origin=shipment")
+
+                    },
                     modifier = Modifier
                         .fillMaxSize()
                         .weight(1f)

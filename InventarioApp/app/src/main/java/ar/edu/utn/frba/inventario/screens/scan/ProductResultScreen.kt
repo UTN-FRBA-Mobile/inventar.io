@@ -29,8 +29,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.product.ProductResponse
-import ar.edu.utn.frba.inventario.utils.ImageFromURL
-import ar.edu.utn.frba.inventario.utils.Spinner
+import ar.edu.utn.frba.inventario.composables.utils.ImageFromURL
+import ar.edu.utn.frba.inventario.composables.utils.Spinner
 import ar.edu.utn.frba.inventario.viewmodels.ProductResultViewModel
 
 

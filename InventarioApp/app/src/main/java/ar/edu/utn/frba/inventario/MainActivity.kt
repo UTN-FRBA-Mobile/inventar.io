@@ -11,8 +11,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import ar.edu.utn.frba.inventario.navigation.AppNavigation
-import ar.edu.utn.frba.inventario.screens.BottomNavigationBar
+import ar.edu.utn.frba.inventario.composables.navigation.AppNavHost
+import ar.edu.utn.frba.inventario.composables.navigation.AppNavBar
 import ar.edu.utn.frba.inventario.ui.theme.InventarioTheme
 import ar.edu.utn.frba.inventario.utils.Screen
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,12 +38,12 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     bottomBar = {
                         if (currentRoute in navBarItems.map { it.route }) {
-                            BottomNavigationBar(navController, navBarItems)
+                            AppNavBar(navController, navBarItems)
                         }
                     }
                 ) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
-                        AppNavigation(navController)
+                        AppNavHost(navController)
                     }
                 }
             }

@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.inventario.screens
+package ar.edu.utn.frba.inventario.screens.order
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -41,7 +41,7 @@ import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.order.Order
 import ar.edu.utn.frba.inventario.api.model.product.ProductOrder
 import ar.edu.utn.frba.inventario.utils.Screen
-import ar.edu.utn.frba.inventario.utils.Spinner
+import ar.edu.utn.frba.inventario.composables.utils.Spinner
 import ar.edu.utn.frba.inventario.viewmodels.OrderDetailViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

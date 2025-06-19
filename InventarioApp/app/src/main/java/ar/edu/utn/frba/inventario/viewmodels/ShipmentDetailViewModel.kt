@@ -13,6 +13,7 @@ import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
 import ar.edu.utn.frba.inventario.api.model.product.Product
+import ar.edu.utn.frba.inventario.api.model.shipment.Shipment
 import ar.edu.utn.frba.inventario.api.model.shipment.ShipmentResponse
 import ar.edu.utn.frba.inventario.api.repository.ProductRepository
 import ar.edu.utn.frba.inventario.api.repository.ShipmentRepository
@@ -29,8 +30,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ShipmentDetailViewModel @Inject constructor(private val shipmentRepository: ShipmentRepository, private val productRepository: ProductRepository):ViewModel(){
-    private val _shipment  = MutableStateFlow<Shipment>(Shipment(id = "0", number = "", customerName = ""))
-    val shipment = _shipment.asStateFlow()
+    private val _shipment  = MutableStateFlow<Shipment>(Shipment(
+        id = "0", number = "",
+        customerName = "",
+        status = ItemStatus.PENDING,
+        products = listOf(),
+        creationDate = LocalDateTime.now()
+    ))
+    val selectedShipment = _shipment.asStateFlow()
 
     val productToScanList = mutableStateListOf<ProductToScan>(ProductToScan(id = "P-101",
         requiredQuantity = 1,
@@ -148,32 +155,13 @@ class ShipmentDetailViewModel @Inject constructor(private val shipmentRepository
             currentStock = 22,
             imageUrl = "a") }
         val shipment  = Shipment(
-            id=shipmentResponse.id.toString(),
+            id = shipmentResponse.id.toString(),
             number = "D${shipmentResponse.idLocation}-E${shipmentResponse.id}",
             customerName = shipmentResponse.customerName,
-            products = shipmentProducts
+            products = shipmentProducts,
+            status = shipmentResponse.status,
+            creationDate = LocalDateTime.parse(shipmentResponse.creationDate.replace("Z", ""))
         )
-
         return shipment
     }
 }
-
-//Luego usar uno que se defina en api/model
-data class Shipment(
-    var id: String, // Al principio del id podría tener el código de sucursal
-    var number: String,
-    var customerName: String,
-    //val status: ShipmentStatus,
-    var products: List<Product> = listOf(
-        Product("P-101", "Resma de papel A4", 1,
-            innerLocation = "Pasillo 5 • Estante 3",
-            currentStock = 222,
-            imageUrl = "a"),
-        Product("P-002", "Producto Ejemplo 2", 2,
-            innerLocation = "est",
-            currentStock = 22,
-            imageUrl = "a")
-    ),
-    var creationDate: LocalDateTime = LocalDateTime.now(), // esto variaría según fecha de creación
-    var responsible: String? = "Sin responsable"
-)

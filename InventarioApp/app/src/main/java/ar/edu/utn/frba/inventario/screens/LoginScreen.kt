@@ -53,12 +53,10 @@ import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.events.NavigationEvent
 import ar.edu.utn.frba.inventario.utils.Screen
-import ar.edu.utn.frba.inventario.utils.Spinner
+import ar.edu.utn.frba.inventario.composables.utils.Spinner
 import ar.edu.utn.frba.inventario.viewmodels.LoginScreenViewModel
 import android.Manifest
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.collectAsState
 import ar.edu.utn.frba.inventario.viewmodels.LocationViewModel
 
 @Composable

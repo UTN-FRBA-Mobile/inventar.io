@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.inventario.screens
+package ar.edu.utn.frba.inventario.screens.order
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
@@ -27,10 +27,10 @@ import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import ar.edu.utn.frba.inventario.api.model.order.Order
-import ar.edu.utn.frba.inventario.components.BranchLocationBar
-import ar.edu.utn.frba.inventario.components.CardItem
-import ar.edu.utn.frba.inventario.components.EmptyResultsMessage
-import ar.edu.utn.frba.inventario.components.StatusFilter
+import ar.edu.utn.frba.inventario.composables.utils.BranchLocationBar
+import ar.edu.utn.frba.inventario.composables.utils.CardItem
+import ar.edu.utn.frba.inventario.composables.utils.EmptyResultsMessage
+import ar.edu.utn.frba.inventario.composables.utils.StatusFilter
 import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.viewmodels.OrdersViewModel
 import ar.edu.utn.frba.inventario.viewmodels.UserScreenViewModel
