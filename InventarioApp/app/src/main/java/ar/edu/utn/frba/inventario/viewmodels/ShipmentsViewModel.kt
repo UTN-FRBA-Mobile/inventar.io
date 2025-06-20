@@ -7,6 +7,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
 import ar.edu.utn.frba.inventario.api.model.product.Product
+import ar.edu.utn.frba.inventario.api.model.product.ProductOperation
 import ar.edu.utn.frba.inventario.api.model.shipment.Shipment
 import ar.edu.utn.frba.inventario.api.model.shipment.ShipmentResponse
 import ar.edu.utn.frba.inventario.api.repository.ShipmentRepository
@@ -60,10 +61,9 @@ class ShipmentsViewModel @Inject constructor(private val shipmentRepository: Shi
             customerName = shipmentResponse.customerName,
             status = shipmentResponse.status,
             products = shipmentResponse.productAmount.map { pa->
-               Product(id = pa.key.toString(), name = "generic", quantity = pa.value,
-               imageUrl = "a",
-               innerLocation = "Pasillo 3, estante 2",
-               currentStock = 100)
+               ProductOperation(
+                   id = pa.key.toString(), name = "generic", quantity = pa.value,
+                   )
                },
             creationDate = LocalDateTime.now().minusDays(1)
         )

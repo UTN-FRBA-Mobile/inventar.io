@@ -4,7 +4,9 @@ data class Product(
     val id: String,
     val name: String,
     val quantity: Int,
-    val imageUrl: String?,
+    val imageURL: String?,
     val innerLocation: String?,
-    val currentStock: Int?
+    val currentStock: Int?,
+    val ean13: String,
+    val description: String,
 )

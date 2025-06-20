@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
-import ar.edu.utn.frba.inventario.api.model.product.ProductResponse
+import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.api.repository.ProductRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,8 +20,8 @@ class ProductResultViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading
 
-    private val _product = MutableStateFlow<ProductResponse?>(null)
-    val product: StateFlow<ProductResponse?> = _product
+    private val _foundProduct = MutableStateFlow<Product?>(null)
+    val foundProduct: StateFlow<Product?> = _foundProduct
 
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage
@@ -37,9 +37,9 @@ class ProductResultViewModel @Inject constructor(
             _isLoading.value = true
             when (val result = productRepository.getProductList(listOf(code))) {
                 is NetworkResult.Success -> {
-                    val product = result.data.values.firstOrNull()
+                    val product: Product? = result.data.values.firstOrNull()
 
-                    _product.value = product
+                    _foundProduct.value = product
 
                     // Print result data
                     Log.d("ProductResultViewModel", "Product data: ${result.data}")

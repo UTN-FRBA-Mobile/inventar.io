@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.R
-import ar.edu.utn.frba.inventario.api.model.product.ProductResponse
+import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.composables.utils.ImageFromURL
 import ar.edu.utn.frba.inventario.composables.utils.Spinner
 import ar.edu.utn.frba.inventario.viewmodels.ProductResultViewModel
@@ -50,14 +50,14 @@ fun ProductResultScreen(
             codeType = codeType,
             errorMessage = errorMessage,
             origin = origin,
-            product = null
+            foundProduct = null
         )
         return
     }
 
     val isLoading by viewModel.isLoading.collectAsState()
     val error by viewModel.errorMessage.collectAsState()
-    val product by viewModel.product.collectAsState()
+    val foundProduct by viewModel.foundProduct.collectAsState()
 
     LaunchedEffect(code) {
         viewModel.loadProductByCode(code, codeType)
@@ -74,7 +74,7 @@ fun ProductResultScreen(
         codeType = codeType,
         errorMessage = error,
         origin = origin,
-        product = product
+        foundProduct = foundProduct
     )
 }
 
@@ -85,7 +85,7 @@ fun ProductResultBodyContent(
     codeType: String?,
     errorMessage: String?,
     origin: String,
-    product: ProductResponse?
+    foundProduct: Product?
 ) {
     Column(
         modifier = Modifier
@@ -106,7 +106,7 @@ fun ProductResultBodyContent(
                 errorMessage,
                 fontSize = 18.sp,
             )
-        } else if (product != null && codeType == "ean-13") {
+        } else if (foundProduct != null && codeType == "ean-13") {
             // Éxito con producto
             Text(
                 text = stringResource(R.string.product_result_search_success),
@@ -118,7 +118,7 @@ fun ProductResultBodyContent(
             Spacer(Modifier.height(16.dp))
 
             Text(
-                text = product.name,
+                text = foundProduct.name,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.SemiBold
             )
@@ -126,16 +126,16 @@ fun ProductResultBodyContent(
             Spacer(Modifier.height(8.dp))
 
             Text(
-                text = product.description,
+                text = foundProduct.description,
                 fontSize = 18.sp,
                 color = Color.DarkGray
             )
 
             Spacer(Modifier.height(24.dp))
 
-            if (product.imageURL.isNotBlank()) {
+            if (foundProduct.imageURL!!.isNotBlank()) {
                 ImageFromURL(
-                    url = product.imageURL,
+                    url = foundProduct.imageURL,
                     modifier = Modifier
                         .size(180.dp)
                         .clip(CircleShape)

@@ -7,7 +7,7 @@ object ShipmentScanFlowState {
     var selectedShipment: Shipment? = null
     var scannedProduct: Product? = null
 
-    fun reset() {
+    fun clear() {
         selectedShipment = null
         scannedProduct = null
     }
