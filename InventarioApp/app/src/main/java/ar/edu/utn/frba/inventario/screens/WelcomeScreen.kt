@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import ar.edu.utn.frba.inventario.composables.utils.AnimatedBuildingGif
 import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.viewmodels.UserScreenViewModel
 
@@ -55,11 +56,10 @@ fun WelcomeBodyContent(
         Text(
             text = "Bienvenido ${user?.username}",
             style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(16.dp)
         )
-
-        Spacer(modifier = Modifier.weight(2f))
-
+        AnimatedBuildingGif()
             Column (
                 modifier = Modifier
                     .fillMaxSize()
