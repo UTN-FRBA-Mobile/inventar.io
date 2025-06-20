@@ -58,7 +58,7 @@ public class SecurityConfig {
                             "/api/v1/shipments",
                             "/api/v1/orders",
                             "/api/v1/products",
-                            "/api/v1/products/*/stock"
+                            "/api/v1/products/stock"
                         ).permitAll().anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

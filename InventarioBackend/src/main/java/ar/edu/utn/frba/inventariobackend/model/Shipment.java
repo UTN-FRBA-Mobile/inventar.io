@@ -80,6 +80,13 @@ public class Shipment {
     }
 
     /**
+     * Updates the status of the shipment.
+     */
+    public void updateStatus(Status status) {
+        this.status = status;
+    }
+
+    /**
      * Set creation and last modified date when initially created.
      */
     @PrePersist

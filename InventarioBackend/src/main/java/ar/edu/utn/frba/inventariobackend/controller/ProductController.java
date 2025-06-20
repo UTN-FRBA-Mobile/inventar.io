@@ -5,6 +5,7 @@ import ar.edu.utn.frba.inventariobackend.dto.request.ProductCreationRequest;
 import ar.edu.utn.frba.inventariobackend.dto.response.ProductResponse;
 import ar.edu.utn.frba.inventariobackend.service.ProductService;
 
+import ar.edu.utn.frba.inventariobackend.utils.TokenUtils;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
+    private final TokenUtils tokenUtils;
 
     /**
      * Creates a new product in the system.
@@ -51,6 +53,20 @@ public class ProductController {
     public ResponseEntity<?> addProductStockEntry(@Valid @RequestBody CreateStockEntryRequest createStockEntryRequest) {
         productService.createStockEntry(createStockEntryRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    /**
+     * Gets the stock associated to a specific location of certain products.
+     *
+     * @param ids An optional list of {@link Long} representing the unique identifiers of the stocks to be fetched.
+     * @return A {@link ResponseEntity} with a map of stocks by product ID.
+     */
+    @SecurityRequirement(name = "bearerAuth")
+    @GetMapping("/stock")
+    public ResponseEntity<Map<Long, Integer>> getProductsStockEntry(@RequestParam Optional<List<Long>> ids) {
+        Map<Long, Integer> stocks =
+            productService.getStockEntries(ids.orElse(List.of()), tokenUtils.getLocationIdFromToken());
+        return ResponseEntity.ok(stocks);
     }
 
     /**

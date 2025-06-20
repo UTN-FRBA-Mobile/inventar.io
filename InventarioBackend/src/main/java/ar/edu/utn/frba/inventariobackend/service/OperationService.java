@@ -5,10 +5,7 @@ import ar.edu.utn.frba.inventariobackend.dto.request.ShipmentCreationRequest;
 import ar.edu.utn.frba.inventariobackend.dto.response.OrderResponse;
 import ar.edu.utn.frba.inventariobackend.dto.response.ShipmentResponse;
 import ar.edu.utn.frba.inventariobackend.model.*;
-import ar.edu.utn.frba.inventariobackend.repository.ItemByOperationRepository;
-import ar.edu.utn.frba.inventariobackend.repository.OrderRepository;
-import ar.edu.utn.frba.inventariobackend.repository.ProductRepository;
-import ar.edu.utn.frba.inventariobackend.repository.ShipmentRepository;
+import ar.edu.utn.frba.inventariobackend.repository.*;
 
 
 import lombok.RequiredArgsConstructor;
@@ -19,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -31,6 +29,10 @@ public class OperationService {
     private final ShipmentRepository shipmentRepository;
     private final ProductRepository productRepository;
     private final ItemByOperationRepository itemByOperationRepository;
+    private final StockByLocationRepository stockByLocationRepository;
+
+    private final Map<Long, Object> shipmentLocks = new ConcurrentHashMap<>();
+    private final Map<Long, Object> orderLocks = new ConcurrentHashMap<>();
 
     /**
      * Creates a new order with its associated items.
@@ -152,6 +154,84 @@ public class OperationService {
     public Optional<OrderResponse> getOrder(long id) {
         return orderRepository.findById(id).map(this::getOrderResponse);
     }
+
+    /**
+     * Initiates the processing of a specific shipment.
+     * <p>
+     * This method ensures thread-safe execution per shipment ID, validates the shipment's
+     * {@link Status#PENDING} state, and checks for sufficient stock at the shipment's location.
+     * The shipment's status is updated to {@link Status#IN_PROGRESS} if stock is available,
+     * or to {@link Status#BLOCKED} otherwise.
+     * </p>
+     *
+     * @param id The unique identifier of the shipment to be started.
+     * @return A {@link ShipmentResponse} reflecting the updated shipment status.
+     * @throws NoSuchElementException If the shipment is not found.
+     * @throws IllegalStateException If the shipment is not pending or if there is insufficient stock.
+     */
+    @Transactional
+    public ShipmentResponse startShipment(long id) {
+        Object lockObject = shipmentLocks.computeIfAbsent(id, k -> new Object());
+
+        synchronized (lockObject) {
+            Shipment shipment = shipmentRepository.findById(id).orElseThrow(NoSuchElementException::new);
+
+            if (shipment.getStatus() != Status.PENDING) {
+                throw new IllegalStateException("Shipment not pending");
+            }
+
+            // Validate stock related to the shipment.
+            Map<Long, Integer> requiredStock = getProductAmount(shipment.getId(), ItemType.SHIPMENT);
+            Map<Long, Integer> actualStock = stockByLocationRepository
+                .findByIdProductInAndIdLocation(requiredStock.keySet().stream().toList(), shipment.getIdLocation())
+                .stream()
+                .map(stockByLocation -> Map.entry(stockByLocation.getIdProduct(), stockByLocation.getStock()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+            boolean enoughStock = requiredStock.entrySet()
+                .stream()
+                .allMatch(entry -> entry.getValue() <= actualStock.getOrDefault(entry.getKey(), 0));
+
+            shipment.updateStatus(enoughStock ? Status.IN_PROGRESS : Status.BLOCKED);
+            shipmentRepository.save(shipment);
+
+            if (!enoughStock) {
+                throw new IllegalStateException("Not enough stock");
+            }
+
+            return getShipmentResponse(shipment);
+        }
+    }
+
+    /**
+     * Initiates the processing of a specific order.
+     * <p>
+     * This method ensures thread-safe execution per order ID and validates the order's
+     * {@link Status#PENDING} state. The order's status is updated to {@link Status#PENDING}.
+     * </p>
+     *
+     * @param id The unique identifier of the order to be started.
+     * @return An {@link OrderResponse} reflecting the updated order status.
+     * @throws NoSuchElementException If the order is not found.
+     * @throws IllegalStateException If the order is not pending.
+     */
+    @Transactional
+    public OrderResponse startOrder(long id) {
+        Object lockObject = orderLocks.computeIfAbsent(id, k -> new Object());
+
+        synchronized (lockObject) {
+            Order order = orderRepository.findById(id).orElseThrow(NoSuchElementException::new);
+
+            if (order.getStatus() != Status.PENDING) {
+                throw new IllegalStateException("Shipment not pending");
+            }
+
+            order.updateStatus(Status.IN_PROGRESS);
+            orderRepository.save(order);
+            return getOrderResponse(order);
+        }
+    }
+
 
     /**
      * Utility method to get the product amount related to an operation.
