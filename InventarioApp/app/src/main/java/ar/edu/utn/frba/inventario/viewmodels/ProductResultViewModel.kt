@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
 import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.api.repository.ProductRepository
+import ar.edu.utn.frba.inventario.utils.ShipmentScanFlowState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -35,24 +36,40 @@ class ProductResultViewModel @Inject constructor(
 
         viewModelScope.launch {
             _isLoading.value = true
+
             when (val result = productRepository.getProductList(listOf(code))) {
                 is NetworkResult.Success -> {
                     val product: Product? = result.data.values.firstOrNull()
 
-                    _foundProduct.value = product
+                    val shipment = ShipmentScanFlowState.selectedShipment
+                    val isInShipment = shipment?.products?.any { it.id == product?.id } == true
 
-                    // Print result data
+                    if (product != null && isInShipment) {
+                        _foundProduct.value = product
+                        _errorMessage.value = null
+                        ShipmentScanFlowState.scannedProduct = product
+                    } else {
+                        _foundProduct.value = null
+                        _errorMessage.value = "Este producto no está en el envío"
+                        ShipmentScanFlowState.scannedProduct = null
+                    }
+
                     Log.d("ProductResultViewModel", "Product data: ${result.data}")
-
-                    _errorMessage.value = if (product == null) "No se encontró el producto" else null
                 }
 
                 is NetworkResult.Error -> {
+                    _foundProduct.value = null
                     _errorMessage.value = result.message ?: "Error desconocido"
+                    ShipmentScanFlowState.scannedProduct = null
                 }
 
-                is NetworkResult.Exception -> _errorMessage.value = "Error desconocido"
+                is NetworkResult.Exception -> {
+                    _foundProduct.value = null
+                    _errorMessage.value = "Error desconocido"
+                    ShipmentScanFlowState.scannedProduct = null
+                }
             }
+
             _isLoading.value = false
         }
     }
