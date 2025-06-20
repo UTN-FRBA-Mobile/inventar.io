@@ -54,6 +54,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.product.Product
+import ar.edu.utn.frba.inventario.api.model.product.ProductOperation
 import ar.edu.utn.frba.inventario.api.model.shipment.Shipment
 import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.utils.ShipmentScanFlowState
@@ -190,8 +191,8 @@ fun ShipmentDetailBodyContent(
 }
 
 @Composable
-fun ProductItem(viewModel:ShipmentDetailViewModel, product:Product,
-                onProductClick: (Product) -> Unit){
+fun ProductItem(viewModel:ShipmentDetailViewModel, product: ProductOperation,
+                onProductClick: (ProductOperation) -> Unit){
     val  statusProd = viewModel.getProductStatus(product.id)
 
     ElevatedCard(colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
@@ -252,7 +253,7 @@ fun ButtonBox(viewModel:ShipmentDetailViewModel, navController: NavController){
                 Button(colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onSecondaryContainer),
                     onClick = {
                         // Reset singleton
-                        ShipmentScanFlowState.reset()
+                        ShipmentScanFlowState.clear()
 
                         // Set variable of singleton
                         ShipmentScanFlowState.selectedShipment = viewModel.selectedShipment.value

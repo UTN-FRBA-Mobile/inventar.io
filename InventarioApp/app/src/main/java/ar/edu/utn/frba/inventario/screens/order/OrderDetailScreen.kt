@@ -39,7 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.order.Order
-import ar.edu.utn.frba.inventario.api.model.product.ProductOrder
+import ar.edu.utn.frba.inventario.api.model.product.ProductOperation
 import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.composables.utils.Spinner
 import ar.edu.utn.frba.inventario.viewmodels.OrderDetailViewModel
@@ -183,7 +183,7 @@ fun OrderDetailBodyContent(viewModel:OrderDetailViewModel, navController: NavCon
 }
 
 @Composable
-fun ProductItem(product:ProductOrder){
+fun ProductItem(product:ProductOperation){
     ElevatedCard(colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
         ,modifier = Modifier
             .fillMaxSize()

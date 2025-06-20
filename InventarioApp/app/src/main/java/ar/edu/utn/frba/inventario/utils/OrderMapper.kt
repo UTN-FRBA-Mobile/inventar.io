@@ -2,7 +2,7 @@ package ar.edu.utn.frba.inventario.utils
 
 import ar.edu.utn.frba.inventario.api.model.order.Order
 import ar.edu.utn.frba.inventario.api.model.order.OrderResponse
-import ar.edu.utn.frba.inventario.api.model.product.ProductOrder
+import ar.edu.utn.frba.inventario.api.model.product.ProductOperation
 
 object OrderMapper {
 
@@ -22,10 +22,10 @@ object OrderMapper {
         )
     }
 
-    fun toProductsInOrder(orderResponse: OrderResponse): List<ProductOrder> {
+    fun toProductsInOrder(orderResponse: OrderResponse): List<ProductOperation> {
         return orderResponse.productAmount.mapNotNull { (id, quantity) ->
             orderResponse.productNames[id]?.let { name ->
-                ProductOrder(
+                ProductOperation(
                     id = id.toString(),
                     name = name,
                     quantity = quantity

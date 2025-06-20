@@ -2,8 +2,8 @@ package ar.edu.utn.frba.inventario.api
 
 import ar.edu.utn.frba.inventario.api.model.auth.LoginRequest
 import ar.edu.utn.frba.inventario.api.model.auth.LoginResponse
-import ar.edu.utn.frba.inventario.api.model.product.ProductResponse
 import ar.edu.utn.frba.inventario.api.model.order.OrderResponse
+import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.api.model.self.LocationResponse
 import ar.edu.utn.frba.inventario.api.model.self.UserResponse
 import ar.edu.utn.frba.inventario.api.model.shipment.ShipmentResponse
@@ -45,5 +45,5 @@ interface ApiService {
     suspend fun getShipmentList(): Response<List<ShipmentResponse>>
 
     @GET("/api/v1/products")
-    suspend fun getProductList(@Query("ean13s") ean13s: List<String>): Response<Map<Long,ProductResponse>>
+    suspend fun getProductList(@Query("ean13s") ean13s: List<String>): Response<Map<Long, Product>>
 }

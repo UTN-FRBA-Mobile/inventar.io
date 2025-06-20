@@ -13,6 +13,7 @@ import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
 import ar.edu.utn.frba.inventario.api.model.product.Product
+import ar.edu.utn.frba.inventario.api.model.product.ProductOperation
 import ar.edu.utn.frba.inventario.api.model.shipment.Shipment
 import ar.edu.utn.frba.inventario.api.model.shipment.ShipmentResponse
 import ar.edu.utn.frba.inventario.api.repository.ProductRepository
@@ -79,7 +80,7 @@ class ShipmentDetailViewModel @Inject constructor(private val shipmentRepository
         }
     }
 
-    private fun loadProductToScanList(products:List<Product>){
+    private fun loadProductToScanList(products:List<ProductOperation>){
         productToScanList.removeAll(productToScanList)
         products.forEach { p->productToScanList.add(ProductToScan(
             id = p.id, requiredQuantity = p.quantity,
@@ -122,18 +123,19 @@ class ShipmentDetailViewModel @Inject constructor(private val shipmentRepository
     @SuppressLint("StateFlowValueCalledInComposition")
     @Composable
     fun getProductById(productId: String): Product {
-        return try {
-            _shipment.value.products.first { it.id == productId }
-        } catch (e: NoSuchElementException) {
-            Log.e("ShipmentDetailViewModel", "Producto no encontrado: $productId")
-            //TODO: en lugar de mostrar la screen de producto cuando no se encuentra un producto, mostrar solo un mensaje de producto no identificado, como cuando se filtra y no hay resultados
-            Product(
-                id = stringResource(R.string.unknown_product_id), name = stringResource(R.string.product_not_found), quantity = 0,
-                innerLocation = stringResource(R.string.no_location_assigned),
-                currentStock = 0,
-                imageUrl = ""
-            )
-        }
+        Log.e("ShipmentDetailViewModel", "Producto no encontrado: $productId")
+        //TODO: en lugar de mostrar la screen de producto cuando no se encuentra un producto, mostrar solo un mensaje de producto no identificado, como cuando se filtra y no hay resultados
+
+        return Product(
+            id = stringResource(R.string.unknown_product_id),
+            name = stringResource(R.string.product_not_found),
+            quantity = 0,
+            innerLocation = stringResource(R.string.no_location_assigned),
+            currentStock = 0,
+            imageURL = "",
+            ean13 = "",
+            description = "",
+        )
     }
 
     data class ProductToScan(
@@ -142,18 +144,24 @@ class ShipmentDetailViewModel @Inject constructor(private val shipmentRepository
         val loadedQuantity: MutableState<Int> = mutableStateOf(0),
         val innerLocation: String,
         val currentStock: Int
-
     )
 
     fun parseShipment(shipmentResponse:ShipmentResponse):Shipment{
-
         Log.d("ShipmentDetailViewModel", "Shipment to parse: $shipmentResponse")
 
         val shipmentProducts = shipmentResponse.productAmount.map { pa ->
-            Product(id=pa.key.toString(), name= shipmentResponse.productNames.get(pa.key)?:"", quantity = pa.value,
-            innerLocation = "est",
-            currentStock = 22,
-            imageUrl = "a") }
+            ProductOperation(
+                id = pa.key.toString(),
+                name = shipmentResponse.productNames.get(pa.key) ?: "",
+                quantity = pa.value,
+            )
+
+            // ProductByShipment
+            // - Product <--
+            // - Shipment <--
+            // - Cantidad
+
+        }
         val shipment  = Shipment(
             id = shipmentResponse.id.toString(),
             number = "D${shipmentResponse.idLocation}-E${shipmentResponse.id}",
