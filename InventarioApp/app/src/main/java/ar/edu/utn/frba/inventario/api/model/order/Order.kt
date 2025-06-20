@@ -17,9 +17,6 @@ data class Order(
     val productsInOrder: List<ProductOperation>,
     val productAmount: Map<Long, Int>,
     val productNames: Map<Long, String>,
-    override val confirmedReceiptDate: LocalDateTime? = null,
-    override val estimatedReceiptDate: LocalDateTime? = null,
-    override val cancellationDate: LocalDateTime? = null,
     override val creationDate: LocalDateTime,
     val scheduledDate: LocalDateTime,
     val lastModifiedDate: LocalDateTime
