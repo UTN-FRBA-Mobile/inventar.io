@@ -169,7 +169,7 @@ public class OperationService {
      * @throws NoSuchElementException If the shipment is not found.
      * @throws IllegalStateException If the shipment is not pending or if there is insufficient stock.
      */
-    @Transactional
+    @Transactional(noRollbackFor = IllegalStateException.class)
     public ShipmentResponse startShipment(long id) {
         Object lockObject = shipmentLocks.computeIfAbsent(id, k -> new Object());
 
@@ -180,11 +180,13 @@ public class OperationService {
                 throw new IllegalStateException("Shipment not pending");
             }
 
-            // Validate stock related to the shipment.
             Map<Long, Integer> requiredStock = getProductAmount(shipment.getId(), ItemType.SHIPMENT);
-            Map<Long, Integer> actualStock = stockByLocationRepository
-                .findByIdProductInAndIdLocation(requiredStock.keySet().stream().toList(), shipment.getIdLocation())
-                .stream()
+
+            // Validate stock related to the shipment.
+            List<StockByLocation> stocksByLocation = stockByLocationRepository
+                .findByIdProductInAndIdLocation(requiredStock.keySet().stream().toList(), shipment.getIdLocation());
+
+            Map<Long, Integer> actualStock = stocksByLocation.stream()
                 .map(stockByLocation -> Map.entry(stockByLocation.getIdProduct(), stockByLocation.getStock()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
@@ -198,6 +200,12 @@ public class OperationService {
             if (!enoughStock) {
                 throw new IllegalStateException("Not enough stock");
             }
+
+            // Refresh existing stock.
+            // Logic when shipment is finished
+            //stocksByLocation.forEach(
+            //    stockByLocation -> stockByLocation.takeStock(requiredStock.get(stockByLocation.getIdProduct())));
+            //stockByLocationRepository.saveAll(stocksByLocation);
 
             return getShipmentResponse(shipment);
         }

@@ -65,4 +65,12 @@ public class StockByLocation {
         this.stock = stock;
         this.innerLocation = innerLocation;
     }
+
+    /**
+     * Reduces the stock based on the parameter sent.
+     * @param stock The value to reduce from the existing stock.
+     */
+    public void takeStock(Integer stock) {
+        this.stock -= stock;
+    }
 }
