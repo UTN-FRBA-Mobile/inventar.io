@@ -1,22 +1,16 @@
 package ar.edu.utn.frba.inventario.viewmodels
 
-import android.annotation.SuppressLint
 import android.util.Log
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
-import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.api.model.product.ProductOperation
 import ar.edu.utn.frba.inventario.api.model.shipment.Shipment
 import ar.edu.utn.frba.inventario.api.model.shipment.ShipmentResponse
-import ar.edu.utn.frba.inventario.api.repository.ProductRepository
 import ar.edu.utn.frba.inventario.api.repository.ShipmentRepository
 import ar.edu.utn.frba.inventario.events.NavigationEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +24,9 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class ShipmentDetailViewModel @Inject constructor(private val shipmentRepository: ShipmentRepository, private val productRepository: ProductRepository):ViewModel(){
+class ShipmentDetailViewModel @Inject constructor(
+    private val shipmentRepository: ShipmentRepository
+):ViewModel(){
     private val _shipment  = MutableStateFlow<Shipment>(Shipment(
         id = "0", number = "",
         customerName = "",
@@ -118,23 +114,6 @@ class ShipmentDetailViewModel @Inject constructor(private val shipmentRepository
 
     fun isCompletedShipment(){
         isStateCompleteShipment.value = productToScanList.all { ps -> ps.requiredQuantity == ps.loadedQuantity.value}
-    }
-
-    @SuppressLint("StateFlowValueCalledInComposition")
-    @Composable
-    fun getProductById(productId: String): Product {
-        Log.e("ShipmentDetailViewModel", "Producto no encontrado: $productId")
-        //TODO: en lugar de mostrar la screen de producto cuando no se encuentra un producto, mostrar solo un mensaje de producto no identificado, como cuando se filtra y no hay resultados
-
-        return Product(
-            id = stringResource(R.string.unknown_product_id),
-            name = stringResource(R.string.product_not_found),
-            innerLocation = stringResource(R.string.no_location_assigned),
-            currentStock = 0,
-            imageURL = "",
-            ean13 = "",
-            description = "",
-        )
     }
 
     data class ProductToScan(

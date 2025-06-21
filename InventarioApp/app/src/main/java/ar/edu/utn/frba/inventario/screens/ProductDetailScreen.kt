@@ -109,7 +109,7 @@ fun ProductDetailScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     CircularProgressIndicator()
-                    Text(text = "Cargando detalles del producto...")
+                    Text(text = stringResource(R.string.loading_product_detail))
                 }
             }
             errorMessage != null -> {
@@ -149,9 +149,9 @@ fun ProductDetailScreen(
                                 )
                                 .clip(RoundedCornerShape(12.dp))
                         ) {
-                            if (productDetail.imageURL!!.isNotBlank()) {
+                            if (!productDetail?.imageURL.isNullOrBlank()) {
                                 Image(
-                                    painter = rememberAsyncImagePainter(model = productDetail.imageURL),
+                                    painter = rememberAsyncImagePainter(model = productDetail!!.imageURL),
                                     contentDescription = stringResource(R.string.product_image),
                                     contentScale = ContentScale.Crop,
                                     modifier = Modifier.fillMaxSize()
@@ -172,7 +172,7 @@ fun ProductDetailScreen(
                             modifier = Modifier.weight(1f)
                         ) {
                             Text(
-                                text = productDetail.name,
+                                text = productDetail?.name.toString(),
                                 style = MaterialTheme.typography.headlineSmall,
                                 color = MaterialTheme.colorScheme.onBackground,
                                 maxLines = 1,
@@ -182,12 +182,12 @@ fun ProductDetailScreen(
                             Spacer(modifier = Modifier.height(4.dp))
 
                             Text(
-                                text = "EAN13: ${productDetail.ean13}",
+                                text = "EAN13: ${productDetail?.ean13.toString()}",
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Text(
-                                text = productDetail.description,
+                                text = productDetail?.description.toString(),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 maxLines = 1,
@@ -225,7 +225,7 @@ fun ProductDetailScreen(
                             DetailRow(
                                 iconLight = R.drawable.current_stock_light,
                                 iconDark = R.drawable.current_stock_dark,
-                                text = productDetail.currentStock.toString(),
+                                text = productDetail?.currentStock.toString(),
                                 label = stringResource(R.string.current_stock)
                             )
                         }

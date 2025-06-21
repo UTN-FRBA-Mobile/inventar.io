@@ -20,15 +20,7 @@ class ProductDetailViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _productDetail: MutableStateFlow<Product> = MutableStateFlow(Product(
-        id = "",
-        name = "",
-        imageURL = "",
-        innerLocation = "",
-        currentStock = 0,
-        ean13 = "",
-        description = ""
-    ))
+    private val _productDetail: MutableStateFlow<Product?> = MutableStateFlow(null)
     val productDetail = _productDetail.asStateFlow()
 
     private val _isLoading = MutableStateFlow(true)
@@ -65,10 +57,10 @@ class ProductDetailViewModel @Inject constructor(
                     val details = detailsResult.data[id]
                     loadedProduct = Product(
                         id = id,
-                        name = details?.name ?: "",
-                        description = details?.description ?: "",
-                        ean13 = details?.ean13 ?:"",
-                        imageURL = details?.imageURL ?: "",
+                        name = details?.name.toString(),
+                        description = details?.description.toString(),
+                        ean13 = details?.ean13.toString(),
+                        imageURL = details?.imageURL,
                         innerLocation = null,
                         currentStock = 0
                     )
