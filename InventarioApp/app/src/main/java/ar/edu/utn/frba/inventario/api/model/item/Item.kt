@@ -11,9 +11,6 @@ interface Item {
     val products: List<ProductOperation>
     val status: ItemStatus
     val creationDate: LocalDateTime
-    val estimatedReceiptDate: LocalDateTime? get() = null
-    val confirmedReceiptDate: LocalDateTime? get() = null
-    val cancellationDate: LocalDateTime? get() = null
 
     fun getRelevantDate(): LocalDateTime?
     fun getDisplayName(): String

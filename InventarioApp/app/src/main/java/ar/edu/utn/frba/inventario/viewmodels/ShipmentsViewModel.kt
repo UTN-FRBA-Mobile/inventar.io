@@ -6,6 +6,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
+import ar.edu.utn.frba.inventario.api.model.order.Order
 import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.api.model.product.ProductOperation
 import ar.edu.utn.frba.inventario.api.model.shipment.Shipment
@@ -21,8 +22,9 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 @HiltViewModel
-class ShipmentsViewModel @Inject constructor(private val shipmentRepository: ShipmentRepository,
-                                             savedStateHandle: SavedStateHandle
+class ShipmentsViewModel @Inject constructor(
+    private val shipmentRepository: ShipmentRepository,
+    savedStateHandle: SavedStateHandle
 ) : BaseItemViewModel<Shipment>(
     savedStateHandle = savedStateHandle,
     filterKey = "shipment_filter"
@@ -30,7 +32,8 @@ class ShipmentsViewModel @Inject constructor(private val shipmentRepository: Shi
     private val _shipments = MutableStateFlow<List<ShipmentResponse>>(emptyList())
     val shipments: StateFlow<List<ShipmentResponse>> = _shipments.asStateFlow()
 
-    override val items: SnapshotStateList<Shipment> = mutableStateListOf<Shipment>()
+    private val _items: SnapshotStateList<Shipment> = mutableStateListOf()
+    override val items: SnapshotStateList<Shipment> get() = _items
 
     fun getShipments() {
         viewModelScope.launch(Dispatchers.Default) {
@@ -38,7 +41,9 @@ class ShipmentsViewModel @Inject constructor(private val shipmentRepository: Shi
                 is NetworkResult.Success -> {
                     Log.d("UserViewModel", "Success: ${shipmentResult.data}")
                     val shipmentsParsed = shipmentResult.data.map { sr -> parseMapShipment(sr) }
-                    items.apply { addAll(shipmentsParsed) }
+
+                    _items.clear()
+                    _items.apply { addAll(shipmentsParsed) }
                 }
                 is NetworkResult.Error -> {
                     Log.d("UserViewModel", "Error: code=${shipmentResult.code}, message=${shipmentResult.message}")

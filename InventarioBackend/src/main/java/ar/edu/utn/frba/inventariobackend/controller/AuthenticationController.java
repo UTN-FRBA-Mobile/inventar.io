@@ -52,6 +52,10 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("no location");
         }
 
+        if (!possibleUser.get().getAllowedLocations().contains(location.get().id())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("location unauthorized");
+        }
+
         String accessToken = jwtUtil.generateToken(request.username(), location.get().id(), false);
         String refreshToken = jwtUtil.generateToken(request.username(), location.get().id(), true);
 

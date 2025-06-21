@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 
@@ -101,5 +102,55 @@ public class OperationController {
     public ResponseEntity<OrderResponse> getOrder(@PathVariable long id) {
         Optional<OrderResponse> optionalOrder = operationService.getOrder(id);
         return optionalOrder.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Initiates the start process for a specific shipment.
+     * <p>
+     * This endpoint requires authentication with a bearer token.
+     * When invoked, it delegates the business logic to the {@code operationService}
+     * to begin the processing of the shipment identified by the provided ID.
+     * </p>
+     *
+     * @param id The unique identifier of the shipment to be started.
+     * @return A {@link ResponseEntity} containing a {@link ShipmentResponse} object
+     * that represents the outcome or details of the started shipment operation.
+     * The HTTP status code will reflect the success or failure of the operation.
+     */
+    @SecurityRequirement(name = "bearerAuth")
+    @PostMapping("/shipments/{id}/start")
+    public ResponseEntity<?> startShipment(@PathVariable long id) {
+        try {
+            return ResponseEntity.ok(operationService.startShipment(id));
+        } catch (NoSuchElementException __) {
+            return ResponseEntity.notFound().build();
+        } catch (IllegalStateException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+    }
+
+    /**
+     * Initiates the start process for a specific order.
+     * <p>
+     * This endpoint requires authentication with a bearer token.
+     * When invoked, it delegates the business logic to the {@code operationService}
+     * to begin the processing of the order identified by the provided ID.
+     * </p>
+     *
+     * @param id The unique identifier of the order to be started.
+     * @return A {@link ResponseEntity} containing an {@link OrderResponse} object
+     * that represents the outcome or details of the started order operation.
+     * The HTTP status code will reflect the success or failure of the operation.
+     */
+    @SecurityRequirement(name = "bearerAuth")
+    @PostMapping("/orders/{id}/start")
+    public ResponseEntity<?> startOrder(@PathVariable long id) {
+        try {
+            return ResponseEntity.ok(operationService.startOrder(id));
+        } catch (NoSuchElementException __) {
+            return ResponseEntity.notFound().build();
+        } catch (IllegalStateException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
 }
