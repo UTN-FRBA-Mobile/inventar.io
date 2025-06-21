@@ -201,12 +201,6 @@ public class OperationService {
                 throw new IllegalStateException("Not enough stock");
             }
 
-            // Refresh existing stock.
-            // Logic when shipment is finished
-            //stocksByLocation.forEach(
-            //    stockByLocation -> stockByLocation.takeStock(requiredStock.get(stockByLocation.getIdProduct())));
-            //stockByLocationRepository.saveAll(stocksByLocation);
-
             return getShipmentResponse(shipment);
         }
     }
@@ -240,6 +234,111 @@ public class OperationService {
         }
     }
 
+    /**
+     * Completes a specific shipment, making it thread-safe by ID.
+     * <p>
+     * Updates shipment status to {@link Status#COMPLETED} and deducts required stock.
+     * </p>
+     *
+     * @param id The unique identifier of the shipment to complete.
+     * @return A {@link ShipmentResponse} for the completed shipment.
+     * @throws NoSuchElementException If the shipment is not found.
+     * @throws IllegalStateException If the shipment is not in {@link Status#IN_PROGRESS}.
+     */
+    @Transactional
+    public ShipmentResponse finishShipment(long id) {
+        Object lockObject = shipmentLocks.computeIfAbsent(id, k -> new Object());
+
+        synchronized (lockObject) {
+            Shipment shipment = shipmentRepository.findById(id).orElseThrow(NoSuchElementException::new);
+
+            if (shipment.getStatus() != Status.IN_PROGRESS) {
+                throw new IllegalStateException("Shipment not in progress");
+            }
+
+            shipment.updateStatus(Status.COMPLETED);
+            shipmentRepository.save(shipment);
+
+            // Update stock available
+            Map<Long, Integer> requiredStock = getProductAmount(shipment.getId(), ItemType.SHIPMENT);
+            List<StockByLocation> stocksByLocation = stockByLocationRepository
+                .findByIdProductInAndIdLocation(requiredStock.keySet().stream().toList(), shipment.getIdLocation());
+            stocksByLocation.forEach(
+                stockByLocation -> stockByLocation.takeStock(requiredStock.get(stockByLocation.getIdProduct())));
+            stockByLocationRepository.saveAll(stocksByLocation);
+
+            return getShipmentResponse(shipment);
+        }
+    }
+
+    /**
+     * Completes a specific order, making it thread-safe by ID.
+     * <p>
+     * Updates order status to {@link Status#COMPLETED} and deducts stock using the provided
+     * `processedStock` quantities.
+     * </p>
+     *
+     * @param id             The unique identifier of the order to complete.
+     * @param processedStock Map of product IDs to quantities to deduct from stock.
+     * @return An {@link OrderResponse} for the completed order.
+     * @throws NoSuchElementException If the order is not found.
+     * @throws IllegalStateException If the order is not in {@link Status#IN_PROGRESS}.
+     */
+    @Transactional
+    public OrderResponse finishOrder(long id, Map<Long, Integer> processedStock) {
+        Object lockObject = orderLocks.computeIfAbsent(id, k -> new Object());
+
+        synchronized (lockObject) {
+            Order order = orderRepository.findById(id).orElseThrow(NoSuchElementException::new);
+
+            if (order.getStatus() != Status.IN_PROGRESS) {
+                throw new IllegalStateException("Order not in progress");
+            }
+
+            order.updateStatus(Status.COMPLETED);
+            orderRepository.save(order);
+
+            List<StockByLocation> stocksByLocation = stockByLocationRepository
+                .findByIdProductInAndIdLocation(processedStock.keySet().stream().toList(), order.getIdLocation());
+
+            stocksByLocation.forEach(stockByLocation -> {
+                stockByLocation.addStock(processedStock.getOrDefault(stockByLocation.getIdProduct(), 0));
+            });
+            stockByLocationRepository.saveAll(stocksByLocation);
+
+            return getOrderResponse(order);
+        }
+    }
+
+    /**
+     * Blocks a specific shipment, making it thread-safe by ID.
+     * <p>
+     * Updates the shipment's status to {@link Status#BLOCKED} without performing any
+     * stock operations. This indicates that the shipment's processing has been halted.
+     * </p>
+     *
+     * @param id The unique identifier of the shipment to block.
+     * @return A {@link ShipmentResponse} for the blocked shipment.
+     * @throws NoSuchElementException If the shipment is not found.
+     * @throws IllegalStateException If the shipment cannot be blocked from its current status.
+     */
+    @Transactional
+    public ShipmentResponse blockShipment(long id) {
+        Object lockObject = shipmentLocks.computeIfAbsent(id, k -> new Object());
+
+        synchronized (lockObject) {
+            Shipment shipment = shipmentRepository.findById(id).orElseThrow(NoSuchElementException::new);
+
+            if (shipment.getStatus() != Status.IN_PROGRESS) {
+                throw new IllegalStateException("Shipment not in progress");
+            }
+
+            shipment.updateStatus(Status.BLOCKED);
+            shipmentRepository.save(shipment);
+
+            return getShipmentResponse(shipment);
+        }
+    }
 
     /**
      * Utility method to get the product amount related to an operation.
