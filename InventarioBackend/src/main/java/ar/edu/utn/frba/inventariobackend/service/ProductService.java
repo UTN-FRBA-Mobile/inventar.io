@@ -63,6 +63,41 @@ public class ProductService {
     }
 
     /**
+     * Retrieves a map of stock quantities for a given list of product IDs and a specific location.
+     * <p>
+     * This method queries the `stockByLocationRepository` to find stock entries that match
+     * any of the provided product IDs within the specified single location.
+     * The result is then transformed into a `Map` where the key is the product ID (`Long`)
+     * and the value is the corresponding stock quantity (`Integer`).
+     *
+     * @param ids        A {@code List} of {@code Long} representing the product identifiers for which
+     *                   stock entries are to be retrieved.
+     * @param locationId A {@code Long} representing the unique identifier of the location
+     *                   for which the stock entries are to be retrieved.
+     * @return A {@code Map} where keys are product IDs ({@code Long}) and values are their
+     * respective stock quantities ({@code Integer}) at the specified location.
+     * If no stock entries are found for the given criteria, an empty map is returned.
+     * The map will contain only products that have an entry for the specified location
+     * and are present in the input {@code ids} list.
+     */
+    public Map<Long, Integer> getStockEntries(List<Long> ids, Long locationId) {
+        List<StockByLocation> stockByLocations =
+            stockByLocationRepository.findByIdProductInAndIdLocation(ids, locationId);
+
+        Map<Long, Integer> actualStockMap = stockByLocations.stream()
+            .collect(Collectors.toMap(
+                StockByLocation::getIdProduct,
+                StockByLocation::getStock
+            ));
+
+        return ids.stream()
+            .collect(Collectors.toMap(
+                productId -> productId, // Key is the product ID
+                productId -> actualStockMap.getOrDefault(productId, 0)
+            ));
+    }
+
+    /**
      * Retrieves a list of products based on the provided list of product IDs.
      *
      * @param ids    A list of product IDs to fetch.

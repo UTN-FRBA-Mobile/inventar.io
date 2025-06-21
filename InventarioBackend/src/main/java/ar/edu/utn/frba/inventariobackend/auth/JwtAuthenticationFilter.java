@@ -25,24 +25,6 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private static final List<String> PUBLIC_ENDPOINTS = List.of(
-        "/api/v1/auth/login",
-        "/api/v1/auth/refresh",
-        "/api/v1/user",
-        "/api/v1/location",
-        "/api/v1/shipments",
-        "/api/v1/orders",
-        "/api/v1/products",
-        "/api/v1/products/"
-    );
-
-    private static final List<String> PUBLIC_PREFIXES = List.of(
-        "/v3/api-docs",
-        "/swagger-ui",
-        "/swagger-ui.html",
-        "/api/v1/products/"
-    );
-
     private final JwtUtil jwtUtil;
 
     /**

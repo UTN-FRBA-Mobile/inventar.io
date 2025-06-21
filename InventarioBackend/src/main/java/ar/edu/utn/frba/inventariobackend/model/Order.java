@@ -86,6 +86,13 @@ public class Order {
     }
 
     /**
+     * Updates the status of the order.
+     */
+    public void updateStatus(Status status) {
+        this.status = status;
+    }
+
+    /**
      * Set creation and last modified date when initially created.
      */
     @PrePersist
