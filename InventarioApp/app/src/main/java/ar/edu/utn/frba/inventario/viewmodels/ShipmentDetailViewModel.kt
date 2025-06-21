@@ -129,7 +129,6 @@ class ShipmentDetailViewModel @Inject constructor(private val shipmentRepository
         return Product(
             id = stringResource(R.string.unknown_product_id),
             name = stringResource(R.string.product_not_found),
-            quantity = 0,
             innerLocation = stringResource(R.string.no_location_assigned),
             currentStock = 0,
             imageURL = "",

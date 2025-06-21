@@ -107,7 +107,8 @@ fun AppNavHost(navController: NavHostController) {
             val productId = backStackEntry.arguments?.getString("productId") ?: ""
             val viewModel: ShipmentDetailViewModel = hiltViewModel()
             ProductDetailScreen(
-                product = viewModel.getProductById(productId),
+                navController = navController,
+                productId = productId,
                 onBackClick = { navController.popBackStack() }
             )
         }
