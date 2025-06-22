@@ -22,6 +22,8 @@
     <string name="product_detail_screen_title">Detalle del producto</string>
     <string name="inner_location">Ubicación en depósito</string>
     <string name="current_stock">Stock actual</string>
+    <string name="loading_product_detail">Cargando detalles del producto...</string>
+
 
     <!-- ShipmentViewModel -->
     <string name="unknown_product_id">Producto no identificado</string>
