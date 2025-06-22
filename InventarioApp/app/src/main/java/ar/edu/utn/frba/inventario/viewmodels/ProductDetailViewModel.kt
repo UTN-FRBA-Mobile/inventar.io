@@ -73,10 +73,13 @@ class ProductDetailViewModel @Inject constructor(
                 }
 
                 if (stockLocationResult is NetworkResult.Success) {
-                    val stockLocation = stockLocationResult.data[id]
+                    val stockLocation = stockLocationResult.data
+                    val productCurrentStock = stockLocation.stockCount[id]
+                    val productInnerLocation = stockLocation.locationDetails[id]
+
                     loadedProduct = loadedProduct?.copy(
-                        innerLocation = "",//TODO: Obtenerlo del endpoint cuando se agregue
-                        currentStock = stockLocation
+                        innerLocation = productInnerLocation,
+                        currentStock = productCurrentStock
                     )
                 } else if (stockLocationResult is NetworkResult.Error) {
                     _errorMessage.value = "Error al cargar stock/ubicación: ${stockLocationResult.message}"

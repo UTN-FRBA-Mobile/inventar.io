@@ -216,7 +216,7 @@ fun ProductDetailScreen(
                             DetailRow(
                                 iconLight = R.drawable.location_light,
                                 iconDark = R.drawable.location_dark,
-                                text = "productDetail.innerLocation",
+                                text = productDetail?.innerLocation.toString(),
                                 label = stringResource(R.string.inner_location)
                             )
 

@@ -5,6 +5,7 @@ import ar.edu.utn.frba.inventario.api.model.auth.LoginResponse
 import ar.edu.utn.frba.inventario.api.model.order.OrderResponse
 import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.api.model.product.ProductResponse
+import ar.edu.utn.frba.inventario.api.model.product.ProductStockLocationResponse
 import ar.edu.utn.frba.inventario.api.model.self.LocationResponse
 import ar.edu.utn.frba.inventario.api.model.self.UserResponse
 import ar.edu.utn.frba.inventario.api.model.shipment.ShipmentResponse
@@ -53,5 +54,5 @@ interface ApiService {
     suspend fun getProductListById(@Query("id") id: String): Response<Map<String, ProductResponse>>
 
     @GET("/api/v1/products/stock")
-    suspend fun getStockByProductId(@Query("ids") ids: String): Response<Map<String, Int>>
+    suspend fun getStockByProductId(@Query("ids") ids: String): Response<ProductStockLocationResponse>
 }

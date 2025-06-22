@@ -4,6 +4,7 @@ import ar.edu.utn.frba.inventario.api.ApiService
 import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
 import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.api.model.product.ProductResponse
+import ar.edu.utn.frba.inventario.api.model.product.ProductStockLocationResponse
 import javax.inject.Inject
 
 class ProductRepository @Inject constructor(
@@ -18,7 +19,7 @@ class ProductRepository @Inject constructor(
         return safeApiCall {apiService.getProductListById(id)}
     }
 
-    suspend fun getStockByProductId(id : String): NetworkResult<Map<String,Int>>{
+    suspend fun getStockByProductId(id : String): NetworkResult<ProductStockLocationResponse>{
         return safeApiCall {apiService.getStockByProductId(id)}
     }
 }
