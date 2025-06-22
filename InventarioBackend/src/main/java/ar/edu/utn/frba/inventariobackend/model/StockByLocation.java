@@ -73,4 +73,12 @@ public class StockByLocation {
     public void takeStock(Integer stock) {
         this.stock -= stock;
     }
+
+    /**
+     * Adds the stock based on the parameter sent.
+     * @param stock The value to add from the existing stock.
+     */
+    public void addStock(Integer stock) {
+        this.stock += stock;
+    }
 }
