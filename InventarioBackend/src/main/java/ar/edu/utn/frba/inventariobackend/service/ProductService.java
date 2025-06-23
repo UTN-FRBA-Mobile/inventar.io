@@ -2,6 +2,7 @@ package ar.edu.utn.frba.inventariobackend.service;
 
 import ar.edu.utn.frba.inventariobackend.dto.request.CreateStockEntryRequest;
 import ar.edu.utn.frba.inventariobackend.dto.request.ProductCreationRequest;
+import ar.edu.utn.frba.inventariobackend.dto.response.StockResponse;
 import ar.edu.utn.frba.inventariobackend.dto.response.ProductResponse;
 import ar.edu.utn.frba.inventariobackend.model.Product;
 import ar.edu.utn.frba.inventariobackend.model.StockByLocation;
@@ -63,38 +64,37 @@ public class ProductService {
     }
 
     /**
-     * Retrieves a map of stock quantities for a given list of product IDs and a specific location.
+     * Retrieves detailed stock information for a list of products at a given location.
      * <p>
-     * This method queries the `stockByLocationRepository` to find stock entries that match
-     * any of the provided product IDs within the specified single location.
-     * The result is then transformed into a `Map` where the key is the product ID (`Long`)
-     * and the value is the corresponding stock quantity (`Integer`).
+     * Returns stock counts (defaulting to 0) and inner location strings (defaulting to "")
+     * for all requested product IDs within the specified location.
+     * </p>
      *
-     * @param ids        A {@code List} of {@code Long} representing the product identifiers for which
-     *                   stock entries are to be retrieved.
-     * @param locationId A {@code Long} representing the unique identifier of the location
-     *                   for which the stock entries are to be retrieved.
-     * @return A {@code Map} where keys are product IDs ({@code Long}) and values are their
-     * respective stock quantities ({@code Integer}) at the specified location.
-     * If no stock entries are found for the given criteria, an empty map is returned.
-     * The map will contain only products that have an entry for the specified location
-     * and are present in the input {@code ids} list.
+     * @param ids        List of product identifiers.
+     * @param locationId Unique identifier of the location.
+     * @return A {@link StockResponse} with product IDs mapped to their stock counts and inner location strings.
      */
-    public Map<Long, Integer> getStockEntries(List<Long> ids, Long locationId) {
+    public StockResponse getStockDetails(List<Long> ids, Long locationId) {
         List<StockByLocation> stockByLocations =
             stockByLocationRepository.findByIdProductInAndIdLocation(ids, locationId);
 
-        Map<Long, Integer> actualStockMap = stockByLocations.stream()
+        Map<Long, Map.Entry<Integer, String>> detailsMap = stockByLocations.stream()
             .collect(Collectors.toMap(
                 StockByLocation::getIdProduct,
-                StockByLocation::getStock
+                stock -> Map.entry(stock.getStock(), stock.getInnerLocation())
             ));
 
-        return ids.stream()
-            .collect(Collectors.toMap(
-                productId -> productId, // Key is the product ID
-                productId -> actualStockMap.getOrDefault(productId, 0)
-            ));
+        Map.Entry<Integer, String> defaultEntry = Map.entry(0, "Desconocido");
+        return new StockResponse(
+            ids.stream()
+                .collect(Collectors.toMap(
+                    productId -> productId, // Key is the product ID
+                    productId -> detailsMap.getOrDefault(productId, defaultEntry).getKey())),
+            ids.stream()
+                .collect(Collectors.toMap(
+                    productId -> productId, // Key is the product ID
+                    productId -> detailsMap.getOrDefault(productId, defaultEntry).getValue()))
+        );
     }
 
     /**

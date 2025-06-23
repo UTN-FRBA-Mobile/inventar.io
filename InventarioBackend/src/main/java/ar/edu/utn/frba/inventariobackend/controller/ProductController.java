@@ -3,6 +3,7 @@ package ar.edu.utn.frba.inventariobackend.controller;
 import ar.edu.utn.frba.inventariobackend.dto.request.CreateStockEntryRequest; // Renamed for clarity
 import ar.edu.utn.frba.inventariobackend.dto.request.ProductCreationRequest;
 import ar.edu.utn.frba.inventariobackend.dto.response.ProductResponse;
+import ar.edu.utn.frba.inventariobackend.dto.response.StockResponse;
 import ar.edu.utn.frba.inventariobackend.service.ProductService;
 
 import ar.edu.utn.frba.inventariobackend.utils.TokenUtils;
@@ -59,14 +60,14 @@ public class ProductController {
      * Gets the stock associated to a specific location of certain products.
      *
      * @param ids An optional list of {@link Long} representing the unique identifiers of the stocks to be fetched.
-     * @return A {@link ResponseEntity} with a map of stocks by product ID.
+     * @return A {@link ResponseEntity} with a stockResponse detailing each product.
      */
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/stock")
-    public ResponseEntity<Map<Long, Integer>> getProductsStockEntry(@RequestParam Optional<List<Long>> ids) {
-        Map<Long, Integer> stocks =
-            productService.getStockEntries(ids.orElse(List.of()), tokenUtils.getLocationIdFromToken());
-        return ResponseEntity.ok(stocks);
+    public ResponseEntity<StockResponse> getProductsStockEntry(@RequestParam Optional<List<Long>> ids) {
+        StockResponse stockResponse =
+            productService.getStockDetails(ids.orElse(List.of()), tokenUtils.getLocationIdFromToken());
+        return ResponseEntity.ok(stockResponse);
     }
 
     /**
