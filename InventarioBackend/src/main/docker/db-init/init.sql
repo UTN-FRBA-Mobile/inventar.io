@@ -134,7 +134,6 @@ INSERT INTO public.location VALUES (5, -34.6427233, -58.4662968, 150, 'Casa Sant
 
 INSERT INTO public.user_account VALUES (1, 16474, 'Fernando Martín Besteiro', '$2a$10$KAV.VS4U/7q.1u8UhazH8uSQeooX/FH/IDl5l9qxZ7B4dxvrJTrJa', 'fmbesteiro');
 INSERT INTO public.user_account VALUES (2, 16475, 'Usuario genérico', '$2a$10$bdm2nk11CK4haWtj7HqE9ef7Cx6/oFLNLmmx0s8TbFaaK6Ip3XP3K', 'usergenerico');
-INSERT INTO public.user_account VALUES (3, 16475, 'santu', '$2a$10$bdm2nk11CK4haWtj7HqE9ef7Cx6/oFLNLmmx0s8TbFaaK6Ip3XP3K', 'usergenerico');
 
 
 --
@@ -151,7 +150,7 @@ INSERT INTO public.user_allowed_locations VALUES (2, 1);
 INSERT INTO public.user_allowed_locations VALUES (2, 2);
 INSERT INTO public.user_allowed_locations VALUES (2, 3);
 INSERT INTO public.user_allowed_locations VALUES (2, 4);
-INSERT INTO public.user_allowed_locations VALUES (3, 5);
+INSERT INTO public.user_allowed_locations VALUES (2, 5);
 
 
 --
