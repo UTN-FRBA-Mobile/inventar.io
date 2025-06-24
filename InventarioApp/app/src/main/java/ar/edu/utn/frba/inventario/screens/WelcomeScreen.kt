@@ -18,10 +18,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.VerticalAlignmentLine
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.composables.utils.AnimatedBuildingGif
 import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.viewmodels.UserScreenViewModel
@@ -54,7 +56,7 @@ fun WelcomeBodyContent(
     {
         Spacer(modifier = Modifier.weight(1f))
         Text(
-            text = "Bienvenido ${user?.username}",
+            text = "${stringResource(R.string.welcome_screen_title)} ${user?.username}",
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(16.dp)
@@ -69,7 +71,7 @@ fun WelcomeBodyContent(
                 verticalArrangement = Arrangement.Center
             ){
                 Text(
-                    text = "Se encuentra actualmente en la sucursal: $userLocation",
+                    text = "${stringResource(R.string.welcome_screen_location_indicator)} $userLocation",
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.Center,
@@ -86,7 +88,7 @@ fun WelcomeBodyContent(
                     }
                 ) {
                     Text(
-                        text = "Continuar",
+                        text = stringResource(id = R.string._continue),
                         style = MaterialTheme.typography.titleLarge
                     )
                 }
