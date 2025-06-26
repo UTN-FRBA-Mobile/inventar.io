@@ -2,22 +2,13 @@ package ar.edu.utn.frba.inventario.viewmodels
 
 
 import android.Manifest
-import android.content.pm.PackageManager
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.viewModelScope
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
-import kotlinx.coroutines.launch
-
 import android.content.Context
+import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
-import android.os.Looper
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import ar.edu.utn.frba.inventario.api.repository.LocationRepository
-import com.google.android.gms.location.*
-import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

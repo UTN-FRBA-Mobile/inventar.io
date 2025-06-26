@@ -1,6 +1,5 @@
 package ar.edu.utn.frba.inventario.screens.scan
 
-import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

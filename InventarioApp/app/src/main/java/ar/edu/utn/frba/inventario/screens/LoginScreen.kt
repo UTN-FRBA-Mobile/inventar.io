@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.inventario.screens
 
+import android.Manifest
 import android.content.pm.PackageManager
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -51,13 +53,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.R
+import ar.edu.utn.frba.inventario.composables.utils.Spinner
 import ar.edu.utn.frba.inventario.events.NavigationEvent
 import ar.edu.utn.frba.inventario.utils.Screen
-import ar.edu.utn.frba.inventario.composables.utils.Spinner
-import ar.edu.utn.frba.inventario.viewmodels.LoginScreenViewModel
-import android.Manifest
-import androidx.compose.material3.MaterialTheme
 import ar.edu.utn.frba.inventario.viewmodels.LocationViewModel
+import ar.edu.utn.frba.inventario.viewmodels.LoginScreenViewModel
 
 @Composable
 fun LoginScreen(

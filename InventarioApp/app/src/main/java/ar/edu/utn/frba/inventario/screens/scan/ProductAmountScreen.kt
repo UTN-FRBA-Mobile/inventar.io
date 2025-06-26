@@ -1,22 +1,34 @@
 package ar.edu.utn.frba.inventario.screens.scan
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.composables.utils.ImageFromURL
 import ar.edu.utn.frba.inventario.composables.utils.Spinner
 import ar.edu.utn.frba.inventario.utils.Screen
@@ -44,7 +56,7 @@ fun ProductAmountScreen(
 
     if (error != null || scannedProduct == null || requiredAmount == null || currentProductStock == null) {
         Text(
-            text = error ?: "Error inesperado",
+            text = error ?: stringResource(R.string.product_amount_unexpected_error),
             modifier = Modifier.padding(16.dp),
             color = Color.Red
         )
@@ -52,7 +64,7 @@ fun ProductAmountScreen(
             ShipmentScanFlowState.clear()
             navController.popBackStack("shipmentDetail", false)
         }) {
-            Text("Volver")
+            Text(stringResource(R.string.product_amount_back_button))
         }
         return
     }
@@ -67,7 +79,7 @@ fun ProductAmountScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Confirmación de cantidad",
+            text = stringResource(R.string.product_amount_title),
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF2E7D32),
@@ -99,9 +111,9 @@ fun ProductAmountScreen(
 
         Text(
             text = if (enoughStock)
-                "Cantidad a ingresar: $requiredAmount"
+                stringResource(R.string.product_amount_required_quantity, requiredAmount)
             else
-                "No hay suficiente stock para cargar $requiredAmount unidades de ${scannedProduct.name}",
+                stringResource(R.string.product_amount_insufficient_stock, requiredAmount, scannedProduct.name),
             style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Center
         )
@@ -116,7 +128,7 @@ fun ProductAmountScreen(
                     popUpTo(Screen.ShipmentDetail.route) { inclusive = true }
                 }
             }) {
-                Text("Confirmar ingreso")
+                Text(stringResource(R.string.product_amount_confirm_button))
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -125,14 +137,14 @@ fun ProductAmountScreen(
                 ShipmentScanFlowState.clear()
                 navController.popBackStack("shipmentDetail", false)
             }) {
-                Text("Cancelar")
+                Text(stringResource(R.string.product_amount_cancel_button))
             }
         } else {
             Button(onClick = {
                 ShipmentScanFlowState.clear()
                 navController.popBackStack("shipmentDetail", false)
             }) {
-                Text("Volver")
+                Text(stringResource(R.string.product_amount_back_button))
             }
         }
     }

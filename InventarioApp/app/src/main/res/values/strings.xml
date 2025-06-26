@@ -1,7 +1,4 @@
 <resources>
-    <!-- Welcome Screen -->
-    <string name="welcome_screen_title">Bienvenido</string>
-    <string name="welcome_screen_location_indicator">Usted se encuentra en la sucursal: </string>
     <!-- Others -->
     <string name="app_name">Inventario</string>
     <string name="all_status_selected">Todos</string>
@@ -9,7 +6,6 @@
     <string name="no_results_for_filters">Sin resultados para los filtros aplicados</string>
     <string name="confirm">Confirmar</string>
     <string name="try_again">Reintentar</string>
-    <!-- continue is not allowed as name (java reserved word) -->
     <string name="_continue">Continuar</string>
     <string name="scan">Escanear</string>
     <string name="go_back">Volver</string>
@@ -21,12 +17,15 @@
     <string name="unknown_error">Error desconocido</string>
     <string name="critical_error">Error crítico</string>
 
+    <!-- Welcome Screen -->
+    <string name="welcome_screen_title">Bienvenido</string>
+    <string name="welcome_screen_location_indicator">Usted se encuentra en la sucursal: </string>
+
     <!-- ProductDetailScreen -->
     <string name="product_detail_screen_title">Detalle del producto</string>
     <string name="inner_location">Ubicación en depósito</string>
     <string name="current_stock">Stock actual</string>
     <string name="loading_product_detail">Cargando detalles del producto...</string>
-
 
     <!-- ShipmentViewModel -->
     <string name="unknown_product_id">Producto no identificado</string>
@@ -94,4 +93,12 @@
     <string name="unknown_location">Ubicación desconocida</string>
     <string name="error_loading_location">Error al cargar ubicación</string>
 
+    <!-- ProductAmountScreen -->
+    <string name="product_amount_title">Confirmación de cantidad</string>
+    <string name="product_amount_required_quantity">Cantidad a ingresar: %1$d</string>
+    <string name="product_amount_insufficient_stock">No hay suficiente stock para cargar %1$d unidades de %2$s</string>
+    <string name="product_amount_confirm_button">Confirmar ingreso</string>
+    <string name="product_amount_cancel_button">Cancelar</string>
+    <string name="product_amount_back_button">Volver</string>
+    <string name="product_amount_unexpected_error">Error inesperado</string>
 </resources>
