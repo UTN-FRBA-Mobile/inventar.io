@@ -31,7 +31,8 @@ import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.composables.utils.ImageFromURL
 import ar.edu.utn.frba.inventario.composables.utils.Spinner
-import ar.edu.utn.frba.inventario.viewmodels.ProductResultViewModel
+import ar.edu.utn.frba.inventario.utils.Screen
+import ar.edu.utn.frba.inventario.viewmodels.scan.ProductResultViewModel
 
 
 @Composable
@@ -87,6 +88,8 @@ fun ProductResultBodyContent(
     origin: String,
     foundProduct: Product?
 ) {
+    // TODO - Revisar si "origin" es necesario, entiendo que ya no
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -154,7 +157,9 @@ fun ProductResultBodyContent(
             Spacer(Modifier.height(32.dp))
 
             Button(onClick = {
-                Log.d("[ProductResultScreen]", "#ToDo, navigate to next page with result: $code")
+                navController.navigate(Screen.ProductAmount.route) {
+                    popUpTo(Screen.Scan.route) { inclusive = true }
+                }
             }) {
                 Text(stringResource(R.string.product_result_continue_button))
             }

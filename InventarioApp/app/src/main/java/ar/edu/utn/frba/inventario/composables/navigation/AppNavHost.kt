@@ -23,6 +23,7 @@ import ar.edu.utn.frba.inventario.screens.shipment.ShipmentsScreen
 import ar.edu.utn.frba.inventario.screens.UserScreen
 import ar.edu.utn.frba.inventario.screens.WelcomeScreen
 import ar.edu.utn.frba.inventario.screens.scan.ManualCodeScreen
+import ar.edu.utn.frba.inventario.screens.scan.ProductAmountScreen
 import ar.edu.utn.frba.inventario.screens.scan.ProductResultScreen
 import ar.edu.utn.frba.inventario.screens.scan.ScanScreen
 import ar.edu.utn.frba.inventario.utils.HasCode
@@ -112,7 +113,9 @@ fun AppNavHost(navController: NavHostController) {
                 onBackClick = { navController.popBackStack() }
             )
         }
-
+        composable(Screen.ProductAmount.route) {
+            ProductAmountScreen(navController)
+        }
     }
 }
 

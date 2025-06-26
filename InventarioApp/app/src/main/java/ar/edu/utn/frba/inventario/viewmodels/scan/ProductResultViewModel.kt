@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.inventario.viewmodels
+package ar.edu.utn.frba.inventario.viewmodels.scan
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
