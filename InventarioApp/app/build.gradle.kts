@@ -106,4 +106,8 @@ dependencies {
 
     // For displaying images from URL
     implementation(libs.coil.compose)
+
+    // For displaying GIFs
+    implementation(libs.coil3.compose)
+    implementation(libs.coil3.gif)
 }
