@@ -22,11 +22,13 @@ import ar.edu.utn.frba.inventario.screens.order.OrderDetailScreen
 import ar.edu.utn.frba.inventario.screens.order.OrdersScreen
 import ar.edu.utn.frba.inventario.screens.scan.ManualCodeScreen
 import ar.edu.utn.frba.inventario.screens.scan.ProductAmountScreen
+import ar.edu.utn.frba.inventario.screens.scan.OrderProductsScreen
 import ar.edu.utn.frba.inventario.screens.scan.ProductResultScreen
 import ar.edu.utn.frba.inventario.screens.scan.ScanScreen
 import ar.edu.utn.frba.inventario.screens.shipment.ShipmentDetailScreen
 import ar.edu.utn.frba.inventario.screens.shipment.ShipmentsScreen
 import ar.edu.utn.frba.inventario.utils.HasCode
+import ar.edu.utn.frba.inventario.utils.OrderProductsListArgs
 import ar.edu.utn.frba.inventario.utils.ProductResultArgs
 import ar.edu.utn.frba.inventario.utils.ScanArgs
 import ar.edu.utn.frba.inventario.utils.Screen
@@ -40,6 +42,7 @@ fun AppNavHost(navController: NavHostController) {
 
     val productResultArgs = ProductResultArgs.entries.toTypedArray()
     val scanArgs = ScanArgs.entries.toTypedArray()
+    val orderProductsListArgs = OrderProductsListArgs.entries.toTypedArray()
 
     printCurrentBackStack(navController)
 
@@ -116,6 +119,18 @@ fun AppNavHost(navController: NavHostController) {
         composable(Screen.ProductAmount.route) {
             ProductAmountScreen(navController)
         }
+        composable(
+            route = Screen.OrderProductsList.withArgsDefinition(orderProductsListArgs),
+            arguments = navArgsOf(orderProductsListArgs)
+        ) { backStackEntry ->
+            val orderId = backStackEntry.arguments?.getString(OrderProductsListArgs.OrderId.code) ?: ""
+            OrderProductsScreen(
+                navController = navController,
+                orderId = orderId
+            )
+        }
+
+
     }
 }
 

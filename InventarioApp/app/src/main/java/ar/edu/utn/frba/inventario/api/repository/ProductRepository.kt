@@ -15,7 +15,7 @@ class ProductRepository @Inject constructor(
         return safeApiCall {apiService.getProductList(ean13s)}
     }
 
-    suspend fun getProductListById(id : String): NetworkResult<Map<String,ProductResponse>>{
+    suspend fun getProductListById(id : List<String>): NetworkResult<Map<String,ProductResponse>>{
         return safeApiCall {apiService.getProductListById(id)}
     }
 

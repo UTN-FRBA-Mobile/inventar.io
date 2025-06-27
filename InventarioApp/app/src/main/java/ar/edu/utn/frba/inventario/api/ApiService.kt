@@ -57,7 +57,7 @@ interface ApiService {
     suspend fun getProductList(@Query("ean13s") ean13s: List<String>): Response<Map<Long, Product>>
 
     @GET("/api/v1/products")
-    suspend fun getProductListById(@Query("id") id: String): Response<Map<String, ProductResponse>>
+    suspend fun getProductListById(@Query("id") id: List<String>): Response<Map<String, ProductResponse>>
 
     @GET("/api/v1/products/stock")
     suspend fun getStockByProductId(@Query("ids") ids: String): Response<ProductStockLocationResponse>
