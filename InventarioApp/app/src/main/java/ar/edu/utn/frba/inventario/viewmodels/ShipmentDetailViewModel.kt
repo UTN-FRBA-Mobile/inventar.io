@@ -13,6 +13,7 @@ import ar.edu.utn.frba.inventario.api.model.shipment.Shipment
 import ar.edu.utn.frba.inventario.api.model.shipment.ShipmentResponse
 import ar.edu.utn.frba.inventario.api.repository.ShipmentRepository
 import ar.edu.utn.frba.inventario.events.NavigationEvent
+import ar.edu.utn.frba.inventario.utils.ShipmentProductToScanList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -77,12 +78,20 @@ class ShipmentDetailViewModel @Inject constructor(
     }
 
     private fun loadProductToScanList(products:List<ProductOperation>){
-        productToScanList.removeAll(productToScanList)
-        products.forEach { p->productToScanList.add(ProductToScan(
-            id = p.id, requiredQuantity = p.quantity,
-            innerLocation = "",
-            currentStock = 222
-        )) }
+        if(!ShipmentProductToScanList.statusShipmentProductToScanList()){
+            productToScanList.removeAll(productToScanList)
+            products.forEach { p->productToScanList.add(ProductToScan(
+                id = p.id, requiredQuantity = p.quantity,
+                innerLocation = "",
+                currentStock = 222
+            ))
+                ShipmentProductToScanList.addProduct(productId = p.id, loadedQuantity = 0)
+            }
+            ShipmentProductToScanList.activeShipmentProductToScanList()
+        }else{
+            ShipmentProductToScanList.getLoadedProducts().forEach { mp-> setLoadedQuantityProduct(mp.key,mp.value)}
+        }
+
     }
 
     fun getLoadedQuantityProduct(id:String):Int{
