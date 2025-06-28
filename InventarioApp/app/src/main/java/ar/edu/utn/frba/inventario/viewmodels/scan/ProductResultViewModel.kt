@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
 import ar.edu.utn.frba.inventario.api.model.product.Product
 import ar.edu.utn.frba.inventario.api.repository.ProductRepository
+import ar.edu.utn.frba.inventario.utils.ShipmentProductToScanList
 import ar.edu.utn.frba.inventario.utils.ShipmentScanFlowState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,25 +42,45 @@ class ProductResultViewModel @Inject constructor(
                 is NetworkResult.Success -> {
                     val product: Product? = result.data.values.firstOrNull()
 
-                    val shipment = ShipmentScanFlowState.selectedShipment
-                    val isInShipment = shipment?.products?.any { it.id == product?.id } == true
+                    if (product == null) {
+                        _foundProduct.value = null
+                        _errorMessage.value = "Producto no encontrado"
+                        ShipmentScanFlowState.scannedProduct = null
+                        _isLoading.value = false
+                        return@launch;
+                    }
 
-                    if (product != null && isInShipment) {
-                        _foundProduct.value = product
-                        _errorMessage.value = null
-                        ShipmentScanFlowState.scannedProduct = product
-                    } else {
+                    val selectedShipment = ShipmentScanFlowState.selectedShipment
+                    val productInShipment = selectedShipment?.products?.any { it.id == product.id } == true
+
+                    if (!productInShipment) {
                         _foundProduct.value = null
                         _errorMessage.value = "Este producto no está en el envío"
                         ShipmentScanFlowState.scannedProduct = null
+                        _isLoading.value = false
+                        return@launch;
                     }
+
+                    val productAlreadyLoaded = ShipmentProductToScanList.isProductLoaded(product.id)
+
+                    if (productAlreadyLoaded) {
+                        _foundProduct.value = null
+                        _errorMessage.value = "Este producto ya fué cargado"
+                        ShipmentScanFlowState.scannedProduct = null
+                        _isLoading.value = false
+                        return@launch;
+                    }
+
+                    _foundProduct.value = product
+                    _errorMessage.value = null
+                    ShipmentScanFlowState.scannedProduct = product
 
                     Log.d("ProductResultViewModel", "Product data: ${result.data}")
                 }
 
                 is NetworkResult.Error -> {
                     _foundProduct.value = null
-                    _errorMessage.value = result.message ?: "Error desconocido"
+                    _errorMessage.value = "Error desconocido"
                     ShipmentScanFlowState.scannedProduct = null
                 }
 

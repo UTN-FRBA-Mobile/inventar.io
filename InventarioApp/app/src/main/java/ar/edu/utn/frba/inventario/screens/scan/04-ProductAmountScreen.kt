@@ -142,7 +142,7 @@ fun ProductAmountScreen(
             }
         } else {
             Button(onClick = {
-                navController.popBackStack()
+                navController.popBackStack(Screen.Scan.route, false)
             }) {
                 Text(stringResource(R.string.go_back))
             }

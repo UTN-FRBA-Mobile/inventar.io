@@ -31,6 +31,9 @@ object ShipmentProductToScanList {
     fun existProductId(productId: String):Boolean{
         return ProductToScanList.containsKey(productId)
     }
+    fun isProductLoaded(productId: String): Boolean {
+        return (ProductToScanList[productId] ?: 0) > 0
+    }
     fun clear(){
         active = false
         ProductToScanList.clear()
