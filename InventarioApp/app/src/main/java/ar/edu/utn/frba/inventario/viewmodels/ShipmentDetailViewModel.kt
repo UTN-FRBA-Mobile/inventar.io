@@ -78,8 +78,8 @@ class ShipmentDetailViewModel @Inject constructor(
     }
 
     private fun loadProductToScanList(products:List<ProductOperation>){
+        productToScanList.removeAll(productToScanList)
         if(!ShipmentProductToScanList.statusShipmentProductToScanList()){
-            productToScanList.removeAll(productToScanList)
             products.forEach { p->productToScanList.add(ProductToScan(
                 id = p.id, requiredQuantity = p.quantity,
                 innerLocation = "",
@@ -89,9 +89,14 @@ class ShipmentDetailViewModel @Inject constructor(
             }
             ShipmentProductToScanList.activeShipmentProductToScanList()
         }else{
+            products.forEach { p->productToScanList.add(ProductToScan(
+                id = p.id, requiredQuantity = p.quantity,
+                innerLocation = "",
+                currentStock = 222
+            ))
+            }
             ShipmentProductToScanList.getLoadedProducts().forEach { mp-> setLoadedQuantityProduct(mp.key,mp.value)}
         }
-
     }
 
     fun getLoadedQuantityProduct(id:String):Int{
