@@ -10,6 +10,7 @@ import ar.edu.utn.frba.inventario.api.model.product.ProductOperation
 import ar.edu.utn.frba.inventario.api.model.shipment.Shipment
 import ar.edu.utn.frba.inventario.api.model.shipment.ShipmentResponse
 import ar.edu.utn.frba.inventario.api.repository.ShipmentRepository
+import ar.edu.utn.frba.inventario.utils.ShipmentProductToScanList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -42,6 +43,7 @@ class ShipmentsViewModel @Inject constructor(
 
                     _items.clear()
                     _items.apply { addAll(shipmentsParsed) }
+                    ShipmentProductToScanList.clear()
                 }
                 is NetworkResult.Error -> {
                     Log.d("UserViewModel", "Error: code=${shipmentResult.code}, message=${shipmentResult.message}")
