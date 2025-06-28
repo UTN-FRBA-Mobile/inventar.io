@@ -101,9 +101,7 @@ fun OrderProductsScreen(
     val productConfirmationStatus = remember { mutableStateMapOf<String, Boolean>() }
     LaunchedEffect(orderProducts) {
         orderProducts.forEach { product ->
-            if (product.id !in productConfirmationStatus) {
-                productConfirmationStatus[product.id] = false
-            }
+            productConfirmationStatus.putIfAbsent(product.id, false)
         }
     }
 
@@ -128,8 +126,8 @@ fun OrderProductsScreen(
                 isLoading -> LoadingView()
                 errorMessage != null -> {
                     OrderMessageView(
-                        title =  stringResource(R.string.product_result_search_failed),
-                        message = stringResource(R.string.order_not_found),
+                        title = stringResource(R.string.search_failed),
+                        message = errorMessage ?: stringResource(R.string.order_not_found),
                         buttonText = stringResource(R.string.try_again),
                         onButtonClick = { navController.popBackStack() },
                         isError = true
@@ -137,9 +135,9 @@ fun OrderProductsScreen(
                 }
                 orderProducts.isEmpty() -> {
                     OrderMessageView(
-                        title = "aa",//stringResource(R.string.order_empty_products), // empty products
-                        message = "aa",//stringResource(R.string.no_products_found_for_order), // Mensaje específico para orden sin productos
-                        buttonText = "aa",//stringResource(R.string.try_again),
+                        title = stringResource(R.string.order_empty_products),
+                        message = stringResource(R.string.no_products_found_for_order),
+                        buttonText = stringResource(R.string.try_again),
                         onButtonClick = { navController.popBackStack() },
                         isError = false
                     )
@@ -336,6 +334,7 @@ fun ProductListItem(
     isConfirmed: Boolean
 ) {
     val context = LocalContext.current
+    val expectedQuantity = remember { product.currentStock ?: 0 }
     var editableQuantity by remember(product.currentStock) {
         mutableStateOf(TextFieldValue(product.currentStock?.toString() ?: "0"))
     }
@@ -422,61 +421,76 @@ fun ProductListItem(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+                Text(
+                    text = stringResource(R.string.expected_quantity, expectedQuantity),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+
                 if (isEditingQuantity) {
-                    BasicTextField(
-                        value = editableQuantity,
-                        onValueChange = { newValue ->
-                            if (newValue.text.all { it.isDigit() }) {
-                                editableQuantity = newValue
-                            } else {
-                                coroutineScope.launch {
-                                    snackbarHostState.showSnackbar("Solo se permite ingresar números")
-                                }
-                            }
-                        },
-                        textStyle = MaterialTheme.typography.titleMedium.copy(
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text =stringResource(R.string.received_quantity, ""),
+                            style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary
-                        ),
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Number,
-                            imeAction = ImeAction.Done
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onDone = {
-                                val newQuantity = editableQuantity.text.toIntOrNull()
-                                if (newQuantity != null && newQuantity >= 0) {
-                                    onQuantityChanged(product.id, newQuantity)
-                                    onProductConfirmed(product.id)
-                                    isEditingQuantity = false
-                                    keyboardController?.hide()
+                        )
+                        BasicTextField(
+                            value = editableQuantity,
+                            onValueChange = { newValue ->
+                                if (newValue.text.all { it.isDigit() }) {
+                                    editableQuantity = newValue
                                 } else {
                                     coroutineScope.launch {
-                                        snackbarHostState.showSnackbar("La cantidad no puede ser negativa o vacía.")
+                                        snackbarHostState.showSnackbar("Solo se permiten números")
                                     }
                                 }
-                            }
-                        ),
-                        modifier = Modifier
-                            .width(60.dp)
-                            .background(MaterialTheme.colorScheme.surfaceVariant)
-                            .padding(horizontal = 4.dp, vertical = 2.dp)
-                            .focusRequester(focusRequester),
-                        singleLine = true,
-                        cursorBrush = SolidColor(MaterialTheme.colorScheme.primary)
-                    )
+                            },
+                            textStyle = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            ),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Number,
+                                imeAction = ImeAction.Done
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onDone = {
+                                    val newQuantity = editableQuantity.text.toIntOrNull()
+                                    if (newQuantity != null && newQuantity >= 0) {
+                                        onQuantityChanged(product.id, newQuantity)
+                                        onProductConfirmed(product.id)
+                                        isEditingQuantity = false
+                                        keyboardController?.hide()
+                                    } else {
+                                        coroutineScope.launch {
+                                            snackbarHostState.showSnackbar("La cantidad no puede ser negativa o vacía.")
+                                        }
+                                    }
+                                }
+                            ),
+                            modifier = Modifier
+                                .width(60.dp)
+                                .background(MaterialTheme.colorScheme.surfaceVariant)
+                                .padding(horizontal = 4.dp, vertical = 2.dp)
+                                .focusRequester(focusRequester),
+                            singleLine = true,
+                            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary)
+                        )
+                    }
                     LaunchedEffect(isEditingQuantity) {
                         if (isEditingQuantity) {
                             focusRequester.requestFocus()
                             keyboardController?.show()
                             editableQuantity = editableQuantity.copy(
-                                selection = TextRange(editableQuantity.text.length)
+                                selection = TextRange(0, editableQuantity.text.length)
                             )
                         }
                     }
                 } else {
                     Text(
-                        text = "Cant: ${editableQuantity.text}",
+                        text = stringResource(R.string.received_quantity, editableQuantity.text),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary

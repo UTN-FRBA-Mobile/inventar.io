@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.R
-import ar.edu.utn.frba.inventario.utils.OrderProductsListArgs
+import ar.edu.utn.frba.inventario.utils.OrderResultArgs
 import ar.edu.utn.frba.inventario.utils.ProductResultArgs
 import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.utils.withNavArgs
@@ -38,17 +38,20 @@ class ScanViewModel @Inject constructor() : ViewModel() {
 
         if (validCode == null) {
             val errorMsg = context.getString(getErrorMessageResId(origin))
-            val destination = Screen.ProductResult.withNavArgs(
-                ProductResultArgs.ErrorMessage to errorMsg,
-                ProductResultArgs.Origin to origin
-            )
+
+            val destination = if (origin == "order") {
+                Screen.OrderResult.withNavArgs(
+                    OrderResultArgs.ErrorMessage to errorMsg
+                )
+            } else {
+                Screen.ProductResult.withNavArgs(
+                    ProductResultArgs.ErrorMessage to errorMsg,
+                    ProductResultArgs.Origin to origin
+                )
+            }
             navController.navigate(destination)
             return
         }
-
-        // Add to withNavArgs the arg codeType
-        //  "ean-13" ->
-        //    "qr" ->
 
         val scannedValue = validCode.rawValue.orEmpty()
         Log.d("ScanSuccess", "Código escaneado: $scannedValue (Tipo: $codeType, Origen: $origin)")
@@ -57,19 +60,16 @@ class ScanViewModel @Inject constructor() : ViewModel() {
             val orderId = extractOrderIdFromQrCode(scannedValue)
 
             if (orderId.isBlank()) {
-                val errorMsg = ("Pedido no identificado")
-                val destination = Screen.ProductResult.withNavArgs(
-                    ProductResultArgs.ErrorMessage to errorMsg,
-                    ProductResultArgs.Code to scannedValue,
-                    ProductResultArgs.CodeType to codeType,
-                    ProductResultArgs.Origin to origin
+                val errorMsg = "Id de orden vacío"
+                val destination = Screen.OrderResult.withNavArgs(
+                    OrderResultArgs.ErrorMessage to errorMsg
                 )
                 navController.navigate(destination)
                 return
             }
 
-            val destination = Screen.OrderProductsList.withNavArgs(
-                OrderProductsListArgs.OrderId to orderId
+            val destination = Screen.OrderResult.withNavArgs(
+                OrderResultArgs.OrderId to orderId
             )
             navController.navigate(destination)
             return

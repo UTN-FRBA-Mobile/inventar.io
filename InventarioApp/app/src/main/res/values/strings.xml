@@ -17,6 +17,8 @@
     <string name="product_state_icon">icono del estado de la carga de productos</string>
     <string name="unknown_error">Error desconocido</string>
     <string name="critical_error">Error crítico</string>
+    <string name="search_failed">Búsqueda fallida</string>
+    <string name="continue_button">Continuar</string>
 
     <!-- Welcome Screen -->
     <string name="welcome_screen_title">Bienvenido</string>
@@ -58,13 +60,11 @@
 
     <!-- ProductResultScreen -->
     <string name="product_result_scan_failed">Escaneo fallido</string>
-    <string name="product_result_search_failed">Búsqueda fallida</string>
     <string name="product_result_barcode">Código de barras</string>
     <string name="product_result_qr_code">Código QR</string>
     <string name="product_result_error_invalid_code_type">ERROR - Código no soportado</string>
     <string name="product_result_scan_success">Escaneo exitoso</string>
     <string name="product_result_search_success">Producto encontrado</string>
-    <string name="product_result_continue_button">Continuar</string>
 
     <plurals name="products_and_date_template">
         <item quantity="one">%1$d producto • Solicitado %2$s</item>
@@ -99,6 +99,15 @@
     <string name="confirm_order">Confirmar pedido</string>
     <string name="loading_products">Cargando productos...</string>
     <string name="only_numbers">Solo se permite ingresar números</string>
+    <string name="order_empty_products">Pedido sin productos</string>
+    <string name="received_quantity">Cant. recibida: %1$s</string>
+    <string name="expected_quantity">Cant. esperada: %1$s</string>
+    <string name="no_products_found_for_order">No se encontraron productos</string>
+
+    <!-- OrderResultScreen -->
+    <string name="order_result_search_success">Pedido encontrado</string>
+    <string name="unique_total_products">Total de productos únicos: %1$s</string>
+    <string name="order_id">ID pedido: P-%1$s</string>
 
     <!-- ProductAmountScreen -->
     <string name="product_amount_title">Confirmación de cantidad</string>

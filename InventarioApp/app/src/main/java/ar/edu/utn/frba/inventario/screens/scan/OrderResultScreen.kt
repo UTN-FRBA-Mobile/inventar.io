@@ -1,14 +1,11 @@
 package ar.edu.utn.frba.inventario.screens.scan
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,8 +14,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -27,40 +22,33 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.R
-import ar.edu.utn.frba.inventario.api.model.product.Product
-import ar.edu.utn.frba.inventario.composables.utils.ImageFromURL
+import ar.edu.utn.frba.inventario.api.model.order.OrderResponse
 import ar.edu.utn.frba.inventario.composables.utils.Spinner
+import ar.edu.utn.frba.inventario.utils.OrderProductsListArgs
 import ar.edu.utn.frba.inventario.utils.Screen
-import ar.edu.utn.frba.inventario.viewmodels.scan.ProductResultViewModel
-
+import ar.edu.utn.frba.inventario.utils.withNavArgs
+import ar.edu.utn.frba.inventario.viewmodels.OrderResultViewModel
 
 @Composable
-fun ProductResultScreen(
+fun OrderResultScreen(
     navController: NavController,
     code: String?,
-    codeType: String?,
+    codeType: String,
     errorMessage: String?,
     origin: String,
-    viewModel: ProductResultViewModel = hiltViewModel()
+    viewModel: OrderResultViewModel = hiltViewModel()
 ) {
-    if (errorMessage != null) {
-        ProductResultBodyContent(
-            navController = navController,
-            code = code,
-            codeType = codeType,
-            errorMessage = errorMessage,
-            origin = origin,
-            foundProduct = null
-        )
-        return
-    }
-
     val isLoading by viewModel.isLoading.collectAsState()
-    val error by viewModel.errorMessage.collectAsState()
-    val foundProduct by viewModel.foundProduct.collectAsState()
+    val apiError by viewModel.errorMessage.collectAsState()
+    val foundOrder by viewModel.foundOrder.collectAsState()
 
-    LaunchedEffect(code) {
-        viewModel.loadProductByCode(code, codeType)
+    LaunchedEffect(code, errorMessage) {
+        if (errorMessage != null) {
+            viewModel._errorMessage.value = errorMessage
+            viewModel._isLoading.value = false
+        } else {
+            viewModel.loadOrderById(code, codeType)
+        }
     }
 
     if (isLoading) {
@@ -68,27 +56,21 @@ fun ProductResultScreen(
         return
     }
 
-    ProductResultBodyContent(
+    OrderResultBodyContent(
         navController = navController,
-        code = code,
-        codeType = codeType,
-        errorMessage = error,
-        origin = origin,
-        foundProduct = foundProduct
+        foundOrder = foundOrder,
+        apiError = apiError,
+        codeType = codeType
     )
 }
 
 @Composable
-fun ProductResultBodyContent(
+fun OrderResultBodyContent(
     navController: NavController,
-    code: String?,
-    codeType: String?,
-    errorMessage: String?,
-    origin: String,
-    foundProduct: Product?
+    foundOrder: OrderResponse?,
+    apiError: String?,
+    codeType: String
 ) {
-    // TODO - Revisar si "origin" es necesario, entiendo que ya no
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -96,7 +78,7 @@ fun ProductResultBodyContent(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (errorMessage != null) {
+        if (apiError != null) {
             Text(
                 text = stringResource(R.string.search_failed),
                 fontSize = 24.sp,
@@ -105,13 +87,13 @@ fun ProductResultBodyContent(
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                errorMessage,
+                apiError,
                 fontSize = 18.sp,
             )
-        } else if (foundProduct != null && codeType == "ean-13") {
-            // Éxito con producto
+        }
+        else if (foundOrder != null) {
             Text(
-                text = stringResource(R.string.product_result_search_success),
+                text = stringResource(R.string.order_result_search_success),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF2E7D32)
@@ -120,60 +102,50 @@ fun ProductResultBodyContent(
             Spacer(Modifier.height(16.dp))
 
             Text(
-                text = foundProduct.name,
+                text = stringResource(R.string.order_id, foundOrder.id.toString()),
                 fontSize = 22.sp,
                 fontWeight = FontWeight.SemiBold
             )
 
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(16.dp))
 
             Text(
-                text = foundProduct.description,
-                fontSize = 18.sp,
-                color = Color.DarkGray
+                text = foundOrder.sender,
+                fontSize = 22.sp,
+                color = Color.Gray
             )
 
-            Spacer(Modifier.height(24.dp))
-
-            if (foundProduct.imageURL!!.isNotBlank()) {
-                ImageFromURL(
-                    url = foundProduct.imageURL,
-                    modifier = Modifier
-                        .size(180.dp)
-                        .clip(CircleShape)
-                        .border(2.dp, Color.Gray, CircleShape)
-                        .shadow(4.dp, CircleShape)
-                )
-                Spacer(Modifier.height(24.dp))
-            }
+            Spacer(Modifier.height(16.dp))
 
             Text(
-                text = "Código EAN-13:\n$code",
-                fontSize = 14.sp,
+                text = stringResource(R.string.unique_total_products, foundOrder.productAmount.size),
+                fontSize = 22.sp,
                 color = Color.Gray
             )
 
             Spacer(Modifier.height(32.dp))
 
             Button(onClick = {
-                navController.navigate(Screen.ProductAmount.route)
+                foundOrder.id?.let { id ->
+                    val destination = Screen.OrderProductsList.withNavArgs(
+                        OrderProductsListArgs.OrderId to id.toString()
+                    )
+                    navController.navigate(destination)
+                }
             }) {
                 Text(stringResource(R.string.continue_button))
             }
 
         } else {
-            Text("Error desconocido", fontSize = 16.sp, color = Color.Gray)
+            Text("Error desconocido o datos no disponibles", fontSize = 16.sp, color = Color.Gray)
         }
 
-        Spacer(Modifier.height(32.dp))
+        Spacer(Modifier.height(24.dp))
 
         Button(onClick = {
-            navController.popBackStack()
+            navController.popBackStack() // Para volver a la pantalla de escaneo
         }) {
             Text(stringResource(R.string.try_again))
         }
     }
 }
-
-
-

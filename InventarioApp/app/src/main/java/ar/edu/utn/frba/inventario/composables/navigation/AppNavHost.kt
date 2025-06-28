@@ -23,12 +23,14 @@ import ar.edu.utn.frba.inventario.screens.order.OrdersScreen
 import ar.edu.utn.frba.inventario.screens.scan.ManualCodeScreen
 import ar.edu.utn.frba.inventario.screens.scan.ProductAmountScreen
 import ar.edu.utn.frba.inventario.screens.scan.OrderProductsScreen
+import ar.edu.utn.frba.inventario.screens.scan.OrderResultScreen
 import ar.edu.utn.frba.inventario.screens.scan.ProductResultScreen
 import ar.edu.utn.frba.inventario.screens.scan.ScanScreen
 import ar.edu.utn.frba.inventario.screens.shipment.ShipmentDetailScreen
 import ar.edu.utn.frba.inventario.screens.shipment.ShipmentsScreen
 import ar.edu.utn.frba.inventario.utils.HasCode
 import ar.edu.utn.frba.inventario.utils.OrderProductsListArgs
+import ar.edu.utn.frba.inventario.utils.OrderResultArgs
 import ar.edu.utn.frba.inventario.utils.ProductResultArgs
 import ar.edu.utn.frba.inventario.utils.ScanArgs
 import ar.edu.utn.frba.inventario.utils.Screen
@@ -43,6 +45,7 @@ fun AppNavHost(navController: NavHostController) {
     val productResultArgs = ProductResultArgs.entries.toTypedArray()
     val scanArgs = ScanArgs.entries.toTypedArray()
     val orderProductsListArgs = OrderProductsListArgs.entries.toTypedArray()
+    val orderResultArgs = OrderResultArgs.entries.toTypedArray() // CORRECTED: Use OrderResultArgs.entries
 
     printCurrentBackStack(navController)
 
@@ -129,7 +132,24 @@ fun AppNavHost(navController: NavHostController) {
                 orderId = orderId
             )
         }
+        composable(
+            Screen.OrderResult.withArgsDefinition(orderResultArgs),
+            arguments = navArgsOf(orderResultArgs) // Usas tu `navArgsOf` existente
+        ) { backStackEntry ->
+            // ¡CAMBIO CLAVE AQUÍ! Obtén los argumentos por sus nombres correctos
+            val orderId = backStackEntry.arguments?.getString(OrderResultArgs.OrderId.code)
+            val initialErrorMessage = backStackEntry.arguments?.getString(OrderResultArgs.ErrorMessage.code)
 
+            OrderResultScreen(
+                navController = navController,
+                code = orderId, // Pasa el orderId como 'code' a OrderResultScreen
+                errorMessage = initialErrorMessage, // Pasa el mensaje de error inicial
+                // Elimina codeType y origin de la firma de OrderResultScreen si no los usas.
+                // Si los sigues necesitando en OrderResultScreen, deberás agregarlos a OrderResultArgs.
+                codeType = backStackEntry.arguments?.getString(OrderResultArgs.CodeType.code.toString()) ?: "", //Si los necesitas aun.
+                origin = backStackEntry.arguments?.getString(OrderResultArgs.Origin.code.toString()) ?: "" //Si los necesitas aun.
+            )
+        }
 
     }
 }
