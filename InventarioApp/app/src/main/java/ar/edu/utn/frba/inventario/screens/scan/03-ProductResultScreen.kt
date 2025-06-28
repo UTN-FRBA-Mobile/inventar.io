@@ -162,23 +162,7 @@ fun ProductResultBodyContent(
             }
 
         } else {
-            // Fallback sin producto
-            val codeTypeText = when (codeType) {
-                "ean-13" -> stringResource(R.string.product_result_barcode)
-                "qr" -> stringResource(R.string.product_result_qr_code)
-                else -> stringResource(R.string.product_result_error_invalid_code_type)
-            }
-
-            Text(
-                text = stringResource(R.string.product_result_search_success),
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF2E7D32)
-            )
-            Spacer(Modifier.height(8.dp))
-            Text("Tipo: $codeTypeText", fontSize = 16.sp, color = Color.Gray)
-            Spacer(Modifier.height(4.dp))
-            Text("Valor: $code", fontSize = 18.sp)
+            Text("Error desconocido", fontSize = 16.sp, color = Color.Gray)
         }
 
         Spacer(Modifier.height(32.dp))
