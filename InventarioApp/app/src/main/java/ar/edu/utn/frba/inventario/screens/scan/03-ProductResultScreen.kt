@@ -156,9 +156,7 @@ fun ProductResultBodyContent(
             Spacer(Modifier.height(32.dp))
 
             Button(onClick = {
-                navController.navigate(Screen.ProductAmount.route) {
-                    popUpTo(Screen.Scan.route) { inclusive = true }
-                }
+                navController.navigate(Screen.ProductAmount.route)
             }) {
                 Text(stringResource(R.string.product_result_continue_button))
             }
