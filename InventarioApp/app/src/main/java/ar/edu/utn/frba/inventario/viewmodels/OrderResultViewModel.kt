@@ -59,7 +59,7 @@ class OrderResultViewModel @Inject constructor(
                         } else {
                             "Orden no encontrada. Intente nuevamente. ${result.message ?: "Error desconocido"}"
                         }
-                        _errorMessage.value = specificError // Establece el mensaje de error
+                        _errorMessage.value = specificError
                         _isLoading.value = false
                         Log.e("OrderResultViewModel", "Error al cargar orden: ${result.message}")
                     }

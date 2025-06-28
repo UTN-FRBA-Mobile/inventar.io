@@ -45,7 +45,7 @@ fun AppNavHost(navController: NavHostController) {
     val productResultArgs = ProductResultArgs.entries.toTypedArray()
     val scanArgs = ScanArgs.entries.toTypedArray()
     val orderProductsListArgs = OrderProductsListArgs.entries.toTypedArray()
-    val orderResultArgs = OrderResultArgs.entries.toTypedArray() // CORRECTED: Use OrderResultArgs.entries
+    val orderResultArgs = OrderResultArgs.entries.toTypedArray()
 
     printCurrentBackStack(navController)
 
@@ -134,20 +134,17 @@ fun AppNavHost(navController: NavHostController) {
         }
         composable(
             Screen.OrderResult.withArgsDefinition(orderResultArgs),
-            arguments = navArgsOf(orderResultArgs) // Usas tu `navArgsOf` existente
+            arguments = navArgsOf(orderResultArgs)
         ) { backStackEntry ->
-            // ¡CAMBIO CLAVE AQUÍ! Obtén los argumentos por sus nombres correctos
             val orderId = backStackEntry.arguments?.getString(OrderResultArgs.OrderId.code)
             val initialErrorMessage = backStackEntry.arguments?.getString(OrderResultArgs.ErrorMessage.code)
 
             OrderResultScreen(
                 navController = navController,
-                code = orderId, // Pasa el orderId como 'code' a OrderResultScreen
-                errorMessage = initialErrorMessage, // Pasa el mensaje de error inicial
-                // Elimina codeType y origin de la firma de OrderResultScreen si no los usas.
-                // Si los sigues necesitando en OrderResultScreen, deberás agregarlos a OrderResultArgs.
-                codeType = backStackEntry.arguments?.getString(OrderResultArgs.CodeType.code.toString()) ?: "", //Si los necesitas aun.
-                origin = backStackEntry.arguments?.getString(OrderResultArgs.Origin.code.toString()) ?: "" //Si los necesitas aun.
+                code = orderId,
+                errorMessage = initialErrorMessage,
+                codeType = backStackEntry.arguments?.getString(OrderResultArgs.CodeType.code.toString()) ?: "",
+                origin = backStackEntry.arguments?.getString(OrderResultArgs.Origin.code.toString()) ?: ""
             )
         }
 
