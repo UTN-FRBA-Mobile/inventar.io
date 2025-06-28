@@ -242,7 +242,10 @@ fun ButtonBox(viewModel:ShipmentDetailViewModel, navController: NavController){
             Row {
                 Button(colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.surfaceTint),
                     enabled = viewModel.isStateCompleteShipment.value,
-                    onClick = {},
+                    onClick = {
+                        viewModel.completedShipment(viewModel.selectedShipment.value.id)
+                        navController.navigate(Screen.Shipments.route)
+                    },
                     modifier = Modifier
                         .fillMaxSize()
                         .weight(1f)){

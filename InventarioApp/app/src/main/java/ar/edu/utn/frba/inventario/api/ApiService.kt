@@ -46,6 +46,12 @@ interface ApiService {
     @GET("/api/v1/shipments")
     suspend fun getShipmentList(): Response<List<ShipmentResponse>>
 
+    @POST("/api/v1/shipments/{id}/start")
+    suspend fun startShipment(@Path("id") id:Long): Response<ShipmentResponse>
+
+    @POST("/api/v1/shipments/{id}/finish")
+    suspend fun finishShipment(@Path("id") id:Long): Response<ShipmentResponse>
+
     /*Products*/
     @GET("/api/v1/products")
     suspend fun getProductList(@Query("ean13s") ean13s: List<String>): Response<Map<Long, Product>>
