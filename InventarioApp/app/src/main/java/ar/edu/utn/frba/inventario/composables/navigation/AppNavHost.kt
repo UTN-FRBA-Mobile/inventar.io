@@ -15,16 +15,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import ar.edu.utn.frba.inventario.api.utils.TokenManager
 import ar.edu.utn.frba.inventario.screens.LoginScreen
-import ar.edu.utn.frba.inventario.screens.order.OrderDetailScreen
-import ar.edu.utn.frba.inventario.screens.order.OrdersScreen
 import ar.edu.utn.frba.inventario.screens.ProductDetailScreen
-import ar.edu.utn.frba.inventario.screens.shipment.ShipmentDetailScreen
-import ar.edu.utn.frba.inventario.screens.shipment.ShipmentsScreen
 import ar.edu.utn.frba.inventario.screens.UserScreen
 import ar.edu.utn.frba.inventario.screens.WelcomeScreen
+import ar.edu.utn.frba.inventario.screens.order.OrderDetailScreen
+import ar.edu.utn.frba.inventario.screens.order.OrdersScreen
 import ar.edu.utn.frba.inventario.screens.scan.ManualCodeScreen
+import ar.edu.utn.frba.inventario.screens.scan.ProductAmountScreen
 import ar.edu.utn.frba.inventario.screens.scan.ProductResultScreen
 import ar.edu.utn.frba.inventario.screens.scan.ScanScreen
+import ar.edu.utn.frba.inventario.screens.shipment.ShipmentDetailScreen
+import ar.edu.utn.frba.inventario.screens.shipment.ShipmentsScreen
 import ar.edu.utn.frba.inventario.utils.HasCode
 import ar.edu.utn.frba.inventario.utils.ProductResultArgs
 import ar.edu.utn.frba.inventario.utils.ScanArgs
@@ -112,7 +113,9 @@ fun AppNavHost(navController: NavHostController) {
                 onBackClick = { navController.popBackStack() }
             )
         }
-
+        composable(Screen.ProductAmount.route) {
+            ProductAmountScreen(navController)
+        }
     }
 }
 

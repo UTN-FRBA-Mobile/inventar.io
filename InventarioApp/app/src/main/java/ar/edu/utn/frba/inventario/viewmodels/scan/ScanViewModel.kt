@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.inventario.viewmodels
+package ar.edu.utn.frba.inventario.viewmodels.scan
 
 import android.content.Context
 import androidx.compose.runtime.mutableStateOf
@@ -72,6 +72,3 @@ class ScanViewModel @Inject constructor() : ViewModel() {
         }
     }
 }
-
-
-

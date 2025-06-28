@@ -1,6 +1,5 @@
 package ar.edu.utn.frba.inventario.viewmodels
 
-import android.location.Location
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

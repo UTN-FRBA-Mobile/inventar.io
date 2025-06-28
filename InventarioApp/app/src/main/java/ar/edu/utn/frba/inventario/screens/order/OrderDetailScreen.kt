@@ -40,8 +40,8 @@ import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.order.Order
 import ar.edu.utn.frba.inventario.api.model.product.ProductOperation
-import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.composables.utils.Spinner
+import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.viewmodels.OrderDetailViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

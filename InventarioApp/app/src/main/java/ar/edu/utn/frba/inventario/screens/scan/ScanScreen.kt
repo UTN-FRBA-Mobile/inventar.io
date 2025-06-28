@@ -49,7 +49,7 @@ import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.utils.drawScanOverlay
-import ar.edu.utn.frba.inventario.viewmodels.ScanViewModel
+import ar.edu.utn.frba.inventario.viewmodels.scan.ScanViewModel
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import java.util.concurrent.Executor
