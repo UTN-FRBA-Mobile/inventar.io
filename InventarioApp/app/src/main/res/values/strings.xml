@@ -4,6 +4,7 @@
     <string name="all_status_selected">Todos</string>
     <string name="branch_name">Sucursal %s</string>
     <string name="no_results_for_filters">Sin resultados para los filtros aplicados</string>
+    <string name="cancel">Cancelar</string>
     <string name="confirm">Confirmar</string>
     <string name="try_again">Reintentar</string>
     <string name="_continue">Continuar</string>
@@ -98,7 +99,5 @@
     <string name="product_amount_required_quantity">Cantidad a ingresar: %1$d</string>
     <string name="product_amount_insufficient_stock">No hay suficiente stock para cargar %1$d unidades de %2$s</string>
     <string name="product_amount_confirm_button">Confirmar ingreso</string>
-    <string name="product_amount_cancel_button">Cancelar</string>
-    <string name="product_amount_back_button">Volver</string>
     <string name="product_amount_unexpected_error">Error inesperado</string>
 </resources>

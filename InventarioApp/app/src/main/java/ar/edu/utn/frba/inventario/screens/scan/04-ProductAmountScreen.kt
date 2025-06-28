@@ -62,10 +62,9 @@ fun ProductAmountScreen(
             color = Color.Red
         )
         Button(onClick = {
-            ShipmentScanFlowState.clear()
-            navController.popBackStack("shipmentDetail", false)
+            navController.popBackStack()
         }) {
-            Text(stringResource(R.string.product_amount_back_button))
+            Text(stringResource(R.string.go_back))
         }
         return
     }
@@ -137,16 +136,15 @@ fun ProductAmountScreen(
 
             OutlinedButton(onClick = {
                 ShipmentScanFlowState.clear()
-                navController.popBackStack("shipmentDetail", false)
+                navController.popBackStack(Screen.ShipmentDetail.route + "/${selectedShipment.id}", false)
             }) {
-                Text(stringResource(R.string.product_amount_cancel_button))
+                Text(stringResource(R.string.cancel))
             }
         } else {
             Button(onClick = {
-                ShipmentScanFlowState.clear()
-                navController.popBackStack("shipmentDetail", false)
+                navController.popBackStack()
             }) {
-                Text(stringResource(R.string.product_amount_back_button))
+                Text(stringResource(R.string.go_back))
             }
         }
     }
