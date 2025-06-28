@@ -32,6 +32,7 @@ import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.composables.utils.ImageFromURL
 import ar.edu.utn.frba.inventario.composables.utils.Spinner
 import ar.edu.utn.frba.inventario.utils.Screen
+import ar.edu.utn.frba.inventario.utils.ShipmentProductToScanList
 import ar.edu.utn.frba.inventario.utils.ShipmentScanFlowState
 import ar.edu.utn.frba.inventario.viewmodels.scan.ProductAmountViewModel
 
@@ -122,6 +123,7 @@ fun ProductAmountScreen(
         if (enoughStock) {
             Button(onClick = {
                 // ToDo - Pegarle al endpoint necesario, para confirmar el ingreso del producto
+                ShipmentProductToScanList.updateLoadedQuantity(productId = scannedProduct.id, loadedQuantity = requiredAmount)
 
                 navController.navigate(Screen.ShipmentDetail.route + "/${selectedShipment.id}") {
                     popUpTo(Screen.ShipmentDetail.route) { inclusive = true }
