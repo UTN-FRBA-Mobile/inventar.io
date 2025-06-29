@@ -412,29 +412,26 @@ fun ProductListItem(
                 Text(
                     text = product.name,
                     style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = MaterialTheme.colorScheme.primary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = "EAN-13: ${product.ean13}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.onSurface                )
                 Text(
                     text = stringResource(R.string.expected_quantity, expectedQuantity),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
                 if (isEditingQuantity) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             text =stringResource(R.string.received_quantity, ""),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         BasicTextField(
                             value = editableQuantity,
@@ -447,9 +444,8 @@ fun ProductListItem(
                                     }
                                 }
                             },
-                            textStyle = MaterialTheme.typography.titleMedium.copy(
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary
+                            textStyle = MaterialTheme.typography.titleSmall.copy(
+                                color = MaterialTheme.colorScheme.onSurface
                             ),
                             keyboardOptions = KeyboardOptions(
                                 keyboardType = KeyboardType.Number,
@@ -491,9 +487,8 @@ fun ProductListItem(
                 } else {
                     Text(
                         text = stringResource(R.string.received_quantity, editableQuantity.text),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }

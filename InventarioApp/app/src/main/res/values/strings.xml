@@ -95,13 +95,13 @@
     <string name="error_loading_location">Error al cargar ubicación</string>
 
     <!-- OrderProductsScreen -->
-    <string name="order_products_screen_title">Pedido identificado</string>
+    <string name="order_products_screen_title">Ingreso de stock</string>
     <string name="confirm_order">Confirmar pedido</string>
     <string name="loading_products">Cargando productos...</string>
     <string name="only_numbers">Solo se permite ingresar números</string>
     <string name="order_empty_products">Pedido sin productos</string>
     <string name="received_quantity">Cant. recibida: %1$s</string>
-    <string name="expected_quantity">Cant. esperada: %1$s</string>
+    <string name="expected_quantity">Cant. solicitada: %1$s</string>
     <string name="no_products_found_for_order">No se encontraron productos</string>
 
     <!-- OrderResultScreen -->
