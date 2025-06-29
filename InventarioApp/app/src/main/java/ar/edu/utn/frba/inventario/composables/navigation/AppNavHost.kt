@@ -148,7 +148,7 @@ fun AppNavHost(navController: NavHostController) {
                 origin = backStackEntry.arguments?.getString(OrderResultArgs.Origin.code.toString()) ?: ""
             )
         }
-        composable(Screen.ManualOrder.route) { // <--- AÑADIR ESTO
+        composable(Screen.ManualOrder.route) { 
             ManualOrderScreen(navController = navController)
         }
 
