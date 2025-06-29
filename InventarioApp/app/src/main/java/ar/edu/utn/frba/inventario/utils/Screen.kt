@@ -13,6 +13,7 @@ enum class Screen(val route: String) {
     Scan("scan"),
     ProductResult("product_result"),
     ManualCode("manual_code"),
+    ManualOrder("manual_order"),
     ProductDetail("product_detail"),
     ProductAmount("product_amount"),
     OrderProductsList("order_products_list"),

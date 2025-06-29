@@ -115,4 +115,9 @@
     <string name="product_amount_insufficient_stock">No hay suficiente stock para cargar %1$d unidades de %2$s</string>
     <string name="product_amount_confirm_button">Confirmar ingreso</string>
     <string name="product_amount_unexpected_error">Error inesperado</string>
+
+    <!-- ManualOrderScreen -->
+    <string name="order_id_input">Ingrese el ID del pedido</string>
+    <string name="order_id_placeholder">ID de pedido</string>
+    <string name="invalid_order_id">El ID del pedido no es válido.</string>
 </resources>

@@ -21,6 +21,7 @@ import ar.edu.utn.frba.inventario.screens.WelcomeScreen
 import ar.edu.utn.frba.inventario.screens.order.OrderDetailScreen
 import ar.edu.utn.frba.inventario.screens.order.OrdersScreen
 import ar.edu.utn.frba.inventario.screens.scan.ManualCodeScreen
+import ar.edu.utn.frba.inventario.screens.scan.ManualOrderScreen
 import ar.edu.utn.frba.inventario.screens.scan.ProductAmountScreen
 import ar.edu.utn.frba.inventario.screens.scan.OrderProductsScreen
 import ar.edu.utn.frba.inventario.screens.scan.OrderResultScreen
@@ -146,6 +147,9 @@ fun AppNavHost(navController: NavHostController) {
                 codeType = backStackEntry.arguments?.getString(OrderResultArgs.CodeType.code.toString()) ?: "",
                 origin = backStackEntry.arguments?.getString(OrderResultArgs.Origin.code.toString()) ?: ""
             )
+        }
+        composable(Screen.ManualOrder.route) { // <--- AÑADIR ESTO
+            ManualOrderScreen(navController = navController)
         }
 
     }
