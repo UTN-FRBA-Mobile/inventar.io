@@ -234,46 +234,70 @@ fun ProductItem(viewModel:ShipmentDetailViewModel, product: ProductOperation,
 
 @Composable
 fun ButtonBox(viewModel:ShipmentDetailViewModel, navController: NavController){
-    Column {
-        Box(contentAlignment = Alignment.Center, modifier = Modifier
-            .fillMaxWidth()
-            .height(70.dp)
-            .padding(10.dp)){
-            Row {
-                Button(colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.surfaceTint),
-                    enabled = viewModel.isStateCompleteShipment.value,
-                    onClick = {},
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .weight(1f)){
-                    Text(text = stringResource(R.string.shipment_detail_screen_next_button), style = MaterialTheme.typography.titleMedium, fontSize = 25.sp,
-                        fontWeight = FontWeight.Bold)
-                }
-                Button(colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onSecondaryContainer),
-                    onClick = {
-                        // Reset singleton
-                        ShipmentScanFlowState.clear()
+    if(viewModel.showButtonBox()) {
+        Column {
+            Box(
+                contentAlignment = Alignment.Center, modifier = Modifier
+                    .fillMaxWidth()
+                    .height(70.dp)
+                    .padding(10.dp)
+            ) {
+                Row {
+                    Button(
+                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.surfaceTint),
+                        enabled = viewModel.isStateCompleteShipment.value,
+                        onClick = {
+                            viewModel.completedShipment(viewModel.selectedShipment.value.id)
+                            navController.navigate(Screen.Shipments.route)
+                        },
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .weight(1f)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.shipment_detail_screen_next_button),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontSize = 25.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    Button(
+                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onSecondaryContainer),
+                        onClick = {
+                            // Reset singleton
+                            ShipmentScanFlowState.clear()
 
-                        // Set variable of singleton
-                        ShipmentScanFlowState.selectedShipment = viewModel.selectedShipment.value
+                            // Set variable of singleton
+                            ShipmentScanFlowState.selectedShipment =
+                                viewModel.selectedShipment.value
 
-                        // Log selectedShipment
-                        Log.d("ShipmentDetailScreen", "Selected Shipment: ${ShipmentScanFlowState.selectedShipment}")
+                            // Log selectedShipment
+                            Log.d(
+                                "ShipmentDetailScreen",
+                                "Selected Shipment: ${ShipmentScanFlowState.selectedShipment}"
+                            )
 
-                        navController.navigate(Screen.Scan.route + "?origin=shipment")
+                            navController.navigate(Screen.Scan.route + "?origin=shipment")
 
-                    },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .weight(1f)
-                ){
-                    Text(text = stringResource(R.string.shipment_detail_screen_scan_button), style = MaterialTheme.typography.titleMedium, fontSize = 25.sp,
-                        fontWeight = FontWeight.Bold)
+                        },
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .weight(1f)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.shipment_detail_screen_scan_button),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontSize = 25.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
             }
+            Spacer(
+                modifier = Modifier
+                    .height(20.dp)
+            )
         }
-        Spacer(modifier = Modifier
-            .height(20.dp))
     }
 
 }

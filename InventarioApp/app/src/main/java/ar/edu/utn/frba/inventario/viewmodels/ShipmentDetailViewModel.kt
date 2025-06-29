@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.inventario.viewmodels
 
+import android.net.http.UrlRequest.Status
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
@@ -66,6 +67,24 @@ class ShipmentDetailViewModel @Inject constructor(
 
                     loadProductToScanList(_shipment.value.products)
                     Log.d("ShipmentDetailViewModel", "contenido de ProductsToScan:$productToScanList")
+
+                    if((_shipment.value.status == ItemStatus.PENDING) && (ExistProductWithLoadedQuantityUpdated())){
+
+                        val resultStartShipment = shipmentRepository.startShipment(id.toLong())
+
+                        when(resultStartShipment){
+                            is NetworkResult.Success -> {
+                                Log.d("ShipmentDetailViewModel-POST_Shipment_Start", "Success, new status:${resultStartShipment.data.status}")
+                            }
+                            is NetworkResult.Error -> {
+                                Log.d("ShipmentDetailViewModel-POST_Shipment_Start", "Error: Code=${resultStartShipment.code}, message=${resultStartShipment.message}")
+                            }
+                            is NetworkResult.Exception -> {
+                                Log.d("ShipmentDetailViewModel-POST_Shipment_Start", "Error Crítico: ${resultStartShipment.e.message}")
+                            }
+                        }
+
+                    }
                 }
                 is NetworkResult.Error -> {
                     Log.d("ShipmentDetailViewModel", "Error: Code=${result.code}, message=${result.message}")
@@ -96,6 +115,10 @@ class ShipmentDetailViewModel @Inject constructor(
             ))
             }
             ShipmentProductToScanList.getLoadedProducts().forEach { mp-> setLoadedQuantityProduct(mp.key,mp.value)}
+        }
+
+        if(_shipment.value.status == ItemStatus.COMPLETED){
+            productToScanList.forEach { ps-> setLoadedQuantityProduct(ps.id,ps.requiredQuantity) }
         }
     }
 
@@ -128,6 +151,10 @@ class ShipmentDetailViewModel @Inject constructor(
 
     fun isCompletedShipment(){
         isStateCompleteShipment.value = productToScanList.all { ps -> ps.requiredQuantity == ps.loadedQuantity.value}
+    }
+
+    fun ExistProductWithLoadedQuantityUpdated():Boolean{
+        return productToScanList.any { p->p.loadedQuantity.value !=0 }
     }
 
     data class ProductToScan(
@@ -163,5 +190,45 @@ class ShipmentDetailViewModel @Inject constructor(
             creationDate = LocalDateTime.parse(shipmentResponse.creationDate.replace("Z", ""))
         )
         return shipment
+    }
+
+    fun showButtonBox(): Boolean{
+        return (_shipment.value.status != ItemStatus.COMPLETED)
+    }
+
+    fun completedShipment(id:String){
+        if((_shipment.value.status == ItemStatus.IN_PROGRESS) && (isStateCompleteShipment.value)){
+
+            viewModelScope.launch(Dispatchers.IO) {
+
+                Log.d("ShipmentDetailViewModel-POST_Shipment_Finish", "Iniciando pedido a API del envio: $id")
+
+                val resultFinishShipment = shipmentRepository.finishShipment(id.toLong())
+
+                when (resultFinishShipment) {
+                    is NetworkResult.Success -> {
+                        Log.d(
+                            "ShipmentDetailViewModel-POST_Shipment_Finish",
+                            "Success, new status:${resultFinishShipment.data.status}"
+                        )
+                    }
+
+                    is NetworkResult.Error -> {
+                        Log.d(
+                            "ShipmentDetailViewModel-POST_Shipment_Finish",
+                            "Error: Code=${resultFinishShipment.code}, message=${resultFinishShipment.message}"
+                        )
+                    }
+
+                    is NetworkResult.Exception -> {
+                        Log.d(
+                            "ShipmentDetailViewModel-POST_Shipment_Finish",
+                            "Error Crítico: ${resultFinishShipment.e.message}"
+                        )
+                    }
+                }
+
+            }
+        }
     }
 }
