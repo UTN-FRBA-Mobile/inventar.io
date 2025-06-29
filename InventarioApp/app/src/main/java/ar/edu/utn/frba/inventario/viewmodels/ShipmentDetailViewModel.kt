@@ -116,6 +116,10 @@ class ShipmentDetailViewModel @Inject constructor(
             }
             ShipmentProductToScanList.getLoadedProducts().forEach { mp-> setLoadedQuantityProduct(mp.key,mp.value)}
         }
+
+        if(_shipment.value.status == ItemStatus.COMPLETED){
+            productToScanList.forEach { ps-> setLoadedQuantityProduct(ps.id,ps.requiredQuantity) }
+        }
     }
 
     fun getLoadedQuantityProduct(id:String):Int{
@@ -186,6 +190,10 @@ class ShipmentDetailViewModel @Inject constructor(
             creationDate = LocalDateTime.parse(shipmentResponse.creationDate.replace("Z", ""))
         )
         return shipment
+    }
+
+    fun showButtonBox(): Boolean{
+        return (_shipment.value.status != ItemStatus.COMPLETED)
     }
 
     fun completedShipment(id:String){
