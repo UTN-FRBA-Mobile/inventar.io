@@ -36,6 +36,15 @@ class OrderProductsViewModel @Inject constructor(
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
 
+    private val _isFinishingOrder = MutableStateFlow(false)
+    val isFinishingOrder: StateFlow<Boolean> = _isFinishingOrder.asStateFlow()
+
+    private val _finishOrderError = MutableStateFlow<String?>(null)
+    val finishOrderError: StateFlow<String?> = _finishOrderError.asStateFlow()
+
+    private val _orderFinishedSuccessfully = MutableStateFlow<Boolean?>(null)
+    val orderFinishedSuccessfully: StateFlow<Boolean?> = _orderFinishedSuccessfully.asStateFlow()
+
     private val orderId: String = savedStateHandle["orderId"] ?: ""
 
     init {
@@ -49,7 +58,7 @@ class OrderProductsViewModel @Inject constructor(
 
     private fun handleMissingOrderId() {
         _isLoading.value = false
-        _errorMessage.value = "ID de orden no proporcionado."
+        _errorMessage.value = "ID de pedido no proporcionado."
         _orderProducts.value = emptyList()
         Log.e("OrderProductsViewModel", "Order ID not provided in navigation arguments.")
     }
@@ -58,6 +67,7 @@ class OrderProductsViewModel @Inject constructor(
         _isLoading.value = true
         _errorMessage.value = null
         _orderProducts.value = emptyList()
+        _finishOrderError.value = null
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -84,8 +94,8 @@ class OrderProductsViewModel @Inject constructor(
 
         if (productIds.isEmpty()) {
             _orderProducts.value = emptyList()
-            _errorMessage.value = "La orden ${order.id} no contiene productos registrados."
-            Log.d("OrderProductsViewModel", "La orden ${order.id} no contiene productos registrados.")
+            _errorMessage.value = "El pedido ${order.id} no contiene productos registrados."
+            Log.d("OrderProductsViewModel", "El pedido ${order.id} no contiene productos registrados.")
             return
         }
 
@@ -134,9 +144,9 @@ class OrderProductsViewModel @Inject constructor(
                 message?.contains("404", ignoreCase = true) == true
 
         _errorMessage.value = if (isNotFound) {
-            "La orden con ID '$id' no fue encontrada."
+            "El pedido con ID '$id' no fue encontrado."
         } else {
-            "Error al cargar la orden: ${message ?: "Error desconocido"}. "
+            "Error al cargar el pedido: ${message ?: "Error desconocido"}. "
         }
 
         _orderProducts.value = emptyList()
@@ -144,7 +154,7 @@ class OrderProductsViewModel @Inject constructor(
     }
 
     private fun handleOrderException(e: Exception) {
-        _errorMessage.value = "Excepción al cargar la orden: ${e.message}. "
+        _errorMessage.value = "Excepción al cargar el pedido: ${e.message}. "
         _orderProducts.value = emptyList()
         Log.e("OrderProductsViewModel", "Exception loading order", e)
     }
@@ -156,6 +166,52 @@ class OrderProductsViewModel @Inject constructor(
             currentList[index] = currentList[index].copy(currentStock = newQuantity)
             _orderProducts.value = currentList
             Log.d("OrderProductsViewModel", "Cantidad actualizada para $productId a $newQuantity")
+        }
+    }
+
+    fun finishOrder() {
+        _isFinishingOrder.value = true
+        _finishOrderError.value = null
+        _orderFinishedSuccessfully.value = null
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val orderIdToFinish = orderId.toLongOrNull()
+                if (orderIdToFinish == null) {
+                    _finishOrderError.value = "ID de orden inválido para finalizar."
+                    _isFinishingOrder.value = false
+                    return@launch
+                }
+
+                val productQuantities = _orderProducts.value.associate { product ->
+                    product.id to (product.currentStock ?: 0)
+                }
+
+                when (val result = orderRepository.finishOrder(orderIdToFinish, productQuantities)) {
+                    is NetworkResult.Success -> {
+                        _isFinishingOrder.value = false
+                        _orderFinishedSuccessfully.value = true
+                        Log.d("OrderProductsViewModel", "Orden ${orderId} finalizada con éxito.")
+                    }
+                    is NetworkResult.Error -> {
+                        _finishOrderError.value = "Error al finalizar el pedido: ${result.message ?: "Desconocido"}"
+                        _isFinishingOrder.value = false
+                        _orderFinishedSuccessfully.value = false
+                        Log.e("OrderProductsViewModel", "Error al finalizar el pedido: ${result.message}")
+                    }
+                    is NetworkResult.Exception -> {
+                        _finishOrderError.value = "Excepción al finalizar el pedido: ${result.e.message}"
+                        _isFinishingOrder.value = false
+                        _orderFinishedSuccessfully.value = false
+                        Log.e("OrderProductsViewModel", "Excepción al finalizar el pedido", result.e)
+                    }
+                }
+            } catch (e: Exception) {
+                _finishOrderError.value = "Error inesperado al finalizar la el pedido: ${e.message}"
+                _isFinishingOrder.value = false
+                _orderFinishedSuccessfully.value = false
+                Log.e("OrderProductsViewModel", "Error inesperado al finalizar el pedido", e)
+            }
         }
     }
 }

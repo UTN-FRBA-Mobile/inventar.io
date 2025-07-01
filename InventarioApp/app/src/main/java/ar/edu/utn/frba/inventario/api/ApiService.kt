@@ -43,7 +43,10 @@ interface ApiService {
     suspend fun startOrder(@Path("id") id:Long): Response<OrderResponse>
 
     @POST("/api/v1/orders/{id}/finish")
-    suspend fun finishOrder(@Path("id") id:Long): Response<OrderResponse>
+    suspend fun finishOrder(
+        @Path("id") id: Long,
+        @Body productQuantities: Map<String, Int>
+    ): Response<OrderResponse>
 
     /*Shipment*/
     @GET("/api/v1/shipments/{id}")

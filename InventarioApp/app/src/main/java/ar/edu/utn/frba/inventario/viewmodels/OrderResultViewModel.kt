@@ -51,7 +51,7 @@ class OrderResultViewModel @Inject constructor(
         _startOrderError.value = null
 
         if (id.isNullOrBlank()) {
-            _errorMessage.value = "No se puede buscar una orden con un ID vacío."
+            _errorMessage.value = "No se puede buscar un pedido con un ID vacío."
             _isLoading.value = false
             return
         }
@@ -62,12 +62,12 @@ class OrderResultViewModel @Inject constructor(
                     is NetworkResult.Success -> {
                         _foundOrder.value = result.data
                         _isLoading.value = false
-                        Log.d("OrderResultViewModel", "Orden encontrada: ${foundOrder.value}")
+                        Log.d("OrderResultViewModel", "Pedido encontrado: ${foundOrder.value}")
                     }
                     is NetworkResult.Error -> {
                         val specificError = if (result.message?.contains("Not Found", ignoreCase = true) == true ||
                             result.message?.contains("404", ignoreCase = true) == true) {
-                            "La orden con ID '$id' no fue encontrada."
+                            "El pedido con ID '$id' no fue encontrado."
                         } else {
                             "Orden no encontrada. Intente nuevamente. ${result.message ?: "Error desconocido"}"
                         }
@@ -76,7 +76,7 @@ class OrderResultViewModel @Inject constructor(
                         Log.e("OrderResultViewModel", "Error al cargar orden: ${result.message}")
                     }
                     is NetworkResult.Exception -> {
-                        _errorMessage.value = "Excepción al cargar la orden: ${result.e.message}. Por favor, intente de nuevo."
+                        _errorMessage.value = "Excepción al cargar el pedido: ${result.e.message}. Por favor, intente de nuevo."
                         _isLoading.value = false
                         Log.e("OrderResultViewModel", "Excepción al cargar orden", result.e)
                     }
@@ -110,12 +110,12 @@ class OrderResultViewModel @Inject constructor(
                             }
                         }
                         is NetworkResult.Error -> {
-                            _startOrderError.value = "Error al iniciar la orden: ${result.message ?: "Desconocido"}"
+                            _startOrderError.value = "Error al iniciar el pedido: ${result.message ?: "Desconocido"}"
                             _startOrderLoading.value = false
                             Log.e("OrderResultViewModel", "Error al iniciar orden: ${result.message}")
                         }
                         is NetworkResult.Exception -> {
-                            _startOrderError.value = "Excepción al iniciar la orden: ${result.e.message}"
+                            _startOrderError.value = "Excepción al iniciar el pedido: ${result.e.message}"
                             _startOrderLoading.value = false
                             Log.e("OrderResultViewModel", "Excepción al iniciar orden", result.e)
                         }

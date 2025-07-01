@@ -20,8 +20,8 @@ class OrderRepository @Inject constructor(
         return safeApiCall {apiService.startOrder(id)}
     }
 
-    suspend fun finishOrder(id: Long): NetworkResult<OrderResponse> {
-        return safeApiCall {apiService.finishOrder(id)}
+    suspend fun finishOrder(id: Long, productQuantities: Map<String, Int>): NetworkResult<OrderResponse> {
+        return safeApiCall { apiService.finishOrder(id, productQuantities) }
     }
 }
 

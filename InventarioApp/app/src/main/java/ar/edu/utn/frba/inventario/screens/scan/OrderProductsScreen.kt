@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -82,7 +83,6 @@ import coil.size.Size
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OrderProductsScreen(
@@ -93,6 +93,9 @@ fun OrderProductsScreen(
     val orderProducts by viewModel.orderProducts.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
+    val isFinishingOrder by viewModel.isFinishingOrder.collectAsState()
+    val finishOrderError by viewModel.finishOrderError.collectAsState()
+    val orderFinishedSuccessfully by viewModel.orderFinishedSuccessfully.collectAsState()
 
     val snackbarHostState = remember { SnackbarHostState() }
     val screenCoroutineScope = rememberCoroutineScope()
@@ -107,13 +110,47 @@ fun OrderProductsScreen(
 
     val allProductsConfirmed = orderProducts.isNotEmpty() && productConfirmationStatus.values.all { it }
 
+    LaunchedEffect(orderFinishedSuccessfully) {
+        when (orderFinishedSuccessfully) {
+            true -> {
+                snackbarHostState.showSnackbar(
+                    message = "¡Pedido finalizado con éxito!",
+                    withDismissAction = true
+                )
+                navController.navigate(Screen.Orders.route) {
+                    popUpTo(Screen.Orders.route) { inclusive = true }
+                }
+            }
+            false -> { } //El error ya se muestra en el FloatingActionButton si existe finishOrderError
+            null -> {}
+        }
+    }
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.secondaryContainer,
         topBar = { OrderTopBar(navController) },
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
-            if (!isLoading && errorMessage == null && orderProducts.isNotEmpty()) {
-                ConfirmOrderButton(allProductsConfirmed, screenCoroutineScope, snackbarHostState)
+            if (!isLoading && errorMessage == null && orderProducts.isNotEmpty() && !isFinishingOrder) {
+                ConfirmOrderButton(
+                    allProductsConfirmed = allProductsConfirmed,
+                    screenCoroutineScope = screenCoroutineScope,
+                    snackbarHostState = snackbarHostState,
+                    viewModel = viewModel,
+                    finishOrderError = finishOrderError
+                )
+            }
+            if (isFinishingOrder) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    contentAlignment = Alignment.BottomCenter
+                ) {
+                    FloatingActionButton(onClick = {}, containerColor = MaterialTheme.colorScheme.primary) {
+                        CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
+                    }
+                }
             }
         }
     ) { innerPadding ->
@@ -155,6 +192,7 @@ fun OrderProductsScreen(
                                 orderId = orderId.orEmpty(),
                                 onQuantityChanged = { productId, newQuantity ->
                                     viewModel.updateProductQuantity(productId, newQuantity)
+                                    productConfirmationStatus[productId] = true
                                     currentlyEditingProductId = null
                                 },
                                 onClick = {
@@ -162,6 +200,7 @@ fun OrderProductsScreen(
                                 },
                                 onProductConfirmed = { productId ->
                                     productConfirmationStatus[productId] = true
+                                    currentlyEditingProductId = null
                                 },
                                 snackbarHostState = snackbarHostState,
                                 isAnotherProductBeingEdited = currentlyEditingProductId != null && currentlyEditingProductId != product.id,
@@ -171,7 +210,6 @@ fun OrderProductsScreen(
                                         productConfirmationStatus[it] = false
                                     }
                                 },
-                                onCancelEditing = { currentlyEditingProductId = null },
                                 isConfirmed = productConfirmationStatus[product.id] == true
                             )
                         }
@@ -220,8 +258,10 @@ fun OrderTopBar(navController: NavController) {
 @Composable
 fun ConfirmOrderButton(
     allProductsConfirmed: Boolean,
-    coroutineScope: CoroutineScope,
-    snackbarHostState: SnackbarHostState
+    screenCoroutineScope: CoroutineScope,
+    snackbarHostState: SnackbarHostState,
+    viewModel: OrderProductsViewModel,
+    finishOrderError: String?
 ) {
     Box(
         modifier = Modifier
@@ -232,8 +272,10 @@ fun ConfirmOrderButton(
         FloatingActionButton(
             onClick = {
                 if (allProductsConfirmed) {
-                    coroutineScope.launch {
-                        snackbarHostState.showSnackbar("\u00a1Orden confirmada completamente!")//TODO esto se elimina cuando tenga comportamiento real el botón
+                    viewModel.finishOrder()
+                } else {
+                    screenCoroutineScope.launch {
+                        snackbarHostState.showSnackbar("Confirmar todos los productos antes de finalizar el pedido.")
                     }
                 }
             },
@@ -244,6 +286,19 @@ fun ConfirmOrderButton(
                 text = stringResource(R.string.confirm_order),
                 modifier = Modifier.padding(horizontal = 16.dp),
                 style = MaterialTheme.typography.labelLarge
+            )
+        }
+
+        if (finishOrderError != null) {
+            Text(
+                text = finishOrderError,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .offset(y = 50.dp)
+                    .background(MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.8f), RoundedCornerShape(8.dp))
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
             )
         }
     }
@@ -330,7 +385,6 @@ fun ProductListItem(
     snackbarHostState: SnackbarHostState,
     isAnotherProductBeingEdited: Boolean,
     onStartEditing: (productId: String) -> Unit,
-    onCancelEditing: () -> Unit,
     isConfirmed: Boolean
 ) {
     val context = LocalContext.current
@@ -349,6 +403,7 @@ fun ProductListItem(
         if (isAnotherProductBeingEdited && isEditingQuantity) {
             isEditingQuantity = false
             keyboardController?.hide()
+            editableQuantity = TextFieldValue(product.currentStock?.toString() ?: "0")
         }
     }
 
@@ -419,7 +474,8 @@ fun ProductListItem(
                 Text(
                     text = "EAN-13: ${product.ean13}",
                     style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.onSurface                )
+                    color = MaterialTheme.colorScheme.onSurface
+                )
                 Text(
                     text = stringResource(R.string.expected_quantity, expectedQuantity),
                     style = MaterialTheme.typography.titleSmall,
@@ -429,7 +485,7 @@ fun ProductListItem(
                 if (isEditingQuantity) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text =stringResource(R.string.received_quantity, ""),
+                            text = stringResource(R.string.received_quantity, ""),
                             style = MaterialTheme.typography.titleSmall,
                             color = MaterialTheme.colorScheme.onSurface
                         )
@@ -526,6 +582,7 @@ fun ProductListItem(
                             if (!isAnotherProductBeingEdited) {
                                 isEditingQuantity = true
                                 onStartEditing(product.id)
+                                editableQuantity = TextFieldValue(product.currentStock?.toString() ?: "0")
                             } else {
                                 coroutineScope.launch {
                                     snackbarHostState.showSnackbar("Confirmar la cantidad actual antes de editar otro producto.")
@@ -541,7 +598,9 @@ fun ProductListItem(
                         )
                     }
                     Spacer(modifier = Modifier.width(8.dp))
-                    IconButton(onClick = { onProductConfirmed(product.id) }) {
+                    IconButton(onClick = {
+                        onProductConfirmed(product.id)
+                    }) {
                         Icon(
                             imageVector = Icons.Default.Check,
                             contentDescription = "Confirmar producto",

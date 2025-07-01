@@ -60,7 +60,7 @@ class ScanViewModel @Inject constructor() : ViewModel() {
             val orderId = extractOrderIdFromQrCode(scannedValue)
 
             if (orderId.isBlank()) {
-                val errorMsg = "Id de orden vacío"
+                val errorMsg = "Id de pedido vacío"
                 val destination = Screen.OrderResult.withNavArgs(
                     OrderResultArgs.ErrorMessage to errorMsg
                 )
