@@ -3,6 +3,7 @@ package ar.edu.utn.frba.inventario.api.repository
 import ar.edu.utn.frba.inventario.api.ApiService
 import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
 import ar.edu.utn.frba.inventario.api.model.order.OrderResponse
+import ar.edu.utn.frba.inventario.api.model.shipment.ShipmentResponse
 import javax.inject.Inject
 
 class OrderRepository @Inject constructor(
@@ -13,6 +14,14 @@ class OrderRepository @Inject constructor(
 
     suspend fun getOrdersList(): NetworkResult<List<OrderResponse>> {
         return safeApiCall {apiService.getOrdersList()}
+    }
+
+    suspend fun startOrder(id: Long): NetworkResult<OrderResponse> {
+        return safeApiCall {apiService.startOrder(id)}
+    }
+
+    suspend fun finishOrder(id: Long): NetworkResult<OrderResponse> {
+        return safeApiCall {apiService.finishOrder(id)}
     }
 }
 

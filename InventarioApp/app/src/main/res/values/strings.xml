@@ -108,6 +108,7 @@
     <string name="order_result_search_success">Pedido encontrado</string>
     <string name="unique_total_products">Total de productos únicos: %1$s</string>
     <string name="order_id">ID pedido: P-%1$s</string>
+    <string name="order_initialization_failed">Error en inicialización de pedido</string>
 
     <!-- ProductAmountScreen -->
     <string name="product_amount_title">Confirmación de cantidad</string>
