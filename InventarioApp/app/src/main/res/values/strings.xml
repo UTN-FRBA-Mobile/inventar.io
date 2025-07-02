@@ -17,6 +17,8 @@
     <string name="product_state_icon">icono del estado de la carga de productos</string>
     <string name="unknown_error">Error desconocido</string>
     <string name="critical_error">Error crítico</string>
+    <string name="search_failed">Búsqueda fallida</string>
+    <string name="continue_button">Continuar</string>
 
     <!-- Welcome Screen -->
     <string name="welcome_screen_title">Bienvenido</string>
@@ -58,13 +60,11 @@
 
     <!-- ProductResultScreen -->
     <string name="product_result_scan_failed">Escaneo fallido</string>
-    <string name="product_result_search_failed">Búsqueda fallida</string>
     <string name="product_result_barcode">Código de barras</string>
     <string name="product_result_qr_code">Código QR</string>
     <string name="product_result_error_invalid_code_type">ERROR - Código no soportado</string>
     <string name="product_result_scan_success">Escaneo exitoso</string>
     <string name="product_result_search_success">Producto encontrado</string>
-    <string name="product_result_continue_button">Continuar</string>
 
     <plurals name="products_and_date_template">
         <item quantity="one">%1$d producto • Solicitado %2$s</item>
@@ -75,7 +75,7 @@
     <string name="shipment_detail_screen_title">Detalle del envío</string>
     <string name="shipment_detail_screen_shipment">Envío %1$s</string>
     <string name="shipment_detail_screen_customer">Comprador: %1$s</string>
-    <string name="shipment_detail_screen_total">Total de productos unicos: %1$s</string>
+    <string name="shipment_detail_screen_total">Total de productos únicos: %1$s</string>
     <string name="shipment_detail_screen_quantity_required">%1$s Requeridos</string>
     <string name="shipment_detail_screen_quantity_loaded">%1$s Cargados</string>
     <string name="shipment_detail_screen_next_button">Siguiente</string>
@@ -83,9 +83,9 @@
 
     <!-- OrderDetailScreen -->
     <string name="order_detail_screen_title">Detalle del pedido</string>
-    <string name="order_detail_screen_order">Pedido %1$s</string>
+    <string name="order_detail_screen_order">Pedido P-%1$s</string>
     <string name="order_detail_screen_sender">Remitente: %1$s</string>
-    <string name="order_detail_screen_total">Total de productos unicos: %1$s</string>
+    <string name="order_detail_screen_total">Total de productos únicos: %1$s</string>
     <string name="order_detail_screen_quantity">Cantidad %1$s</string>
     <string name="order_not_found">No se encontró el pedido</string>
 
@@ -94,10 +94,31 @@
     <string name="unknown_location">Ubicación desconocida</string>
     <string name="error_loading_location">Error al cargar ubicación</string>
 
+    <!-- OrderProductsScreen -->
+    <string name="order_products_screen_title">Ingreso de stock</string>
+    <string name="confirm_order">Confirmar pedido</string>
+    <string name="loading_products">Cargando productos...</string>
+    <string name="only_numbers">Solo se permite ingresar números</string>
+    <string name="order_empty_products">Pedido sin productos</string>
+    <string name="received_quantity">Cant. recibida: %1$s</string>
+    <string name="expected_quantity">Cant. solicitada: %1$s</string>
+    <string name="no_products_found_for_order">No se encontraron productos</string>
+
+    <!-- OrderResultScreen -->
+    <string name="order_result_search_success">Pedido encontrado</string>
+    <string name="unique_total_products">Total de productos únicos: %1$s</string>
+    <string name="order_id">ID pedido: P-%1$s</string>
+    <string name="order_initialization_failed">Error en inicialización de pedido</string>
+
     <!-- ProductAmountScreen -->
     <string name="product_amount_title">Confirmación de cantidad</string>
     <string name="product_amount_required_quantity">Cantidad a ingresar: %1$d</string>
     <string name="product_amount_insufficient_stock">No hay suficiente stock para cargar %1$d unidades de %2$s</string>
     <string name="product_amount_confirm_button">Confirmar ingreso</string>
     <string name="product_amount_unexpected_error">Error inesperado</string>
+
+    <!-- ManualOrderScreen -->
+    <string name="order_id_input">Ingrese el ID del pedido</string>
+    <string name="order_id_placeholder">ID de pedido</string>
+    <string name="invalid_order_id">El ID del pedido no es válido.</string>
 </resources>

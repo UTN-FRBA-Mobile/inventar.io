@@ -127,7 +127,7 @@ fun ScanCameraContent(navController: NavController, origin: String) {
                 )
             }
 
-            if (origin == "shipment") {
+            if (origin == "shipment" || origin == "order") {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -135,7 +135,7 @@ fun ScanCameraContent(navController: NavController, origin: String) {
                         .align(Alignment.BottomCenter),
                     contentAlignment = Alignment.Center
                 ) {
-                    ManualInputButton(navController)
+                    ManualInputButton(navController = navController, origin = origin)
                 }
             }
         }
@@ -143,9 +143,15 @@ fun ScanCameraContent(navController: NavController, origin: String) {
 }
 
 @Composable
-fun ManualInputButton(navController: NavController) {
+fun ManualInputButton(navController: NavController, origin: String) {
     Button(
-        onClick = { navController.navigate(Screen.ManualCode.route) },
+        onClick = {
+            if (origin == "shipment") {
+                navController.navigate(Screen.ManualCode.route)
+            } else if (origin == "order") {
+                navController.navigate(Screen.ManualOrder.route)
+            }
+        },
         shape = RoundedCornerShape(50),
     ) {
         Text(stringResource(R.string.scan_manual_input_button))
@@ -175,8 +181,8 @@ fun PermissionDeniedContent(navController: NavController, origin: String) {
         )
         Spacer(modifier = Modifier.height(12.dp))
 
-        if (origin == "shipment") {
-            ManualInputButton(navController)
+        if (origin == "shipment" || origin == "order") {
+            ManualInputButton(navController = navController, origin = origin)
         }
     }
 }

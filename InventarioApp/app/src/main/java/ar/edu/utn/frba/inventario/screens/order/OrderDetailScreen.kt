@@ -160,7 +160,7 @@ fun OrderDetailBodyContent(viewModel:OrderDetailViewModel, navController: NavCon
             Column (modifier = Modifier
                 .padding(20.dp)){
                 Text(
-                    text = stringResource(R.string.order_detail_screen_order, order.number),
+                    text = stringResource(R.string.order_detail_screen_order, order.id),
                     style = MaterialTheme.typography.titleLarge,
                     fontSize = 25.sp,
                     fontWeight = FontWeight.Bold

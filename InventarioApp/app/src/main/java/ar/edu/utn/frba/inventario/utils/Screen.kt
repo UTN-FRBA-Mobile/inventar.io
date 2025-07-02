@@ -13,8 +13,11 @@ enum class Screen(val route: String) {
     Scan("scan"),
     ProductResult("product_result"),
     ManualCode("manual_code"),
+    ManualOrder("manual_order"),
     ProductDetail("product_detail"),
-    ProductAmount("product_amount")
+    ProductAmount("product_amount"),
+    OrderProductsList("order_products_list"),
+    OrderResult("order_result");
 }
 
 enum class ProductResultArgs(override val code: String) : HasCode {
@@ -24,8 +27,19 @@ enum class ProductResultArgs(override val code: String) : HasCode {
     Origin("origin"),
 }
 
+enum class OrderResultArgs(override val code: String) : HasCode {
+    OrderId("orderId"),
+    ErrorMessage("errorMessage"),
+    CodeType("codeType"),
+    Origin("origin"),
+}
+
 enum class ScanArgs(override val code: String) : HasCode {
     Origin("origin"),
+}
+
+enum class OrderProductsListArgs(override val code: String) : HasCode {
+    OrderId("orderId");
 }
 
 fun Screen.withArgsDefinition(args: Array<out HasCode>): String {

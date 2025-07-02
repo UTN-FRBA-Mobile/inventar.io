@@ -98,7 +98,7 @@ fun ProductResultBodyContent(
     ) {
         if (errorMessage != null) {
             Text(
-                text = stringResource(R.string.product_result_search_failed),
+                text = stringResource(R.string.search_failed),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Red
@@ -158,7 +158,7 @@ fun ProductResultBodyContent(
             Button(onClick = {
                 navController.navigate(Screen.ProductAmount.route)
             }) {
-                Text(stringResource(R.string.product_result_continue_button))
+                Text(stringResource(R.string.continue_button))
             }
 
         } else {

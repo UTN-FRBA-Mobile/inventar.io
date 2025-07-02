@@ -1,10 +1,12 @@
 package ar.edu.utn.frba.inventario.viewmodels.scan
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.R
+import ar.edu.utn.frba.inventario.utils.OrderResultArgs
 import ar.edu.utn.frba.inventario.utils.ProductResultArgs
 import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.utils.withNavArgs
@@ -28,27 +30,54 @@ class ScanViewModel @Inject constructor() : ViewModel() {
     ) {
         val validCode = getValidBarcode(scannedCodes, origin)
 
+        val codeType = when (validCode?.format) {
+            Barcode.FORMAT_EAN_13 -> "ean-13"
+            Barcode.FORMAT_QR_CODE -> "qr"
+            else -> ""
+        }
+
         if (validCode == null) {
             val errorMsg = context.getString(getErrorMessageResId(origin))
-            val destination = Screen.ProductResult.withNavArgs(
-                ProductResultArgs.ErrorMessage to errorMsg
+
+            val destination = if (origin == "order") {
+                Screen.OrderResult.withNavArgs(
+                    OrderResultArgs.ErrorMessage to errorMsg
+                )
+            } else {
+                Screen.ProductResult.withNavArgs(
+                    ProductResultArgs.ErrorMessage to errorMsg,
+                    ProductResultArgs.Origin to origin
+                )
+            }
+            navController.navigate(destination)
+            return
+        }
+
+        val scannedValue = validCode.rawValue.orEmpty()
+        Log.d("ScanSuccess", "Código escaneado: $scannedValue (Tipo: $codeType, Origen: $origin)")
+
+        if (origin == "order" && codeType == "qr") {
+            val orderId = extractOrderIdFromQrCode(scannedValue)
+
+            if (orderId.isBlank()) {
+                val errorMsg = "Id de pedido vacío"
+                val destination = Screen.OrderResult.withNavArgs(
+                    OrderResultArgs.ErrorMessage to errorMsg
+                )
+                navController.navigate(destination)
+                return
+            }
+
+            val destination = Screen.OrderResult.withNavArgs(
+                OrderResultArgs.OrderId to orderId
             )
             navController.navigate(destination)
             return
         }
 
-        // Add to withNavArgs the arg codeType
-        //  "ean-13" ->
-        //    "qr" ->
-
-        // Navegación con el código válido
         val destination = Screen.ProductResult.withNavArgs(
-            ProductResultArgs.CodeType to when (validCode.format) {
-                Barcode.FORMAT_EAN_13 -> "ean-13"
-                Barcode.FORMAT_QR_CODE -> "qr"
-                else -> ""
-            },
-            ProductResultArgs.Code to validCode.rawValue.orEmpty(),
+            ProductResultArgs.CodeType to codeType,
+            ProductResultArgs.Code to scannedValue,
             ProductResultArgs.Origin to origin
         )
         navController.navigate(destination)
@@ -61,6 +90,15 @@ class ScanViewModel @Inject constructor() : ViewModel() {
                 "order" -> barcode.format == Barcode.FORMAT_QR_CODE
                 else -> false
             }
+        }
+    }
+
+    private fun extractOrderIdFromQrCode(qrCode: String): String {
+        val parts = qrCode.split('_')
+        return if (parts.size >= 2 && parts.last().any { it.isDigit() }) {
+            parts.last().filter { it.isDigit() }
+        } else {
+            ""
         }
     }
 
