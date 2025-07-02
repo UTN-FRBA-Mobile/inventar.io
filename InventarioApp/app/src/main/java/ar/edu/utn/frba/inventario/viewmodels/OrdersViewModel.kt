@@ -9,6 +9,7 @@ import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
 import ar.edu.utn.frba.inventario.api.model.order.Order
 import ar.edu.utn.frba.inventario.api.repository.OrderRepository
 import ar.edu.utn.frba.inventario.api.repository.SelfRepository
+import ar.edu.utn.frba.inventario.api.utils.PreferencesManager
 import ar.edu.utn.frba.inventario.utils.OrderMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
@@ -22,10 +23,12 @@ import kotlinx.coroutines.withContext
 class OrdersViewModel @Inject constructor(
     private val orderRepository: OrderRepository,
     savedStateHandle: SavedStateHandle,
-    private val selfRepository: SelfRepository
+    private val selfRepository: SelfRepository,
+    preferencesManager: PreferencesManager
 ) : BaseItemViewModel<Order>(
     savedStateHandle = savedStateHandle,
-    filterKey = "orders_filter"
+    preferencesManager = preferencesManager,
+    statusFilterKey = "orders"
 ) {
 
     private val _items: SnapshotStateList<Order> = mutableStateListOf()

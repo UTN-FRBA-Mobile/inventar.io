@@ -150,7 +150,7 @@ fun OrderResultBodyContent(
             Spacer(Modifier.height(32.dp))
 
             Button(onClick = onContinueClick) {
-                Text(stringResource(R.string.continue_button))
+                Text(stringResource(R.string._continue))
             }
 
         } else {
