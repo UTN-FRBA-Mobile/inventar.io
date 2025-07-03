@@ -18,7 +18,6 @@
     <string name="unknown_error">Error desconocido</string>
     <string name="critical_error">Error crítico</string>
     <string name="search_failed">Búsqueda fallida</string>
-    <string name="continue_button">Continuar</string>
 
     <!-- Welcome Screen -->
     <string name="welcome_screen_title">Bienvenido</string>

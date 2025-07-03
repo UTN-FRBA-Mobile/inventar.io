@@ -5,6 +5,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
+import ar.edu.utn.frba.inventario.api.utils.PreferencesManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,24 +14,17 @@ import java.time.LocalDateTime
 
 abstract class BaseItemViewModel<T>(
     internal val savedStateHandle: SavedStateHandle,
-    private val filterKey: String
+    private val preferencesManager: PreferencesManager,
+    private val statusFilterKey: String
 ) : ViewModel() {
     protected abstract val items: SnapshotStateList<T>
 
     private val _selectedStatusList = MutableStateFlow<Set<ItemStatus>>(emptySet())
     val selectedStatusList: StateFlow<Set<ItemStatus>> = _selectedStatusList.asStateFlow()
 
-    private fun restoreFiltersFromSavedState(): Set<ItemStatus> {
-        Log.d("VIEWMODEL_BASE_ITEM", "Filtros: ${savedStateHandle.get<List<String>>(filterKey)}")
-        return savedStateHandle.get<List<String>>(filterKey)
-            ?.mapNotNull { statusName ->
-                try {
-                    ItemStatus.valueOf(statusName)
-                } catch (e: IllegalArgumentException) {
-                    null
-                }
-            }
-            ?.toSet() ?: emptySet()
+    init {
+        _selectedStatusList.value = preferencesManager.getSelectedStatus(statusFilterKey)
+        Log.d("VIEWMODEL_BASE_ITEM", "Filtros cargados desde Preferences: ${_selectedStatusList.value}")
     }
 
     fun getFilteredItems(): List<T> {
@@ -46,7 +40,7 @@ abstract class BaseItemViewModel<T>(
             val newSet = currentSet.toMutableSet().apply {
                 if (!add(status)) remove(status)
             }
-            savedStateHandle[filterKey] = newSet.map { it.name }
+            preferencesManager.saveSelectedStatus(statusFilterKey, newSet.toSet())
             newSet
         }
     }
@@ -54,9 +48,8 @@ abstract class BaseItemViewModel<T>(
     fun clearFilters() {
         Log.d("VIEWMODEL_BASE_ITEM", "clearFilter antes : ${_selectedStatusList.value}")
         _selectedStatusList.value = emptySet()
-        savedStateHandle[filterKey] = emptyList<String>()
-        Log.d("VIEWMODEL_BASE_ITEM", "clearFilter aplicado : ${savedStateHandle.get<List<String>>(filterKey)}"
-        )
+        preferencesManager.clearSelectedStatus(statusFilterKey)
+        Log.d("VIEWMODEL_BASE_ITEM", "clearFilter aplicado : ${preferencesManager.getSelectedStatus(statusFilterKey)}")
     }
 
     private fun getSortedItems(items: List<T>): List<T> {

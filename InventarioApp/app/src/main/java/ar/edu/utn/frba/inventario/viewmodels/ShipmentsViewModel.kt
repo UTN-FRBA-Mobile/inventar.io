@@ -10,6 +10,7 @@ import ar.edu.utn.frba.inventario.api.model.product.ProductOperation
 import ar.edu.utn.frba.inventario.api.model.shipment.Shipment
 import ar.edu.utn.frba.inventario.api.model.shipment.ShipmentResponse
 import ar.edu.utn.frba.inventario.api.repository.ShipmentRepository
+import ar.edu.utn.frba.inventario.api.utils.PreferencesManager
 import ar.edu.utn.frba.inventario.utils.ShipmentProductToScanList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
@@ -23,10 +24,12 @@ import java.time.LocalDateTime
 @HiltViewModel
 class ShipmentsViewModel @Inject constructor(
     private val shipmentRepository: ShipmentRepository,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    preferencesManager: PreferencesManager
 ) : BaseItemViewModel<Shipment>(
     savedStateHandle = savedStateHandle,
-    filterKey = "shipment_filter"
+    preferencesManager = preferencesManager,
+    statusFilterKey = "shipments"
 ) {
     private val _shipments = MutableStateFlow<List<ShipmentResponse>>(emptyList())
     val shipments: StateFlow<List<ShipmentResponse>> = _shipments.asStateFlow()

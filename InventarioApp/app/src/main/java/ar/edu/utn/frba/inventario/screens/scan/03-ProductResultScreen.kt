@@ -158,7 +158,7 @@ fun ProductResultBodyContent(
             Button(onClick = {
                 navController.navigate(Screen.ProductAmount.route)
             }) {
-                Text(stringResource(R.string.continue_button))
+                Text(stringResource(R.string._continue))
             }
 
         } else {

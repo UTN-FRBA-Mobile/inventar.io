@@ -6,6 +6,7 @@ import ar.edu.utn.frba.inventario.api.ApiService
 import ar.edu.utn.frba.inventario.api.interceptor.AuthInterceptor
 import ar.edu.utn.frba.inventario.api.interceptor.LoggingInterceptor
 import ar.edu.utn.frba.inventario.api.repository.AuthRepository
+import ar.edu.utn.frba.inventario.api.utils.PreferencesManager
 import ar.edu.utn.frba.inventario.api.utils.TokenManager
 import ar.edu.utn.frba.inventario.api.utils.TokenRefreshAuthenticator
 import dagger.Module
@@ -90,5 +91,11 @@ object NetworkModule {
     @Singleton
     fun provideApiService(retrofit: Retrofit): ApiService {
         return retrofit.create(ApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePreferencesManager(@ApplicationContext context: Context): PreferencesManager {
+        return PreferencesManager(context)
     }
 }

@@ -126,17 +126,14 @@ fun ScanCameraContent(navController: NavController, origin: String) {
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                 )
             }
-
-            if (origin == "shipment" || origin == "order") {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 48.dp)
-                        .align(Alignment.BottomCenter),
-                    contentAlignment = Alignment.Center
-                ) {
-                    ManualInputButton(navController = navController, origin = origin)
-                }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 48.dp)
+                    .align(Alignment.BottomCenter),
+                contentAlignment = Alignment.Center
+            ) {
+                ManualInputButton(navController = navController, origin = origin)
             }
         }
     }
@@ -181,9 +178,7 @@ fun PermissionDeniedContent(navController: NavController, origin: String) {
         )
         Spacer(modifier = Modifier.height(12.dp))
 
-        if (origin == "shipment" || origin == "order") {
-            ManualInputButton(navController = navController, origin = origin)
-        }
+        ManualInputButton(navController = navController, origin = origin)
     }
 }
 
