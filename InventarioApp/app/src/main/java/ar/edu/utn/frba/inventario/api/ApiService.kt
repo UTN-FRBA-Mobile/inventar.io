@@ -70,4 +70,7 @@ interface ApiService {
 
     @GET("/api/v1/products/stock")
     suspend fun getStockByProductId(@Query("ids") ids: String): Response<ProductStockLocationResponse>
+
+    @GET("/api/v1/products/stock")
+    suspend fun getStockByProductIdList(@Query("ids") ids: List<String>): Response<ProductStockLocationResponse>
 }

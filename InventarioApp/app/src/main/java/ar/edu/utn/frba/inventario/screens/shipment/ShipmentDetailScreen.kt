@@ -264,6 +264,8 @@ fun ButtonBox(viewModel:ShipmentDetailViewModel, navController: NavController){
                     Button(
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onSecondaryContainer),
                         onClick = {
+
+                            viewModel.enoughStockProducts(viewModel.selectedShipment.value.id)
                             // Reset singleton
                             ShipmentScanFlowState.clear()
 

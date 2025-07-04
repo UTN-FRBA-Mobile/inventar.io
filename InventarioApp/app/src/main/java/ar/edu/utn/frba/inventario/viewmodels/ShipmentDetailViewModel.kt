@@ -12,6 +12,7 @@ import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
 import ar.edu.utn.frba.inventario.api.model.product.ProductOperation
 import ar.edu.utn.frba.inventario.api.model.shipment.Shipment
 import ar.edu.utn.frba.inventario.api.model.shipment.ShipmentResponse
+import ar.edu.utn.frba.inventario.api.repository.ProductRepository
 import ar.edu.utn.frba.inventario.api.repository.ShipmentRepository
 import ar.edu.utn.frba.inventario.events.NavigationEvent
 import ar.edu.utn.frba.inventario.utils.ShipmentProductToScanList
@@ -27,7 +28,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ShipmentDetailViewModel @Inject constructor(
-    private val shipmentRepository: ShipmentRepository
+    private val shipmentRepository: ShipmentRepository, private val productRepository: ProductRepository
 ):ViewModel(){
     private val _shipment  = MutableStateFlow<Shipment>(Shipment(
         id = "0", number = "",
@@ -230,5 +231,52 @@ class ShipmentDetailViewModel @Inject constructor(
 
             }
         }
+    }
+
+    fun enoughStockProducts(id:String):Boolean{
+
+        viewModelScope.launch(Dispatchers.IO) {
+
+            Log.d("ShipmentDetailViewModel", "Iniciando pedido a API del envio: $id")
+            val productIds = _shipment.value.products.map { p->p.id }
+
+            val resultStockProducts = productRepository.getStockByProductIdList(productIds)
+
+            when (resultStockProducts) {
+                is NetworkResult.Success -> {
+                    Log.d(
+                        "ShipmentDetailViewModel",
+                        "Success, Product ids :${resultStockProducts.data.stockCount.keys}"
+                    )
+
+                    val currentStockProducts = resultStockProducts.data.stockCount
+                    val enoughAllStock = productToScanList.all { ps-> currentStockProducts[ps.id]!! >= ps.requiredQuantity }
+
+                    if(enoughAllStock){
+                        Log.d("ShipmentDetailViewModel", "Hay Stock suficiente para los productos del envio $id, Stock disponible: $currentStockProducts")
+                    }else{
+                        Log.d("ShipmentDetailViewModel", "No Hay Stock suficiente para los productos del envio $id, Stock disponible: $currentStockProducts")
+                    }
+
+
+                }
+
+                is NetworkResult.Error -> {
+                    Log.d(
+                        "ShipmentDetailViewModel",
+                        "Error: Code=${resultStockProducts.code}, message=${resultStockProducts.message}"
+                    )
+                }
+
+                is NetworkResult.Exception -> {
+                    Log.d(
+                        "ShipmentDetailViewModel",
+                        "Error Crítico: ${resultStockProducts.e.message}"
+                    )
+                }
+            }
+
+        }
+        return false
     }
 }
