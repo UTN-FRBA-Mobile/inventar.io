@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -183,25 +184,45 @@ fun OrderDetailBodyContent(viewModel:OrderDetailViewModel, navController: NavCon
 }
 
 @Composable
-fun ProductItem(product:ProductOperation){
-    ElevatedCard(colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
-        ,modifier = Modifier
+fun ProductItem(product: ProductOperation) {
+    ElevatedCard(
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface),
+        modifier = Modifier
             .fillMaxSize()
-            .padding(2.dp)){
-        Row(modifier = Modifier
-            .fillMaxSize()
-            .padding(start = 10.dp)){
-            Box(modifier = Modifier
-                .weight(2f)
-                .padding(15.dp)){
-                Text(text = product.name, fontWeight = FontWeight.Bold, fontSize = 20.sp, style = MaterialTheme.typography.bodyMedium)
+            .padding(2.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .weight(2f)
+                    .padding(15.dp),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Text(
+                    text = product.name,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp,
+                    style = MaterialTheme.typography.bodyMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
-            Spacer(modifier = Modifier
-                .height(10.dp))
-            Box(modifier = Modifier
-                .weight(1f)
-                .padding(15.dp)) {
-                Text(text = stringResource(R.string.order_detail_screen_quantity, product.quantity), style = MaterialTheme.typography.bodyMedium)
+            Spacer(modifier = Modifier.height(10.dp))
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(15.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(R.string.order_detail_screen_quantity, product.quantity),
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
         }
     }
