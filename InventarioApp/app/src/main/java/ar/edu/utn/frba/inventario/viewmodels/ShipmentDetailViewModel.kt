@@ -259,7 +259,19 @@ class ShipmentDetailViewModel @Inject constructor(
                     if(enoughAllStock){
                         Log.d("ShipmentDetailViewModel", "Hay Stock suficiente para los productos del envio $id, Stock disponible: $currentStockProducts")
                         if(_shipment.value.status == ItemStatus.BLOCKED){
-                            //Todo pegada endpoint de unblock
+                            val resultUnBlockShipment = shipmentRepository.unBlockShipment(id.toLong())
+
+                            when(resultUnBlockShipment){
+                                is NetworkResult.Success -> {
+                                    Log.d("ShipmentDetailViewModel-POST_Shipment_UnBlock", "Success, new status:${resultUnBlockShipment.data.status}")
+                                }
+                                is NetworkResult.Error -> {
+                                    Log.d("ShipmentDetailViewModel-POST_Shipment_UnBlock", "Error: Code=${resultUnBlockShipment.code}, message=${resultUnBlockShipment.message}")
+                                }
+                                is NetworkResult.Exception -> {
+                                    Log.d("ShipmentDetailViewModel-POST_Shipment_UnBlock", "Error Crítico: ${resultUnBlockShipment.e.message}")
+                                }
+                            }
                         }
                         true
                     }else{

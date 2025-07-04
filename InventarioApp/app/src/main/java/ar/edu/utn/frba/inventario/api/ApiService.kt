@@ -64,6 +64,9 @@ interface ApiService {
     @POST("/api/v1/shipments/{id}/block")
     suspend fun blockShipment(@Path("id") id:Long): Response<ShipmentResponse>
 
+    @POST("/api/v1/shipments/{id}/unblock")
+    suspend fun unBlockShipment(@Path("id") id:Long): Response<ShipmentResponse>
+
     /*Products*/
     @GET("/api/v1/products")
     suspend fun getProductList(@Query("ean13s") ean13s: List<String>): Response<Map<Long, Product>>

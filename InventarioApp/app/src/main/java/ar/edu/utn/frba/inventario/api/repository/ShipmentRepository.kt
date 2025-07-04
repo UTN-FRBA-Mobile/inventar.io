@@ -26,4 +26,8 @@ class ShipmentRepository @Inject constructor(
     suspend fun blockShipment(idShipment: Long): NetworkResult<ShipmentResponse> {
         return safeApiCall {apiService.blockShipment(idShipment)}
     }
+
+    suspend fun unBlockShipment(idShipment: Long): NetworkResult<ShipmentResponse> {
+        return safeApiCall {apiService.unBlockShipment(idShipment)}
+    }
 }
