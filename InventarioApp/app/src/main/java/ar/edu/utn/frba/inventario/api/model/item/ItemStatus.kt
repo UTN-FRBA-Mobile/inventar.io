@@ -31,11 +31,5 @@ enum class ItemStatus(
         color = RedBlocked,
         displayName = "Bloqueado",
         iconResourceId = R.drawable.blocked
-    ),
-    //TODO Evaluar si se unifica con blocked
-    CANCELLED(
-        color = RedBlocked,
-        displayName = "Cancelado",
-        iconResourceId = R.drawable.cancelled
     )
 }

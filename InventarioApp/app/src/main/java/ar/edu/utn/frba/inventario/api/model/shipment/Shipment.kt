@@ -21,11 +21,21 @@ data class Shipment(
     override fun getDisplayName() = "$number • $customerName"
 
     override fun getCardDetail(context: Context): String {
-        return context.resources.getQuantityString(
+        val formattedDate = getRelevantDate().format()
+        val productsSize = products.size
+        val productsString = context.resources.getQuantityString(
             R.plurals.products_and_date_template,
-            products.size,
-            products.size,
-            creationDate.format()
+            productsSize,
+            productsSize
         )
+
+        val statusAndDateString = when(status) {
+            ItemStatus.PENDING -> context.getString(R.string.shipment_status_pending, formattedDate)
+            ItemStatus.IN_PROGRESS -> context.getString(R.string.shipment_status_in_progress, formattedDate)
+            ItemStatus.COMPLETED -> context.getString(R.string.shipment_status_completed, formattedDate)
+            ItemStatus.BLOCKED -> context.getString(R.string.shipment_status_blocked, formattedDate)
+            else -> context.getString(R.string.shipment_status_pending, formattedDate)
+        }
+        return "$productsString • $statusAndDateString"
     }
 }
