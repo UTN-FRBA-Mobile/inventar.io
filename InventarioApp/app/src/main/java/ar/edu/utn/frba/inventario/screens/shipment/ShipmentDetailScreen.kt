@@ -255,7 +255,7 @@ fun ButtonBox(viewModel:ShipmentDetailViewModel, navController: NavController){
                             .weight(1f)
                     ) {
                         Text(
-                            text = stringResource(R.string.shipment_detail_screen_next_button),
+                            text = stringResource(R.string.next),
                             style = MaterialTheme.typography.titleMedium,
                             fontSize = 25.sp,
                             fontWeight = FontWeight.Bold
@@ -285,7 +285,7 @@ fun ButtonBox(viewModel:ShipmentDetailViewModel, navController: NavController){
                             .weight(1f)
                     ) {
                         Text(
-                            text = stringResource(R.string.shipment_detail_screen_scan_button),
+                            text = stringResource(R.string.scan),
                             style = MaterialTheme.typography.titleMedium,
                             fontSize = 25.sp,
                             fontWeight = FontWeight.Bold

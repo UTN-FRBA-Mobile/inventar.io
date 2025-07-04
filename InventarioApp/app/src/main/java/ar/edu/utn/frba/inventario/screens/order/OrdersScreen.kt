@@ -98,7 +98,6 @@ fun OrderBodyContent(
                     modifier = Modifier.weight(1f)
                 )
             } else {
-
                 LazyColumn(
                     modifier = Modifier.weight(1f)
                 ) {

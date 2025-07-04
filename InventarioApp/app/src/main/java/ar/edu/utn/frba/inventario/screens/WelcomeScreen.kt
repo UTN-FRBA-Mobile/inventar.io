@@ -62,8 +62,7 @@ fun WelcomeBodyContent(
         AnimatedBuildingGif()
 
         Column(
-            modifier = Modifier
-                .padding(8.dp),
+            modifier = Modifier.padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
