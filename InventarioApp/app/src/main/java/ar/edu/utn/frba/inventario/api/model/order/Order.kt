@@ -23,7 +23,6 @@ data class Order(
 ) : Item {
     override fun getRelevantDate() = when(status) {
         ItemStatus.COMPLETED -> lastModifiedDate
-        ItemStatus.CANCELLED -> lastModifiedDate
         ItemStatus.BLOCKED,
         ItemStatus.PENDING -> scheduledDate
         ItemStatus.IN_PROGRESS -> creationDate
@@ -36,10 +35,9 @@ data class Order(
 
         return when(status) {
             ItemStatus.COMPLETED -> context.getString(R.string.received_on, formattedDate)
-            ItemStatus.CANCELLED -> context.getString(R.string.cancelled_on, formattedDate)
             ItemStatus.PENDING -> context.getString(R.string.pending_reception, formattedDate)
             ItemStatus.BLOCKED,
-            ItemStatus.IN_PROGRESS -> context.getString(R.string.created_date, formattedDate)
+            ItemStatus.IN_PROGRESS -> context.getString(R.string.reception_start, formattedDate)
         }
     }
 }

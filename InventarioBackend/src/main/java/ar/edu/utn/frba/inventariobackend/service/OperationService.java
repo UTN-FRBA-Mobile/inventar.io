@@ -341,6 +341,35 @@ public class OperationService {
     }
 
     /**
+     * Unblocks a specific shipment, making it thread-safe by ID.
+     * <p>
+     * Updates the shipment's status to {@link Status#PENDING}. This indicates that the shipment's ready to be picked up.
+     * </p>
+     *
+     * @param id The unique identifier of the shipment to unblock.
+     * @return A {@link ShipmentResponse} for the unblocked shipment.
+     * @throws NoSuchElementException If the shipment is not found.
+     * @throws IllegalStateException If the shipment cannot be unblocked from its current status.
+     */
+    @Transactional
+    public ShipmentResponse unblockShipment(long id) {
+        Object lockObject = shipmentLocks.computeIfAbsent(id, k -> new Object());
+
+        synchronized (lockObject) {
+            Shipment shipment = shipmentRepository.findById(id).orElseThrow(NoSuchElementException::new);
+
+            if (shipment.getStatus() != Status.BLOCKED) {
+                throw new IllegalStateException("Shipment not blocked");
+            }
+
+            shipment.updateStatus(Status.PENDING);
+            shipmentRepository.save(shipment);
+
+            return getShipmentResponse(shipment);
+        }
+    }
+
+    /**
      * Utility method to get the product amount related to an operation.
      *
      * @param operationId The id of the associated operation.

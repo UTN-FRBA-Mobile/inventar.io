@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -235,18 +236,25 @@ fun ProductItem(viewModel:ShipmentDetailViewModel, product: ProductOperation,
 }
 
 @Composable
-fun ButtonBox(viewModel:ShipmentDetailViewModel, navController: NavController){
+fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) {
     val coroutineScope = rememberCoroutineScope()
 
-    if(viewModel.showButtonBox()) {
-        Column {
+    if (viewModel.showButtonBox()) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Box(
-                contentAlignment = Alignment.Center, modifier = Modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .height(70.dp)
-                    .padding(10.dp)
+                    .padding(horizontal = 18.dp, vertical = 10.dp)
             ) {
-                Row {
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Button(
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.surfaceTint),
                         enabled = viewModel.isStateCompleteShipment.value,
@@ -254,19 +262,23 @@ fun ButtonBox(viewModel:ShipmentDetailViewModel, navController: NavController){
                             viewModel.completedShipment(viewModel.selectedShipment.value.id)
                             navController.navigate(Screen.Shipments.route)
                         },
+                        shape = RoundedCornerShape(50),
                         modifier = Modifier
-                            .fillMaxSize()
                             .weight(1f)
+                            .height(50.dp)
                     ) {
                         Text(
                             text = stringResource(R.string.shipment_detail_screen_next_button),
                             style = MaterialTheme.typography.titleMedium,
-                            fontSize = 25.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(horizontal = 15.dp, vertical = 0.dp)
                         )
                     }
+
+                    Spacer(modifier = Modifier.width(16.dp))
+
                     Button(
-                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onSecondaryContainer),
+                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
                         onClick = {
 
                             coroutineScope.launch {
@@ -300,26 +312,23 @@ fun ButtonBox(viewModel:ShipmentDetailViewModel, navController: NavController){
                             }
 
                         },
+                        shape = RoundedCornerShape(50),
                         modifier = Modifier
-                            .fillMaxSize()
                             .weight(1f)
+                            .height(50.dp)
                     ) {
                         Text(
                             text = stringResource(R.string.shipment_detail_screen_scan_button),
                             style = MaterialTheme.typography.titleMedium,
-                            fontSize = 25.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(horizontal = 15.dp, vertical = 0.dp)
                         )
                     }
                 }
             }
-            Spacer(
-                modifier = Modifier
-                    .height(20.dp)
-            )
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
-
 }
 
 @Preview

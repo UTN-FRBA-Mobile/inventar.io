@@ -16,6 +16,7 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -37,12 +38,20 @@ class OrdersViewModel @Inject constructor(
     private val _locationName = MutableStateFlow("")
     val locationName: StateFlow<String> = _locationName
 
+    private val _loading = MutableStateFlow(false)
+    val loading: StateFlow<Boolean> = _loading.asStateFlow()
+
+    private val _error = MutableStateFlow<String?>(null)
+    val error: StateFlow<String?> = _error.asStateFlow()
+
     override fun getStatus(item: Order) = item.status
 
     override fun getFilterDate(item: Order) = item.creationDate //TODO analizar si usamos creationDate o deberíamos ordenar por otra fecha
 
     fun getOrders() {
         viewModelScope.launch(Dispatchers.Default) {
+            _loading.value = true
+            _error.value = null
             when (val ordersResult = orderRepository.getOrdersList()) {
                 is NetworkResult.Success -> {
                     Log.d("OrdersViewModel", "Success: ${ordersResult.data}")
@@ -54,15 +63,17 @@ class OrdersViewModel @Inject constructor(
                         _items.clear()
                         _items.addAll(ordersParsed)
                     }
-
                 }
                 is NetworkResult.Error -> {
                     Log.d("OrdersViewModel", "Error: code=${ordersResult.code}, message=${ordersResult.message}")
+                    _error.value = ordersResult.message ?: "Error desconocido al cargar pedidos."
                 }
                 is NetworkResult.Exception -> {
                     Log.d("OrdersViewModel", "Error crítico: ${ordersResult.e.message}")
+                    _error.value = ordersResult.e.message ?: "Excepción desconocida al cargar pedidos."
                 }
             }
+            _loading.value = false
         }
     }
 }
