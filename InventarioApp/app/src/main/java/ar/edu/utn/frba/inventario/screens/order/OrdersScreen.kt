@@ -50,7 +50,6 @@ fun OrdersScreen(
     val loading by ordersViewModel.loading.collectAsStateWithLifecycle()
     val error by ordersViewModel.error.collectAsStateWithLifecycle()
 
-
     LaunchedEffect(Unit) {
         ordersViewModel.getOrders()
     }
@@ -58,7 +57,6 @@ fun OrdersScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.secondaryContainer)
     ) {
         BranchLocationBar(
             branchName = branchName,
