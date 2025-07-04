@@ -288,14 +288,10 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
                                 val hasEnoughStock = viewModel.enoughStockProducts(shipmentId)
 
                                 if (hasEnoughStock) {
-                                    // Reset singleton
                                     ShipmentScanFlowState.clear()
-
-                                    // Set variable of singleton
                                     ShipmentScanFlowState.selectedShipment =
                                         viewModel.selectedShipment.value
 
-                                    // Log selectedShipment
                                     Log.d(
                                         "ShipmentDetailScreen",
                                         "Selected Shipment: ${ShipmentScanFlowState.selectedShipment}"
