@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -138,9 +139,12 @@ class ShipmentDetailViewModel @Inject constructor(
         isCompletedShipment()
     }
     fun getProductStatus(id:String):ItemStatus{
-        val prodToScan = productToScanList.first { ps -> ps.id == id }
+        val prodToScan = productToScanList.firstOrNull { ps -> ps.id == id }
 
         var productStatus = ItemStatus.PENDING
+
+        if(prodToScan==null)
+            return productStatus
 
         if(prodToScan.requiredQuantity == prodToScan.loadedQuantity.value){
             productStatus = ItemStatus.COMPLETED
@@ -233,10 +237,9 @@ class ShipmentDetailViewModel @Inject constructor(
         }
     }
 
-    fun enoughStockProducts(id:String):Boolean{
+    suspend fun enoughStockProducts(id:String):Boolean{
 
-        var existStock = false
-        viewModelScope.launch(Dispatchers.IO) {
+        return withContext(Dispatchers.IO) {
 
             Log.d("ShipmentDetailViewModel", "Iniciando pedido a API del envio: $id")
             val productIds = _shipment.value.products.map { p->p.id }
@@ -258,7 +261,7 @@ class ShipmentDetailViewModel @Inject constructor(
                         if(_shipment.value.status == ItemStatus.BLOCKED){
                             //Todo pegada endpoint de unblock
                         }
-                        existStock = true
+                        true
                     }else{
                         Log.d("ShipmentDetailViewModel", "No Hay Stock suficiente para los productos del envio $id, Stock disponible: $currentStockProducts")
                         if(_shipment.value.status == ItemStatus.PENDING || _shipment.value.status == ItemStatus.IN_PROGRESS){
@@ -278,7 +281,7 @@ class ShipmentDetailViewModel @Inject constructor(
                             }
 
                         }
-                        existStock = false
+                        false
                     }
                 }
 
@@ -287,6 +290,7 @@ class ShipmentDetailViewModel @Inject constructor(
                         "ShipmentDetailViewModel",
                         "Error: Code=${resultStockProducts.code}, message=${resultStockProducts.message}"
                     )
+                    false
                 }
 
                 is NetworkResult.Exception -> {
@@ -294,10 +298,10 @@ class ShipmentDetailViewModel @Inject constructor(
                         "ShipmentDetailViewModel",
                         "Error Crítico: ${resultStockProducts.e.message}"
                     )
+                    false
                 }
             }
 
         }
-        return existStock
     }
 }
