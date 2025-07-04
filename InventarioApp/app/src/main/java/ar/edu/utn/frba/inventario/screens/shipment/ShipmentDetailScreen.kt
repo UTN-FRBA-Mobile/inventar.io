@@ -265,21 +265,28 @@ fun ButtonBox(viewModel:ShipmentDetailViewModel, navController: NavController){
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onSecondaryContainer),
                         onClick = {
 
-                            viewModel.enoughStockProducts(viewModel.selectedShipment.value.id)
-                            // Reset singleton
-                            ShipmentScanFlowState.clear()
+                            if(viewModel.enoughStockProducts(viewModel.selectedShipment.value.id)){
+                                // Reset singleton
+                                ShipmentScanFlowState.clear()
 
-                            // Set variable of singleton
-                            ShipmentScanFlowState.selectedShipment =
-                                viewModel.selectedShipment.value
+                                // Set variable of singleton
+                                ShipmentScanFlowState.selectedShipment =
+                                    viewModel.selectedShipment.value
 
-                            // Log selectedShipment
-                            Log.d(
-                                "ShipmentDetailScreen",
-                                "Selected Shipment: ${ShipmentScanFlowState.selectedShipment}"
-                            )
+                                // Log selectedShipment
+                                Log.d(
+                                    "ShipmentDetailScreen",
+                                    "Selected Shipment: ${ShipmentScanFlowState.selectedShipment}"
+                                )
 
-                            navController.navigate(Screen.Scan.route + "?origin=shipment")
+                                navController.navigate(Screen.Scan.route + "?origin=shipment")
+                            }else{
+                                Log.d(
+                                    "ShipmentDetailScreen",
+                                    "No hay stock suficiente, se redirecciona a la pantalla de Shipments"
+                                )
+                                navController.navigate(Screen.Shipments.route)
+                            }
 
                         },
                         modifier = Modifier

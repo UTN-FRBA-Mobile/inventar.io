@@ -235,6 +235,7 @@ class ShipmentDetailViewModel @Inject constructor(
 
     fun enoughStockProducts(id:String):Boolean{
 
+        var existStock = false
         viewModelScope.launch(Dispatchers.IO) {
 
             Log.d("ShipmentDetailViewModel", "Iniciando pedido a API del envio: $id")
@@ -254,11 +255,31 @@ class ShipmentDetailViewModel @Inject constructor(
 
                     if(enoughAllStock){
                         Log.d("ShipmentDetailViewModel", "Hay Stock suficiente para los productos del envio $id, Stock disponible: $currentStockProducts")
+                        if(_shipment.value.status == ItemStatus.BLOCKED){
+                            //Todo pegada endpoint de unblock
+                        }
+                        existStock = true
                     }else{
                         Log.d("ShipmentDetailViewModel", "No Hay Stock suficiente para los productos del envio $id, Stock disponible: $currentStockProducts")
+                        if(_shipment.value.status == ItemStatus.PENDING || _shipment.value.status == ItemStatus.IN_PROGRESS){
+
+                            val resultBlockShipment = shipmentRepository.blockShipment(id.toLong())
+
+                            when(resultBlockShipment){
+                                is NetworkResult.Success -> {
+                                    Log.d("ShipmentDetailViewModel-POST_Shipment_Block", "Success, new status:${resultBlockShipment.data.status}")
+                                }
+                                is NetworkResult.Error -> {
+                                    Log.d("ShipmentDetailViewModel-POST_Shipment_Block", "Error: Code=${resultBlockShipment.code}, message=${resultBlockShipment.message}")
+                                }
+                                is NetworkResult.Exception -> {
+                                    Log.d("ShipmentDetailViewModel-POST_Shipment_Block", "Error Crítico: ${resultBlockShipment.e.message}")
+                                }
+                            }
+
+                        }
+                        existStock = false
                     }
-
-
                 }
 
                 is NetworkResult.Error -> {
@@ -277,6 +298,6 @@ class ShipmentDetailViewModel @Inject constructor(
             }
 
         }
-        return false
+        return existStock
     }
 }
