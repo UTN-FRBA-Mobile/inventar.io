@@ -37,8 +37,16 @@ class ShipmentsViewModel @Inject constructor(
     private val _items: SnapshotStateList<Shipment> = mutableStateListOf()
     override val items: SnapshotStateList<Shipment> get() = _items
 
+    private val _loading = MutableStateFlow(false)
+    val loading: StateFlow<Boolean> = _loading.asStateFlow()
+
+    private val _error = MutableStateFlow<String?>(null)
+    val error: StateFlow<String?> = _error.asStateFlow()
+
     fun getShipments() {
         viewModelScope.launch(Dispatchers.Default) {
+            _loading.value = true
+            _error.value = null
             when (val shipmentResult = shipmentRepository.getShipmentList()) {
                 is NetworkResult.Success -> {
                     Log.d("UserViewModel", "Success: ${shipmentResult.data}")
@@ -50,11 +58,14 @@ class ShipmentsViewModel @Inject constructor(
                 }
                 is NetworkResult.Error -> {
                     Log.d("UserViewModel", "Error: code=${shipmentResult.code}, message=${shipmentResult.message}")
+                    _error.value = shipmentResult.message ?: "Error desconocido al cargar envíos."
                 }
                 is NetworkResult.Exception -> {
                     Log.d("UserViewModel", "Error crítico: ${shipmentResult.e.message}")
+                    _error.value = shipmentResult.e.message ?: "Excepción desconocida al cargar envíos."
                 }
             }
+            _loading.value = false
         }
     }
 

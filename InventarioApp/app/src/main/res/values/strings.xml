@@ -41,6 +41,16 @@
     <string name="cancelled_on">Fecha cancelación: %1$s</string>
     <string name="pending_reception">Recepción estimada: %1$s</string>
     <string name="created_date">Fecha creación: %1$s</string>
+    <string name="reception_start">Inicio de recepción: %1$s</string>
+    <string name="shipment_status_pending">Creación: %1$s</string>
+    <string name="shipment_status_in_progress">Inicio de preparación %1$s</string>
+    <string name="shipment_status_completed">Envío finalizado %1$s</string>
+    <string name="shipment_status_blocked">Bloqueado %1$s</string>
+
+    <plurals name="products_and_date_template">
+        <item quantity="one">%1$d producto</item>
+        <item quantity="other">%1$d productos</item>
+    </plurals>
 
     <!-- ScanScreen -->
     <string name="scan_camera_permission_denied_title">Permiso de camara requerido para escanear</string>
@@ -65,11 +75,6 @@
     <string name="product_result_error_invalid_code_type">ERROR - Código no soportado</string>
     <string name="product_result_scan_success">Escaneo exitoso</string>
     <string name="product_result_search_success">Producto encontrado</string>
-
-    <plurals name="products_and_date_template">
-        <item quantity="one">%1$d producto • Solicitado %2$s</item>
-        <item quantity="other">%1$d productos • Solicitado %2$s</item>
-    </plurals>
 
     <!-- ShipmentDetailScreen -->
     <string name="shipment_detail_screen_title">Detalle del envío</string>

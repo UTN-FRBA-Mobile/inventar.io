@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -233,16 +234,23 @@ fun ProductItem(viewModel:ShipmentDetailViewModel, product: ProductOperation,
 }
 
 @Composable
-fun ButtonBox(viewModel:ShipmentDetailViewModel, navController: NavController){
-    if(viewModel.showButtonBox()) {
-        Column {
+fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) {
+    if (viewModel.showButtonBox()) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Box(
-                contentAlignment = Alignment.Center, modifier = Modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .height(70.dp)
-                    .padding(10.dp)
+                    .padding(horizontal = 18.dp, vertical = 10.dp)
             ) {
-                Row {
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Button(
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.surfaceTint),
                         enabled = viewModel.isStateCompleteShipment.value,
@@ -250,28 +258,28 @@ fun ButtonBox(viewModel:ShipmentDetailViewModel, navController: NavController){
                             viewModel.completedShipment(viewModel.selectedShipment.value.id)
                             navController.navigate(Screen.Shipments.route)
                         },
+                        shape = RoundedCornerShape(50),
                         modifier = Modifier
-                            .fillMaxSize()
                             .weight(1f)
+                            .height(50.dp)
                     ) {
                         Text(
                             text = stringResource(R.string.next),
                             style = MaterialTheme.typography.titleMedium,
-                            fontSize = 25.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(horizontal = 15.dp, vertical = 0.dp)
                         )
                     }
-                    Button(
-                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onSecondaryContainer),
-                        onClick = {
-                            // Reset singleton
-                            ShipmentScanFlowState.clear()
 
-                            // Set variable of singleton
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    Button(
+                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
+                        onClick = {
+                            ShipmentScanFlowState.clear()
                             ShipmentScanFlowState.selectedShipment =
                                 viewModel.selectedShipment.value
 
-                            // Log selectedShipment
                             Log.d(
                                 "ShipmentDetailScreen",
                                 "Selected Shipment: ${ShipmentScanFlowState.selectedShipment}"
@@ -280,26 +288,23 @@ fun ButtonBox(viewModel:ShipmentDetailViewModel, navController: NavController){
                             navController.navigate(Screen.Scan.route + "?origin=shipment")
 
                         },
+                        shape = RoundedCornerShape(50),
                         modifier = Modifier
-                            .fillMaxSize()
                             .weight(1f)
+                            .height(50.dp)
                     ) {
                         Text(
                             text = stringResource(R.string.scan),
                             style = MaterialTheme.typography.titleMedium,
-                            fontSize = 25.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(horizontal = 15.dp, vertical = 0.dp)
                         )
                     }
                 }
             }
-            Spacer(
-                modifier = Modifier
-                    .height(20.dp)
-            )
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
-
 }
 
 @Preview
