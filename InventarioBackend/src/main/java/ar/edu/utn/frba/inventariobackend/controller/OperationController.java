@@ -242,4 +242,31 @@ public class OperationController {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
+
+    /**
+     * Unblocks a specific shipment, allowing further processing.
+     * <p>
+     * This endpoint requires authentication with a bearer token. It marks the shipment as
+     * pending, delegating the status update logic to the {@code operationService}.
+     * </p>
+     *
+     * @param id The unique identifier of the shipment to be unblocked.
+     * @return A {@link ResponseEntity} containing:
+     * <ul>
+     * <li>{@code 200 OK} with a {@link ShipmentResponse} if the shipment is successfully unblocked.</li>
+     * <li>{@code 404 Not Found} if no shipment with the given ID exists.</li>
+     * <li>{@code 400 Bad Request} with an error message if the shipment cannot be unblocked due to its current state or business rules.</li>
+     * </ul>
+     */
+    @SecurityRequirement(name = "bearerAuth")
+    @PostMapping("/shipments/{id}/unblock")
+    public ResponseEntity<?> unblockShipment(@PathVariable long id) {
+        try {
+            return ResponseEntity.ok(operationService.unblockShipment(id));
+        } catch (NoSuchElementException __) {
+            return ResponseEntity.notFound().build();
+        }  catch (IllegalStateException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+    }
 }
