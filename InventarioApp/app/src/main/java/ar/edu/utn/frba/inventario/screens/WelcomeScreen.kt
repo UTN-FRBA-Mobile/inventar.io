@@ -59,7 +59,11 @@ fun WelcomeBodyContent(
             modifier = Modifier.padding(16.dp)
         )
 
+        Spacer(modifier = Modifier.padding(20.dp))
+
         AnimatedBuildingGif()
+
+        Spacer(modifier = Modifier.padding(20.dp))
 
         Column(
             modifier = Modifier.padding(8.dp),
