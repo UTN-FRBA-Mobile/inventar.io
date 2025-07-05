@@ -33,11 +33,10 @@ import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 fun CardItem(navController: NavController, item:Item, onItemClick: (Item) -> Unit) {
     Card(modifier = Modifier
         .fillMaxWidth()
-        .padding(6.dp)
-        .clickable { onItemClick(item) }
-            ,
+        .padding(bottom = 7.5.dp)
+        .clickable { onItemClick(item) },
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
         )
     ) {
         CardContent(item)

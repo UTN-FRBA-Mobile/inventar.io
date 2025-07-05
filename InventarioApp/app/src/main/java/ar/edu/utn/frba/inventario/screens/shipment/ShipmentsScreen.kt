@@ -44,9 +44,7 @@ fun ShipmentsScreen(
     val loading by shipmentsViewModel.loading.collectAsStateWithLifecycle()
     val error by shipmentsViewModel.error.collectAsStateWithLifecycle()
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.secondaryContainer)
+        modifier = Modifier.fillMaxSize()
     ) {
         BranchLocationBar(
             branchName = branchName,
@@ -84,7 +82,7 @@ fun ShipmentsBodyContent(
         Text(
             text = "Envíos",
             style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(vertical = 16.dp)
         )
         when {
             loading -> {

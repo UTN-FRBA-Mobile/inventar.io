@@ -92,13 +92,12 @@ fun OrderBodyContent(
 ) {
     Box(modifier = modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
             Text(
                 text = "Pedidos",
                 style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(vertical = 16.dp)
             )
 
             when {

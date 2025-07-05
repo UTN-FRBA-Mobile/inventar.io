@@ -1,7 +1,6 @@
 package ar.edu.utn.frba.inventario.screens
 
 import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,11 +34,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.composables.utils.ImageFromURL
 import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.viewmodels.LocationViewModel
@@ -67,15 +68,11 @@ fun UserBodyContent(
         userScreenViewModel.getUser()
     }
 
-
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(MaterialTheme.colorScheme.secondaryContainer)
+    Box(modifier = Modifier.fillMaxSize()
     ){
         if (user == null) {
             Column (
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ){
@@ -83,9 +80,7 @@ fun UserBodyContent(
             }
         } else {
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(10.dp),
+                modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row (
@@ -113,14 +108,13 @@ fun UserBodyContent(
                     Log.d("Show base64", "Success: ${user!!.imageURL}")
                 }
                 Text(
-                    text = "Ubicaciones Autorizadas",
+                    text = stringResource(R.string.authorized_locations),
                     style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(bottom = 15.dp)
                 )
                 LazyColumn(modifier =
-                    Modifier
-                        .padding(8.dp)
-                        .fillMaxHeight(0.9f)
+                    Modifier.fillMaxHeight(0.9f)
                 ) {
                     items(user!!.allowedLocations.size) { index ->
                         var address by remember { mutableStateOf<String?>(null) }
@@ -131,16 +125,20 @@ fun UserBodyContent(
 
                         Column(modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp)) {
+                            .padding(vertical = 7.5.dp)) {
                             Card (
                                 modifier = Modifier.fillMaxWidth(),
                                 colors = CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.surface
+                                    MaterialTheme.colorScheme.surfaceContainerHigh
                                 )
                             ){
-                                Text(text = user!!.allowedLocations[index].name, fontSize = 18.sp, modifier = Modifier.padding(10.dp))
+                                Text(text = user!!.allowedLocations[index].name,
+                                    fontSize = 18.sp,
+                                    modifier =
+                                        Modifier
+                                            .padding(10.dp))
                                 Text(
-                                    text = address ?: "Cargando...",
+                                    text = address ?: stringResource(R.string.loading),
                                     fontSize = 14.sp,
                                     modifier = Modifier.padding(10.dp)
                                 )
@@ -155,7 +153,7 @@ fun UserBodyContent(
                         launchSingleTop = true
                     }
                 }) {
-                    Text("Logout")
+                    Text(stringResource(R.string.logout))
                 }
             }
         }
