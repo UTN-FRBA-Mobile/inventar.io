@@ -4,6 +4,7 @@ package ar.edu.utn.frba.inventario.screens.shipment
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -73,6 +74,11 @@ fun ShipmentDetailScreen(
     id: String
 ) {
     val showExitDialog by viewModel.showExitConfirmationDialog.collectAsState()
+
+    val currentShipment by viewModel.selectedShipment.collectAsState()
+    BackHandler(enabled =  currentShipment.status!= ItemStatus.COMPLETED) {
+        viewModel.showExitConfirmation()
+    }
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
         bottomBar = { ButtonBox(viewModel, navController) },
