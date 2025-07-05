@@ -151,13 +151,12 @@ fun OrderBodyContent(
                 .align(Alignment.BottomCenter)
                 .padding(18.dp)
                 .width(180.dp)
-                .height(50.dp),
+                .height(40.dp),
             containerColor = MaterialTheme.colorScheme.primary
         ) {
             Text(
                 text = stringResource(R.string.scan),
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(horizontal = 15.dp, vertical = 0.dp)
             )
         }

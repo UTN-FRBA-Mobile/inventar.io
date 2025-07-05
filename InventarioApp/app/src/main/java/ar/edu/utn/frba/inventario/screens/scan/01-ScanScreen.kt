@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -139,14 +140,14 @@ fun ScanCameraContent(navController: NavController, origin: String) {
                     .align(Alignment.BottomCenter),
                 contentAlignment = Alignment.Center
             ) {
-                ManualInputButton(navController = navController, origin = origin)
+                ManualInputButton(navController = navController, origin = origin, modifier = Modifier)
             }
         }
     }
 }
 
 @Composable
-fun ManualInputButton(navController: NavController, origin: String) {
+fun ManualInputButton(navController: NavController, origin: String, modifier: Modifier) {
     Button(
         onClick = {
             if (origin == "shipment") {
@@ -156,8 +157,14 @@ fun ManualInputButton(navController: NavController, origin: String) {
             }
         },
         shape = RoundedCornerShape(50),
+        modifier = modifier
+            .width(180.dp)
+            .height(50.dp)
     ) {
-        Text(stringResource(R.string.scan_manual_input_button))
+        Text(
+            stringResource(R.string.scan_manual_input_button),
+            style = MaterialTheme.typography.titleMedium
+        )
     }
 }
 
@@ -184,7 +191,7 @@ fun PermissionDeniedContent(navController: NavController, origin: String) {
         )
         Spacer(modifier = Modifier.height(12.dp))
 
-        ManualInputButton(navController = navController, origin = origin)
+        ManualInputButton(navController = navController, origin = origin, modifier = Modifier)
     }
 }
 

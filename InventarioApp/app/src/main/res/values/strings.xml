@@ -19,6 +19,7 @@
     <string name="critical_error">Error crítico</string>
     <string name="search_failed">Búsqueda fallida</string>
     <string name="next">Siguiente</string>
+    <string name="logout">Cerrar sesión</string>
 
     <!-- Welcome Screen -->
     <string name="welcome_screen_title">Bienvenido</string>
@@ -129,6 +130,7 @@
     <string name="unique_total_products">Total de productos únicos: %1$s</string>
     <string name="order_id">ID pedido: P-%1$s</string>
     <string name="order_initialization_failed">Error en inicialización de pedido</string>
+    <string name="order_is_completed">El pedido se encuentra completado</string>
 
     <!-- ProductAmountScreen -->
     <string name="product_amount_title">Confirmación de cantidad</string>
