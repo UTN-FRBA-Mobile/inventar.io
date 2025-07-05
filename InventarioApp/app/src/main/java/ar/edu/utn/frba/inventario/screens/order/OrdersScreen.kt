@@ -157,7 +157,7 @@ fun OrderBodyContent(
             Text(
                 text = stringResource(R.string.scan),
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(horizontal = 15.dp, vertical = 0.dp)
             )
         }
