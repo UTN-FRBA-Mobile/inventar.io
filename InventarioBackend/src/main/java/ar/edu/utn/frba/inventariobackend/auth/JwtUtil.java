@@ -13,8 +13,8 @@ import java.util.Date;
  */
 @Component
 public class JwtUtil {
-    /** Validity duration for access tokens (60 minutes). */
-    private static final long ACCESS_TOKEN_VALIDITY = 1000 * 60 * 60;
+    /** Validity duration for access tokens (6 hs). */
+    private static final long ACCESS_TOKEN_VALIDITY = 1000 * 60 * 60 * 6;
 
     /** Validity duration for refresh tokens (7 days). */
     private static final long REFRESH_TOKEN_VALIDITY = 1000 * 60 * 60 * 24 * 7;
