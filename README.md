@@ -1,8 +1,8 @@
 # 📦 Inventar.io
 
-<div style="text-align: center;">
+<p align="center">
     <img src="./docs/banner.png" alt="Inventar.io Banner" width="256" height="256">
-</div>
+</p>
 
 **Inventar.io** es una aplicación móvil diseñada para facilitar la gestión de inventarios en depósitos, almacenes y centros logísticos. Con una interfaz intuitiva, funcionalidades modernas como escaneo de códigos con cámara, y un sistema para gestionar pedidos y órdenes, **Inventar.io** es la solución perfecta para llevar el control de tus productos.
 
