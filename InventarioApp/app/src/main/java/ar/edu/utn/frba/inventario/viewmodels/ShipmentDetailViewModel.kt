@@ -12,6 +12,7 @@ import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
 import ar.edu.utn.frba.inventario.api.model.product.ProductOperation
 import ar.edu.utn.frba.inventario.api.model.shipment.Shipment
 import ar.edu.utn.frba.inventario.api.model.shipment.ShipmentResponse
+import ar.edu.utn.frba.inventario.api.repository.ProductRepository
 import ar.edu.utn.frba.inventario.api.repository.ShipmentRepository
 import ar.edu.utn.frba.inventario.events.NavigationEvent
 import ar.edu.utn.frba.inventario.utils.ShipmentProductToScanList
@@ -22,12 +23,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
 class ShipmentDetailViewModel @Inject constructor(
-    private val shipmentRepository: ShipmentRepository
+    private val shipmentRepository: ShipmentRepository, private val productRepository: ProductRepository
 ):ViewModel(){
     private val _shipment  = MutableStateFlow<Shipment>(Shipment(
         id = "0", number = "",
@@ -137,9 +139,12 @@ class ShipmentDetailViewModel @Inject constructor(
         isCompletedShipment()
     }
     fun getProductStatus(id:String):ItemStatus{
-        val prodToScan = productToScanList.first { ps -> ps.id == id }
+        val prodToScan = productToScanList.firstOrNull { ps -> ps.id == id }
 
         var productStatus = ItemStatus.PENDING
+
+        if(prodToScan==null)
+            return productStatus
 
         if(prodToScan.requiredQuantity == prodToScan.loadedQuantity.value){
             productStatus = ItemStatus.COMPLETED
@@ -229,6 +234,86 @@ class ShipmentDetailViewModel @Inject constructor(
                 }
 
             }
+        }
+    }
+
+    suspend fun enoughStockProducts(id:String):Boolean{
+
+        return withContext(Dispatchers.IO) {
+
+            Log.d("ShipmentDetailViewModel", "Iniciando pedido a API del envio: $id")
+            val productIds = _shipment.value.products.map { p->p.id }
+
+            val resultStockProducts = productRepository.getStockByProductIdList(productIds)
+
+            when (resultStockProducts) {
+                is NetworkResult.Success -> {
+                    Log.d(
+                        "ShipmentDetailViewModel",
+                        "Success, Product ids :${resultStockProducts.data.stockCount.keys}"
+                    )
+
+                    val currentStockProducts = resultStockProducts.data.stockCount
+                    val enoughAllStock = productToScanList.all { ps-> currentStockProducts[ps.id]!! >= ps.requiredQuantity }
+
+                    if(enoughAllStock){
+                        Log.d("ShipmentDetailViewModel", "Hay Stock suficiente para los productos del envio $id, Stock disponible: $currentStockProducts")
+                        if(_shipment.value.status == ItemStatus.BLOCKED){
+                            val resultUnBlockShipment = shipmentRepository.unBlockShipment(id.toLong())
+
+                            when(resultUnBlockShipment){
+                                is NetworkResult.Success -> {
+                                    Log.d("ShipmentDetailViewModel-POST_Shipment_UnBlock", "Success, new status:${resultUnBlockShipment.data.status}")
+                                }
+                                is NetworkResult.Error -> {
+                                    Log.d("ShipmentDetailViewModel-POST_Shipment_UnBlock", "Error: Code=${resultUnBlockShipment.code}, message=${resultUnBlockShipment.message}")
+                                }
+                                is NetworkResult.Exception -> {
+                                    Log.d("ShipmentDetailViewModel-POST_Shipment_UnBlock", "Error Crítico: ${resultUnBlockShipment.e.message}")
+                                }
+                            }
+                        }
+                        true
+                    }else{
+                        Log.d("ShipmentDetailViewModel", "No Hay Stock suficiente para los productos del envio $id, Stock disponible: $currentStockProducts")
+                        if(_shipment.value.status == ItemStatus.PENDING || _shipment.value.status == ItemStatus.IN_PROGRESS){
+
+                            val resultBlockShipment = shipmentRepository.blockShipment(id.toLong())
+
+                            when(resultBlockShipment){
+                                is NetworkResult.Success -> {
+                                    Log.d("ShipmentDetailViewModel-POST_Shipment_Block", "Success, new status:${resultBlockShipment.data.status}")
+                                }
+                                is NetworkResult.Error -> {
+                                    Log.d("ShipmentDetailViewModel-POST_Shipment_Block", "Error: Code=${resultBlockShipment.code}, message=${resultBlockShipment.message}")
+                                }
+                                is NetworkResult.Exception -> {
+                                    Log.d("ShipmentDetailViewModel-POST_Shipment_Block", "Error Crítico: ${resultBlockShipment.e.message}")
+                                }
+                            }
+
+                        }
+                        false
+                    }
+                }
+
+                is NetworkResult.Error -> {
+                    Log.d(
+                        "ShipmentDetailViewModel",
+                        "Error: Code=${resultStockProducts.code}, message=${resultStockProducts.message}"
+                    )
+                    false
+                }
+
+                is NetworkResult.Exception -> {
+                    Log.d(
+                        "ShipmentDetailViewModel",
+                        "Error Crítico: ${resultStockProducts.e.message}"
+                    )
+                    false
+                }
+            }
+
         }
     }
 }

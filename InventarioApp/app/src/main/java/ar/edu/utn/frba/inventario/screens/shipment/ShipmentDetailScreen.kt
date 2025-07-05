@@ -40,6 +40,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -59,6 +60,7 @@ import ar.edu.utn.frba.inventario.api.model.shipment.Shipment
 import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.utils.ShipmentScanFlowState
 import ar.edu.utn.frba.inventario.viewmodels.ShipmentDetailViewModel
+import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -235,6 +237,8 @@ fun ProductItem(viewModel:ShipmentDetailViewModel, product: ProductOperation,
 
 @Composable
 fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) {
+    val coroutineScope = rememberCoroutineScope()
+
     if (viewModel.showButtonBox()) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -276,16 +280,32 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
                     Button(
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
                         onClick = {
-                            ShipmentScanFlowState.clear()
-                            ShipmentScanFlowState.selectedShipment =
-                                viewModel.selectedShipment.value
 
-                            Log.d(
-                                "ShipmentDetailScreen",
-                                "Selected Shipment: ${ShipmentScanFlowState.selectedShipment}"
-                            )
+                            coroutineScope.launch {
 
-                            navController.navigate(Screen.Scan.route + "?origin=shipment")
+                                val shipmentId = viewModel.selectedShipment.value.id
+
+                                val hasEnoughStock = viewModel.enoughStockProducts(shipmentId)
+
+                                if (hasEnoughStock) {
+                                    ShipmentScanFlowState.clear()
+                                    ShipmentScanFlowState.selectedShipment =
+                                        viewModel.selectedShipment.value
+
+                                    Log.d(
+                                        "ShipmentDetailScreen",
+                                        "Selected Shipment: ${ShipmentScanFlowState.selectedShipment}"
+                                    )
+
+                                    navController.navigate(Screen.Scan.route + "?origin=shipment")
+                                } else {
+                                    Log.d(
+                                        "ShipmentDetailScreen",
+                                        "No hay stock suficiente, se redirecciona a la pantalla de Shipments"
+                                    )
+                                    navController.navigate(Screen.Shipments.route)
+                                }
+                            }
 
                         },
                         shape = RoundedCornerShape(50),
