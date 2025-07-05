@@ -329,8 +329,8 @@ public class OperationService {
         synchronized (lockObject) {
             Shipment shipment = shipmentRepository.findById(id).orElseThrow(NoSuchElementException::new);
 
-            if (shipment.getStatus() != Status.IN_PROGRESS) {
-                throw new IllegalStateException("Shipment not in progress");
+            if (shipment.getStatus() != Status.IN_PROGRESS && shipment.getStatus() != Status.PENDING) {
+                throw new IllegalStateException("Shipment not in progress or pending");
             }
 
             shipment.updateStatus(Status.BLOCKED);

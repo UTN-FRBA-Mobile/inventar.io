@@ -48,8 +48,6 @@ fun AppNavHost(navController: NavHostController) {
     val orderProductsListArgs = OrderProductsListArgs.entries.toTypedArray()
     val orderResultArgs = OrderResultArgs.entries.toTypedArray()
 
-    printCurrentBackStack(navController)
-
     NavHost(navController, startDestination = startDestination) {
         composable(Screen.Login.route) {
             LoginScreen(navController)
@@ -152,23 +150,6 @@ fun AppNavHost(navController: NavHostController) {
             ManualOrderScreen(navController = navController)
         }
 
-    }
-}
-
-fun printCurrentBackStack(navController: NavController) {
-    navController.addOnDestinationChangedListener { controller, _, _ ->
-        @SuppressLint("RestrictedApi")
-        val routes = controller.currentBackStack.value.joinToString(", ") {
-            val route = it.destination.route
-            // Print all routes without query params
-            route?.substringBefore("?") ?: "null"
-        }
-
-        Log.d("BackStackLog", "BackStack: $routes")
-
-        // Print current route without query params
-        val currentRoute = controller.currentBackStackEntry?.destination?.route?.substringBefore("?")
-        Log.d("BackStackLog", "Current Route: $currentRoute")
     }
 }
 
