@@ -22,4 +22,8 @@ class ProductRepository @Inject constructor(
     suspend fun getStockByProductId(id : String): NetworkResult<ProductStockLocationResponse>{
         return safeApiCall {apiService.getStockByProductId(id)}
     }
+
+    suspend fun getStockByProductIdList(ids : List<String>): NetworkResult<ProductStockLocationResponse>{
+        return safeApiCall {apiService.getStockByProductIdList(ids)}
+    }
 }
