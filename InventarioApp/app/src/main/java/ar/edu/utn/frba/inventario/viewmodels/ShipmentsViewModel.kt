@@ -14,6 +14,7 @@ import ar.edu.utn.frba.inventario.api.repository.ProductRepository
 import ar.edu.utn.frba.inventario.api.repository.ShipmentRepository
 import ar.edu.utn.frba.inventario.api.utils.PreferencesManager
 import ar.edu.utn.frba.inventario.utils.ShipmentProductToScanList
+import ar.edu.utn.frba.inventario.utils.toLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -160,7 +161,7 @@ class ShipmentsViewModel @Inject constructor(
                    id = pa.key.toString(), name = "generic", quantity = pa.value,
                    )
                },
-            creationDate = LocalDateTime.now().minusDays(1)
+            creationDate = shipmentResponse.creationDate.toLocalDateTime()
         )
     }
 }
