@@ -84,6 +84,9 @@
     <string name="shipment_detail_screen_quantity_loaded">%1$s Cargados</string>
     <string name="shipment_detail_screen_next_button">Siguiente</string>
     <string name="shipment_detail_screen_scan_button">Escanear</string>
+    <string name="shipment_detail_screen_insufficient_stock_title_alert_dialog">Stock Insuficiente</string>
+    <string name="shipment_detail_screen_insufficient_stock_message_alert_dialog">No hay existencias suficiente para algunos productos. Se Bloquea el envio y serás redirigido.</string>
+    <string name="shipment_detail_screen_insufficient_stock_accept_button_alert_dialog">Aceptar</string>
 
     <!-- OrderDetailScreen -->
     <string name="order_detail_screen_title">Detalle del pedido</string>

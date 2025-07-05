@@ -25,6 +25,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
@@ -239,6 +240,9 @@ fun ProductItem(viewModel:ShipmentDetailViewModel, product: ProductOperation,
 fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) {
     val coroutineScope = rememberCoroutineScope()
 
+    val showDialog by viewModel.showInsufficientStockDialog.collectAsState()
+    val dialogMessage by viewModel.insufficientStockMessage.collectAsState()
+
     if (viewModel.showButtonBox()) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -303,7 +307,6 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
                                         "ShipmentDetailScreen",
                                         "No hay stock suficiente, se redirecciona a la pantalla de Shipments"
                                     )
-                                    navController.navigate(Screen.Shipments.route)
                                 }
                             }
 
@@ -324,6 +327,25 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
             }
             Spacer(modifier = Modifier.height(20.dp))
         }
+    }
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                viewModel.dismissInsufficientStockDialog()
+                navController.navigate(Screen.Shipments.route)
+            },
+            title = { Text(text = stringResource(R.string.shipment_detail_screen_insufficient_stock_title_alert_dialog)) },
+            text = { Text(text = dialogMessage.ifEmpty { stringResource(R.string.shipment_detail_screen_insufficient_stock_message_alert_dialog) }) },
+            confirmButton = {
+                Button(onClick = {
+                    viewModel.dismissInsufficientStockDialog()
+                    navController.navigate(Screen.Shipments.route)
+                }) {
+                    Text(text = stringResource(R.string.shipment_detail_screen_insufficient_stock_accept_button_alert_dialog))
+                }
+            }
+        )
     }
 }
 
