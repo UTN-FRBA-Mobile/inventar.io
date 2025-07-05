@@ -62,6 +62,9 @@ class ShipmentDetailViewModel @Inject constructor(
     private val _insufficientStockMessage = MutableStateFlow("")
     val insufficientStockMessage = _insufficientStockMessage.asStateFlow()
 
+    private val _showExitConfirmationDialog = MutableStateFlow(false)
+    val showExitConfirmationDialog = _showExitConfirmationDialog.asStateFlow()
+
     fun loadShipment(id:String){
         viewModelScope.launch(Dispatchers.IO) {
 
@@ -333,5 +336,11 @@ class ShipmentDetailViewModel @Inject constructor(
     fun dismissInsufficientStockDialog() {
         _showInsufficientStockDialog.value = false
         _insufficientStockMessage.value = ""
+    }
+    fun showExitConfirmation() {
+        _showExitConfirmationDialog.value = true
+    }
+    fun dismissExitConfirmation() {
+        _showExitConfirmationDialog.value = false
     }
 }

@@ -56,6 +56,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import ar.edu.utn.frba.inventario.R
+import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import ar.edu.utn.frba.inventario.api.model.product.ProductOperation
 import ar.edu.utn.frba.inventario.api.model.shipment.Shipment
 import ar.edu.utn.frba.inventario.utils.Screen
@@ -71,6 +72,7 @@ fun ShipmentDetailScreen(
     navController: NavController,
     id: String
 ) {
+    val showExitDialog by viewModel.showExitConfirmationDialog.collectAsState()
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
         bottomBar = { ButtonBox(viewModel, navController) },
@@ -86,7 +88,12 @@ fun ShipmentDetailScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(
-                        onClick = {navController.navigate(Screen.Shipments.route)},
+                        onClick = {
+                            if(viewModel.selectedShipment.value.status == ItemStatus.COMPLETED){
+                                navController.navigate(Screen.Shipments.route)
+                            }else{
+                                viewModel.showExitConfirmation()
+                            } },
                         modifier = Modifier.size(48.dp)
                     ) {
                         Icon(
@@ -110,6 +117,31 @@ fun ShipmentDetailScreen(
         }
     ) { innerPadding ->
         ShipmentDetailBodyContent(viewModel, navController, id, innerPadding)
+    }
+
+    if (showExitDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                viewModel.dismissExitConfirmation()
+            },
+            title = { Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_title_alert_dialog)) },
+            text = { Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_message_alert_dialog)) },
+            confirmButton = {
+                Button(onClick = {
+                    viewModel.dismissExitConfirmation()
+                    navController.navigate(Screen.Shipments.route)
+                }) {
+                    Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_accept_button_alert_dialog))
+                }
+            },
+            dismissButton = {
+                Button(onClick = {
+                    viewModel.dismissExitConfirmation()
+                }) {
+                    Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_cancel_button_alert_dialog))
+                }
+            }
+        )
     }
 }
 

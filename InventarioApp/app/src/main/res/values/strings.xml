@@ -87,6 +87,10 @@
     <string name="shipment_detail_screen_insufficient_stock_title_alert_dialog">Stock Insuficiente</string>
     <string name="shipment_detail_screen_insufficient_stock_message_alert_dialog">No hay existencias suficiente para algunos productos. Se Bloquea el envio y serás redirigido.</string>
     <string name="shipment_detail_screen_insufficient_stock_accept_button_alert_dialog">Aceptar</string>
+    <string name="shipment_detail_screen_confirm_exit_title_alert_dialog">Confirmar Salida</string>
+    <string name="shipment_detail_screen_confirm_exit_message_alert_dialog">¿Estás seguro que quieres salir? Los productos cargados se perderán.</string>
+    <string name="shipment_detail_screen_confirm_exit_accept_button_alert_dialog">Sí, Salir</string>
+    <string name="shipment_detail_screen_confirm_exit_cancel_button_alert_dialog">Cancelar</string>
 
     <!-- OrderDetailScreen -->
     <string name="order_detail_screen_title">Detalle del pedido</string>
