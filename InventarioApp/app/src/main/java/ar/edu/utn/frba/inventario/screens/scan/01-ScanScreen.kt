@@ -91,8 +91,7 @@ fun ScanCameraContent(navController: NavController, origin: String) {
 
         // OVERLAY UI
         Box(
-            modifier = Modifier
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
             val scanBoxSize = 250.dp
             val scanBoxPx = with(LocalDensity.current) { scanBoxSize.toPx() }

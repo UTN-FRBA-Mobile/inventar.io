@@ -1,7 +1,6 @@
 package ar.edu.utn.frba.inventario.screens.order
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -159,16 +158,6 @@ else -> {
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(horizontal = 15.dp, vertical = 0.dp)
             )
-        }
-
-        BackHandler {
-            navController.navigate(Screen.Shipments.route) {
-                popUpTo(navController.graph.startDestinationId) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
         }
     }
 }

@@ -2,6 +2,12 @@ package ar.edu.utn.frba.inventario.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+// Custom colors
+val GreyPending = Color(0xFF757575)
+val YellowInProgress = Color(0xFFF2B70C)
+val GreenCompleted =  Color(0xFF19C800)
+val RedBlocked = Color(0xFFB70000)
+
 val primaryLight = Color(0xFF415E91)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFD7E3FF)
@@ -217,11 +223,6 @@ val surfaceContainerLowDarkHighContrast = Color(0xFF1E2025)
 val surfaceContainerDarkHighContrast = Color(0xFF2E3036)
 val surfaceContainerHighDarkHighContrast = Color(0xFF393B41)
 val surfaceContainerHighestDarkHighContrast = Color(0xFF45474C)
-
-val GreyPending = Color(0xFF636363)
-val YellowInProgress = Color(0xFFF2B70C)
-val GreenCompleted =  Color(0xFF19C800)
-val RedBlocked = Color(0xFFB70000)
 
 
 

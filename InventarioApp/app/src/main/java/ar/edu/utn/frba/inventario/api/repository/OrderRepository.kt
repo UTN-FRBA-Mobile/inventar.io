@@ -3,7 +3,6 @@ package ar.edu.utn.frba.inventario.api.repository
 import ar.edu.utn.frba.inventario.api.ApiService
 import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
 import ar.edu.utn.frba.inventario.api.model.order.OrderResponse
-import ar.edu.utn.frba.inventario.api.model.shipment.ShipmentResponse
 import javax.inject.Inject
 
 class OrderRepository @Inject constructor(

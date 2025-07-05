@@ -43,6 +43,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -78,7 +79,6 @@ fun ShipmentDetailScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.secondaryContainer)
                         .height(56.dp)
                         .padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -132,17 +132,17 @@ fun ShipmentDetailBodyContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.secondaryContainer)
             .padding(innerPadding)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
                 .background(color = MaterialTheme.colorScheme.primaryContainer)
         ) {
             Column(
                 modifier = Modifier
-                    .padding(20.dp)
+                    .padding(15.dp)
             ) {
                 Text(
                     text = stringResource(
@@ -173,7 +173,7 @@ fun ShipmentDetailBodyContent(
         }
         LazyColumn(
             modifier = Modifier
-                .padding(15.dp)
+                .padding(top = 15.dp)
         ) {
             items(selectedShipment.products) { product ->
                 ProductItem(
@@ -197,7 +197,7 @@ fun ProductItem(viewModel:ShipmentDetailViewModel, product: ProductOperation,
                 onProductClick: (ProductOperation) -> Unit){
     val  statusProd = viewModel.getProductStatus(product.id)
 
-    ElevatedCard(colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
+    ElevatedCard(colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh)
         ,modifier = Modifier
             .fillMaxSize()
             .padding(2.dp)

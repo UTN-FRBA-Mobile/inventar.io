@@ -12,14 +12,15 @@ import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ar.edu.utn.frba.inventario.utils.Screen
+import ar.edu.utn.frba.inventario.utils.removeRouteParams
 
 @Composable
 fun AppNavBar(navController: NavController, items: List<Screen> ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
+    val currentRoute = navBackStackEntry?.destination?.route?.removeRouteParams()
 
     NavigationBar {
-        items.forEach { screen ->
+        items.forEach { screen: Screen ->
             NavigationBarItem(
                 icon = {
                     when (screen) {
@@ -35,9 +36,8 @@ fun AppNavBar(navController: NavController, items: List<Screen> ) {
                         return@NavigationBarItem
 
                     navController.navigate(screen.route) {
-                        popUpTo(navController.graph.startDestinationId) { saveState = true }
+                        popUpTo(navController.graph.startDestinationId)
                         launchSingleTop = true
-                        restoreState = true
                     }
                 }
             )

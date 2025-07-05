@@ -1,17 +1,21 @@
 package ar.edu.utn.frba.inventario.composables.navigation
 
-import android.annotation.SuppressLint
-import android.util.Log
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NamedNavArgument
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import ar.edu.utn.frba.inventario.api.utils.TokenManager
 import ar.edu.utn.frba.inventario.screens.LoginScreen
@@ -22,9 +26,9 @@ import ar.edu.utn.frba.inventario.screens.order.OrderDetailScreen
 import ar.edu.utn.frba.inventario.screens.order.OrdersScreen
 import ar.edu.utn.frba.inventario.screens.scan.ManualCodeScreen
 import ar.edu.utn.frba.inventario.screens.scan.ManualOrderScreen
-import ar.edu.utn.frba.inventario.screens.scan.ProductAmountScreen
 import ar.edu.utn.frba.inventario.screens.scan.OrderProductsScreen
 import ar.edu.utn.frba.inventario.screens.scan.OrderResultScreen
+import ar.edu.utn.frba.inventario.screens.scan.ProductAmountScreen
 import ar.edu.utn.frba.inventario.screens.scan.ProductResultScreen
 import ar.edu.utn.frba.inventario.screens.scan.ScanScreen
 import ar.edu.utn.frba.inventario.screens.shipment.ShipmentDetailScreen
@@ -35,11 +39,33 @@ import ar.edu.utn.frba.inventario.utils.OrderResultArgs
 import ar.edu.utn.frba.inventario.utils.ProductResultArgs
 import ar.edu.utn.frba.inventario.utils.ScanArgs
 import ar.edu.utn.frba.inventario.utils.Screen
+import ar.edu.utn.frba.inventario.utils.removeRouteParams
 import ar.edu.utn.frba.inventario.utils.withArgsDefinition
 import ar.edu.utn.frba.inventario.viewmodels.ShipmentDetailViewModel
 
 @Composable
 fun AppNavHost(navController: NavHostController) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route?.removeRouteParams()
+
+    val fullScreenRoutes = listOf(Screen.Scan.route)
+    val isFullScreen = currentRoute in fullScreenRoutes
+
+    val BODY_PADDING = 15.dp
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .then(
+                if (!isFullScreen) Modifier.padding(BODY_PADDING)
+                else Modifier)
+    ) {
+        NavHostBody(navController)
+    }
+}
+
+@Composable
+fun NavHostBody(navController: NavHostController) {
     val tokenManager = rememberTokenManager()
     val startDestination = if (tokenManager.hasSession()) Screen.Welcome.route else Screen.Login.route
 
@@ -89,11 +115,11 @@ fun AppNavHost(navController: NavHostController) {
             )
         }
         composable(route=Screen.ShipmentDetail.route+"/{id}",
-        arguments = listOf(
-            navArgument(name = "id"){
-                type= NavType.StringType
-            }
-        )) { backStackEntry->
+            arguments = listOf(
+                navArgument(name = "id"){
+                    type= NavType.StringType
+                }
+            )) { backStackEntry->
             val idShipment = backStackEntry.arguments?.getString("id")?:""
             ShipmentDetailScreen(navController = navController, id = idShipment)
         }
