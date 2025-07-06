@@ -166,15 +166,7 @@ fun UserBodyContent(
                         }
                     }
                 }
-                Button(onClick = {
-                    userScreenViewModel.doLogout()
-                    navController.navigate(Screen.Login.route) {
-                        popUpTo(0) { inclusive = true } // clears entire back stack
-                        launchSingleTop = true
-                    }
-                }) {
-                    Text(stringResource(R.string.logout))
-                    Button(
+                Button(
                         onClick = {
                             userScreenViewModel.doLogout()
                             navController.navigate(Screen.Login.route) {
@@ -195,4 +187,3 @@ fun UserBodyContent(
             }
         }
     }
-}

@@ -159,7 +159,7 @@ fun ManualInputButton(navController: NavController, origin: String, modifier: Mo
         shape = RoundedCornerShape(50),
         modifier = modifier
             .width(180.dp)
-            .height(50.dp)
+            .height(40.dp)
     ) {
         Text(
             stringResource(R.string.scan_manual_input_button),

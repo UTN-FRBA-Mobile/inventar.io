@@ -145,5 +145,4 @@
     <string name="invalid_order_id">El ID del pedido no es válido.</string>
     <string name="authorized_locations">Ubicaciones Autorizadas</string>
     <string name="loading">Cargando...</string>
-    <string name="logout">Logout</string>
 </resources>
