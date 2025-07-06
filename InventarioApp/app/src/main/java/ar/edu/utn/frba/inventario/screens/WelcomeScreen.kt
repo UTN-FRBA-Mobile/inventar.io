@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -78,7 +79,8 @@ fun WelcomeBodyContent(
             )
             Button(
                 modifier = Modifier
-                    .padding(16.dp),
+                    .padding(16.dp)
+                    .width(140.dp),
                 onClick = {
                     navController.navigate(Screen.Shipments.route) {
                         popUpTo(0) { saveState = true }
@@ -89,7 +91,7 @@ fun WelcomeBodyContent(
             ) {
                 Text(
                     text = stringResource(id = R.string._continue),
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleMedium
                 )
             }
         }

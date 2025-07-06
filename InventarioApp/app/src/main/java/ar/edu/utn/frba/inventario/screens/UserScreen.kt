@@ -7,9 +7,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -81,7 +81,10 @@ fun UserBodyContent(
             }
         } else {
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 10.dp)
+                    .padding(bottom = 18.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row(
@@ -94,7 +97,7 @@ fun UserBodyContent(
                     ImageFromURL(
                         url = user!!.imageURL, modifier = Modifier
                             .size(100.dp)
-                            .clip(CircleShape)                    // Hace la imagen circular
+                            .clip(CircleShape)
                             .border(2.dp, Color.Gray, CircleShape)
                             .shadow(4.dp, CircleShape)
                     )
@@ -118,7 +121,9 @@ fun UserBodyContent(
                 )
                 LazyColumn(
                     modifier =
-                        Modifier.fillMaxHeight(0.9f)
+                        Modifier
+                            .padding(8.dp)
+                            .weight(1f)
                 ) {
                     items(user!!.allowedLocations.size) { index ->
                         var address by remember { mutableStateOf<String?>(null) }
@@ -161,16 +166,24 @@ fun UserBodyContent(
                         }
                     }
                 }
-                Button(onClick = {
-                    userScreenViewModel.doLogout()
-                    navController.navigate(Screen.Login.route) {
-                        popUpTo(0) { inclusive = true } // clears entire back stack
-                        launchSingleTop = true
+                Button(
+                        onClick = {
+                            userScreenViewModel.doLogout()
+                            navController.navigate(Screen.Login.route) {
+                                popUpTo(0) { inclusive = true }
+                                launchSingleTop = true
+                            }
+                        },
+                        modifier = Modifier
+                            .width(180.dp)
+                            .height(40.dp)
+                    ) {
+                        Text(
+                            stringResource(R.string.logout),
+                            style = MaterialTheme.typography.titleMedium
+                        )
                     }
-                }) {
-                    Text(stringResource(R.string.logout))
                 }
             }
         }
     }
-}

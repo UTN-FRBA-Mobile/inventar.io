@@ -4,9 +4,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,11 +20,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ar.edu.utn.frba.inventario.R
+import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import ar.edu.utn.frba.inventario.api.model.order.OrderResponse
 import ar.edu.utn.frba.inventario.composables.utils.Spinner
 import ar.edu.utn.frba.inventario.viewmodels.OrderResultViewModel
@@ -148,22 +152,38 @@ fun OrderResultBodyContent(
                 color = Color.Gray
             )
 
-            Spacer(Modifier.height(32.dp))
+            Spacer(Modifier.height(16.dp))
 
-            Button(onClick = onContinueClick) {
-                Text(stringResource(R.string._continue))
+            if (foundOrder.status == ItemStatus.COMPLETED) {
+                Text(
+                    text = stringResource(R.string.order_is_completed),
+                    fontSize = 22.sp,
+                    color = Color.Gray,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+            } else {
+                Button(onClick = onContinueClick) {
+                    Text(
+                        stringResource(R.string._continue),
+                        style = MaterialTheme.typography.titleMedium
+                        )
+                }
             }
 
         } else {
             Text("Error desconocido o datos no disponibles", fontSize = 16.sp, color = Color.Gray)
         }
 
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(16.dp))
 
         Button(onClick = {
             navController.popBackStack()
         }) {
-            Text(stringResource(R.string.try_again))
+            Text(
+                stringResource(R.string.try_again),
+                style = MaterialTheme.typography.titleMedium
+            )
         }
     }
 }
