@@ -1,6 +1,5 @@
 package ar.edu.utn.frba.inventario.screens.shipment
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,9 +43,7 @@ fun ShipmentsScreen(
     val loading by shipmentsViewModel.loading.collectAsStateWithLifecycle()
     val error by shipmentsViewModel.error.collectAsStateWithLifecycle()
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.secondaryContainer)
+        modifier = Modifier.fillMaxSize()
     ) {
         BranchLocationBar(
             branchName = branchName,
@@ -84,7 +81,7 @@ fun ShipmentsBodyContent(
         Text(
             text = "Envíos",
             style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(vertical = 16.dp)
         )
         when {
             loading -> {
@@ -97,6 +94,7 @@ fun ShipmentsBodyContent(
                     Spinner(true)
                 }
             }
+
             error != null -> {
                 Box(
                     modifier = Modifier
@@ -110,12 +108,14 @@ fun ShipmentsBodyContent(
                     )
                 }
             }
+
             shipments.isEmpty() -> {
                 EmptyResultsMessage(
                     message = stringResource(R.string.no_results_for_filters),
                     modifier = Modifier.weight(1f)
                 )
             }
+
             else -> {
                 LazyColumn(
                     modifier = Modifier.weight(1f)

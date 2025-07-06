@@ -24,9 +24,9 @@ fun BranchLocationBar(
 ) {
     Row(
         modifier = modifier
-            .padding(horizontal = 16.dp, vertical = 2.dp)
+            .padding(vertical = 2.dp)
             .background(
-                color = MaterialTheme.colorScheme.secondaryContainer,
+                color = MaterialTheme.colorScheme.surface,
                 shape = MaterialTheme.shapes.small
             ),
         verticalAlignment = Alignment.CenterVertically

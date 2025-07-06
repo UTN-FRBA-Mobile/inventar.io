@@ -84,15 +84,21 @@ fun ScanCameraContent(navController: NavController, origin: String) {
         // CAMERA PREVIEW
         AndroidView(
             factory = { ctx ->
-                createCameraPreviewView(ctx, lifecycleOwner, cameraExecutor, viewModel, navController, origin)
+                createCameraPreviewView(
+                    ctx,
+                    lifecycleOwner,
+                    cameraExecutor,
+                    viewModel,
+                    navController,
+                    origin
+                )
             },
             modifier = Modifier.fillMaxSize()
         )
 
         // OVERLAY UI
         Box(
-            modifier = Modifier
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
             val scanBoxSize = 250.dp
             val scanBoxPx = with(LocalDensity.current) { scanBoxSize.toPx() }
@@ -236,12 +242,18 @@ fun createCameraPreviewView(
             val mediaImage = imageProxy.image
 
             if (mediaImage != null && !viewModel.scannedCode.value) {
-                val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+                val image =
+                    InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
                 scanner.process(image)
                     .addOnSuccessListener { scannedCodes ->
                         if (!viewModel.scannedCode.value && scannedCodes.isNotEmpty()) {
                             viewModel.scannedCode.value = true
-                            viewModel.handleScanSuccess(scannedCodes, navController, context, origin)
+                            viewModel.handleScanSuccess(
+                                scannedCodes,
+                                navController,
+                                context,
+                                origin
+                            )
                         }
                     }
                     .addOnFailureListener {

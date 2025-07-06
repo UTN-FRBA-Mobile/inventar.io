@@ -18,6 +18,7 @@
     <string name="unknown_error">Error desconocido</string>
     <string name="critical_error">Error crítico</string>
     <string name="search_failed">Búsqueda fallida</string>
+    <string name="next">Siguiente</string>
 
     <!-- Welcome Screen -->
     <string name="welcome_screen_title">Bienvenido</string>
@@ -40,9 +41,9 @@
     <string name="cancelled_on">Fecha cancelación: %1$s</string>
     <string name="pending_reception">Recepción estimada: %1$s</string>
     <string name="created_date">Fecha creación: %1$s</string>
-    <string name="reception_start">Inicio de recepción: %1$s</string>
+    <string name="reception_start">Iniciado: %1$s</string>
     <string name="shipment_status_pending">Creación: %1$s</string>
-    <string name="shipment_status_in_progress">Inicio de preparación %1$s</string>
+    <string name="shipment_status_in_progress">Iniciado: %1$s</string>
     <string name="shipment_status_completed">Envío finalizado %1$s</string>
     <string name="shipment_status_blocked">Bloqueado %1$s</string>
 
@@ -84,15 +85,15 @@
     <string name="shipment_detail_screen_quantity_loaded">%1$s Cargados</string>
     <string name="shipment_detail_screen_next_button">Siguiente</string>
     <string name="shipment_detail_screen_scan_button">Escanear</string>
-    <string name="shipment_detail_screen_insufficient_stock_title_alert_dialog">Stock Insuficiente</string>
-    <string name="shipment_detail_screen_insufficient_stock_message_alert_dialog">No hay existencias suficiente para algunos productos. Se Bloquea el envio y serás redirigido.</string>
+    <string name="shipment_detail_screen_insufficient_stock_title_alert_dialog">Stock insuficiente</string>
+    <string name="shipment_detail_screen_insufficient_stock_message_alert_dialog">No hay existencias suficientes para algunos productos. Se bloquea el envío y será redirigido.</string>
     <string name="shipment_detail_screen_insufficient_stock_accept_button_alert_dialog">Aceptar</string>
-    <string name="shipment_detail_screen_confirm_exit_title_alert_dialog">Confirmar Salida</string>
-    <string name="shipment_detail_screen_confirm_exit_message_alert_dialog">¿Estás seguro que quieres salir? Los productos cargados se perderán.</string>
-    <string name="shipment_detail_screen_confirm_exit_accept_button_alert_dialog">Sí, Salir</string>
+    <string name="shipment_detail_screen_confirm_exit_title_alert_dialog">Confirmar salida</string>
+    <string name="shipment_detail_screen_confirm_exit_message_alert_dialog">¿Está seguro que desea salir? Los productos cargados se perderán.</string>
+    <string name="shipment_detail_screen_confirm_exit_accept_button_alert_dialog">Salir</string>
     <string name="shipment_detail_screen_confirm_exit_cancel_button_alert_dialog">Cancelar</string>
-    <string name="shipment_detail_screen_confirm_complete_title_alert_dialog">Confirmar Envío</string>
-    <string name="shipment_detail_screen_confirm_complete_message_alert_dialog">¿Estás seguro que quieres completar este envío y salir?</string>
+    <string name="shipment_detail_screen_confirm_complete_title_alert_dialog">Confirmar envío</string>
+    <string name="shipment_detail_screen_confirm_complete_message_alert_dialog">¿Está seguro que desea completar este envío y salir?</string>
     <string name="shipment_detail_screen_confirm_complete_confirm_button_alert_dialog">Confirmar</string>
     <string name="shipment_detail_screen_confirm_complete_cancel_button_alert_dialog">Cancelar</string>
 
@@ -136,4 +137,7 @@
     <string name="order_id_input">Ingrese el ID del pedido</string>
     <string name="order_id_placeholder">ID de pedido</string>
     <string name="invalid_order_id">El ID del pedido no es válido.</string>
+    <string name="authorized_locations">Ubicaciones Autorizadas</string>
+    <string name="loading">Cargando...</string>
+    <string name="logout">Logout</string>
 </resources>

@@ -29,10 +29,18 @@ data class Shipment(
             productsSize
         )
 
-        val statusAndDateString = when(status) {
+        val statusAndDateString = when (status) {
             ItemStatus.PENDING -> context.getString(R.string.shipment_status_pending, formattedDate)
-            ItemStatus.IN_PROGRESS -> context.getString(R.string.shipment_status_in_progress, formattedDate)
-            ItemStatus.COMPLETED -> context.getString(R.string.shipment_status_completed, formattedDate)
+            ItemStatus.IN_PROGRESS -> context.getString(
+                R.string.shipment_status_in_progress,
+                formattedDate
+            )
+
+            ItemStatus.COMPLETED -> context.getString(
+                R.string.shipment_status_completed,
+                formattedDate
+            )
+
             ItemStatus.BLOCKED -> context.getString(R.string.shipment_status_blocked, formattedDate)
             else -> context.getString(R.string.shipment_status_pending, formattedDate)
         }

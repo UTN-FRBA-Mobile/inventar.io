@@ -64,7 +64,7 @@ fun EmptyResultsMessage(
             ) {
                 Text(
                     text = message,
-                    style = MaterialTheme.typography.titleMedium ,
+                    style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.padding(16.dp),

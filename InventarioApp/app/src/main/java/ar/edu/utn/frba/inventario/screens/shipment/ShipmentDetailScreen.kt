@@ -45,6 +45,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -76,7 +77,7 @@ fun ShipmentDetailScreen(
     val showExitDialog by viewModel.showExitConfirmationDialog.collectAsState()
 
     val currentShipment by viewModel.selectedShipment.collectAsState()
-    BackHandler(enabled =  currentShipment.status!= ItemStatus.COMPLETED) {
+    BackHandler(enabled = currentShipment.status != ItemStatus.COMPLETED) {
         viewModel.showExitConfirmation()
     }
     Scaffold(
@@ -87,7 +88,6 @@ fun ShipmentDetailScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.secondaryContainer)
                         .height(56.dp)
                         .padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -95,11 +95,12 @@ fun ShipmentDetailScreen(
                 ) {
                     IconButton(
                         onClick = {
-                            if(viewModel.selectedShipment.value.status == ItemStatus.COMPLETED){
+                            if (viewModel.selectedShipment.value.status == ItemStatus.COMPLETED) {
                                 navController.navigate(Screen.Shipments.route)
-                            }else{
+                            } else {
                                 viewModel.showExitConfirmation()
-                            } },
+                            }
+                        },
                         modifier = Modifier.size(48.dp)
                     ) {
                         Icon(
@@ -168,106 +169,135 @@ fun ShipmentDetailBodyContent(
         CircularProgressIndicator()
     } else {
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.secondaryContainer)
-            .padding(innerPadding)
-    ) {
-        Box(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(color = MaterialTheme.colorScheme.primaryContainer)
+                .fillMaxSize()
+                .padding(innerPadding)
         ) {
-            Column(
+            Box(
                 modifier = Modifier
-                    .padding(20.dp)
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(color = MaterialTheme.colorScheme.primaryContainer)
             ) {
-                Text(
-                    text = stringResource(
-                        R.string.shipment_detail_screen_shipment,
-                        selectedShipment.number
-                    ),
-                    style = MaterialTheme.typography.titleLarge,
-                    fontSize = 25.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = stringResource(
-                        R.string.shipment_detail_screen_customer,
-                        selectedShipment.customerName
-                    ),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Text(
-                    text = stringResource(
-                        R.string.shipment_detail_screen_total,
-                        selectedShipment.products.size
-                    ),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
-                )
+                Column(
+                    modifier = Modifier
+                        .padding(15.dp)
+                ) {
+                    Text(
+                        text = stringResource(
+                            R.string.shipment_detail_screen_shipment,
+                            selectedShipment.number
+                        ),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontSize = 25.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = stringResource(
+                            R.string.shipment_detail_screen_customer,
+                            selectedShipment.customerName
+                        ),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        text = stringResource(
+                            R.string.shipment_detail_screen_total,
+                            selectedShipment.products.size
+                        ),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
             }
-        }
-        LazyColumn(
-            modifier = Modifier
-                .padding(15.dp)
-        ) {
-            items(selectedShipment.products) { product ->
-                ProductItem(
-                    viewModel, product,
-                    onProductClick = { clickedProduct ->
-                        navController.navigate(Screen.ProductDetail.route + "/${clickedProduct.id}")
-                    })
-                Spacer(modifier = Modifier.height(5.dp))
+            LazyColumn(
+                modifier = Modifier
+                    .padding(top = 15.dp)
+            ) {
+                items(selectedShipment.products) { product ->
+                    ProductItem(
+                        viewModel, product,
+                        onProductClick = { clickedProduct ->
+                            navController.navigate(Screen.ProductDetail.route + "/${clickedProduct.id}")
+                        })
+                    Spacer(modifier = Modifier.height(5.dp))
+                }
             }
+            Spacer(
+                modifier = Modifier
+                    .height(10.dp)
+            )
         }
-        Spacer(
-            modifier = Modifier
-                .height(10.dp)
-        )
     }
-}
 }
 
 @Composable
-fun ProductItem(viewModel:ShipmentDetailViewModel, product: ProductOperation,
-                onProductClick: (ProductOperation) -> Unit){
-    val  statusProd = viewModel.getProductStatus(product.id)
+fun ProductItem(
+    viewModel: ShipmentDetailViewModel, product: ProductOperation,
+    onProductClick: (ProductOperation) -> Unit
+) {
+    val statusProd = viewModel.getProductStatus(product.id)
 
-    ElevatedCard(colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
-        ,modifier = Modifier
+    ElevatedCard(
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
+        modifier = Modifier
             .fillMaxSize()
             .padding(2.dp)
-            .clickable { onProductClick(product) }){
-        Row(modifier = Modifier
-            .fillMaxSize()){
-            Column(modifier = Modifier
-                .weight(1f)
-                .padding(15.dp)){
-                Text(text = product.name, fontWeight = FontWeight.Bold, fontSize = 15.sp, style = MaterialTheme.typography.bodyMedium)
-                Spacer(modifier = Modifier
-                    .height(10.dp))
+            .clickable { onProductClick(product) }) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(15.dp)
+            ) {
+                Text(
+                    text = product.name,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(
+                    modifier = Modifier
+                        .height(10.dp)
+                )
                 Row {
-                    Text(text = stringResource(R.string.shipment_detail_screen_quantity_required, product.quantity), style = MaterialTheme.typography.bodySmall)
+                    Text(
+                        text = stringResource(
+                            R.string.shipment_detail_screen_quantity_required,
+                            product.quantity
+                        ), style = MaterialTheme.typography.bodySmall
+                    )
                     Spacer(modifier = Modifier.width(60.dp))
-                    Box(contentAlignment = Alignment.Center
-                            ){
-                        Text(text= stringResource(R.string.shipment_detail_screen_quantity_loaded, viewModel.getLoadedQuantityProduct(product.id)), style = MaterialTheme.typography.bodySmall)
+                    Box(
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = stringResource(
+                                R.string.shipment_detail_screen_quantity_loaded,
+                                viewModel.getLoadedQuantityProduct(product.id)
+                            ), style = MaterialTheme.typography.bodySmall
+                        )
                     }
                 }
             }
 
-            Box(modifier = Modifier
-                .padding(end = 12.dp)
-                .size(40.dp)
-                .align(alignment = Alignment.CenterVertically),
-                contentAlignment = Alignment.Center){
-                Image(painter = painterResource(id = statusProd.iconResourceId),
+            Box(
+                modifier = Modifier
+                    .padding(end = 12.dp)
+                    .size(40.dp)
+                    .align(alignment = Alignment.CenterVertically),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(id = statusProd.iconResourceId),
                     contentDescription = stringResource(R.string.product_state_icon),
                     modifier = Modifier.fillMaxSize(0.9f),
-                    contentScale = ContentScale.Fit)
+                    contentScale = ContentScale.Fit
+                )
 
             }
         }
@@ -313,7 +343,7 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
                             .height(50.dp)
                     ) {
                         Text(
-                            text = stringResource(R.string.shipment_detail_screen_next_button),
+                            text = stringResource(R.string.next),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(horizontal = 15.dp, vertical = 0.dp)
@@ -358,7 +388,7 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
                             .height(50.dp)
                     ) {
                         Text(
-                            text = stringResource(R.string.shipment_detail_screen_scan_button),
+                            text = stringResource(R.string.scan),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(horizontal = 15.dp, vertical = 0.dp)
@@ -417,12 +447,13 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
 
 @Preview
 @Composable
-fun vistaFinal(){
+fun vistaFinal() {
     ShipmentDetailScreen(navController = rememberNavController(), id = "S01-3")
 }
+
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun vistaFinalDark(){
+fun vistaFinalDark() {
     ShipmentDetailScreen(navController = rememberNavController(), id = "S01-3")
 }
 

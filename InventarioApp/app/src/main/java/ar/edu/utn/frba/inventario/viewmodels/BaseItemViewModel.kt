@@ -24,7 +24,10 @@ abstract class BaseItemViewModel<T>(
 
     init {
         _selectedStatusList.value = preferencesManager.getSelectedStatus(statusFilterKey)
-        Log.d("VIEWMODEL_BASE_ITEM", "Filtros cargados desde Preferences: ${_selectedStatusList.value}")
+        Log.d(
+            "VIEWMODEL_BASE_ITEM",
+            "Filtros cargados desde Preferences: ${_selectedStatusList.value}"
+        )
     }
 
     fun getFilteredItems(): List<T> {
@@ -49,7 +52,10 @@ abstract class BaseItemViewModel<T>(
         Log.d("VIEWMODEL_BASE_ITEM", "clearFilter antes : ${_selectedStatusList.value}")
         _selectedStatusList.value = emptySet()
         preferencesManager.clearSelectedStatus(statusFilterKey)
-        Log.d("VIEWMODEL_BASE_ITEM", "clearFilter aplicado : ${preferencesManager.getSelectedStatus(statusFilterKey)}")
+        Log.d(
+            "VIEWMODEL_BASE_ITEM",
+            "clearFilter aplicado : ${preferencesManager.getSelectedStatus(statusFilterKey)}"
+        )
     }
 
     private fun getSortedItems(items: List<T>): List<T> {

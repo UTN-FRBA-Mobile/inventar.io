@@ -66,10 +66,17 @@ class ProductDetailViewModel @Inject constructor(
                     )
                 } else if (detailsResult is NetworkResult.Error) {
                     _errorMessage.value = "Error al cargar detalles: ${detailsResult.message}"
-                    Log.e("ProductDetailViewModel", "Error loading product details: ${detailsResult.message}")
+                    Log.e(
+                        "ProductDetailViewModel",
+                        "Error loading product details: ${detailsResult.message}"
+                    )
                 } else if (detailsResult is NetworkResult.Exception) {
                     _errorMessage.value = "Excepción al cargar detalles: ${detailsResult.e.message}"
-                    Log.e("ProductDetailViewModel", "Exception loading product details", detailsResult.e)
+                    Log.e(
+                        "ProductDetailViewModel",
+                        "Exception loading product details",
+                        detailsResult.e
+                    )
                 }
 
                 if (stockLocationResult is NetworkResult.Success) {
@@ -82,11 +89,20 @@ class ProductDetailViewModel @Inject constructor(
                         currentStock = productCurrentStock
                     )
                 } else if (stockLocationResult is NetworkResult.Error) {
-                    _errorMessage.value = "Error al cargar stock/ubicación: ${stockLocationResult.message}"
-                    Log.e("ProductDetailViewModel", "Error loading product stock/location: ${stockLocationResult.message}")
+                    _errorMessage.value =
+                        "Error al cargar stock/ubicación: ${stockLocationResult.message}"
+                    Log.e(
+                        "ProductDetailViewModel",
+                        "Error loading product stock/location: ${stockLocationResult.message}"
+                    )
                 } else if (stockLocationResult is NetworkResult.Exception) {
-                    _errorMessage.value = "Excepción al cargar stock/ubicación: ${stockLocationResult.e.message}"
-                    Log.e("ProductDetailViewModel", "Exception loading product stock/location", stockLocationResult.e)
+                    _errorMessage.value =
+                        "Excepción al cargar stock/ubicación: ${stockLocationResult.e.message}"
+                    Log.e(
+                        "ProductDetailViewModel",
+                        "Exception loading product stock/location",
+                        stockLocationResult.e
+                    )
                 }
 
                 if (loadedProduct != null) {

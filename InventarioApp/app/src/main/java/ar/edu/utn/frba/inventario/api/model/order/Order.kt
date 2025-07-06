@@ -21,10 +21,11 @@ data class Order(
     val scheduledDate: LocalDateTime,
     val lastModifiedDate: LocalDateTime
 ) : Item {
-    override fun getRelevantDate() = when(status) {
+    override fun getRelevantDate() = when (status) {
         ItemStatus.COMPLETED -> lastModifiedDate
         ItemStatus.BLOCKED,
         ItemStatus.PENDING -> scheduledDate
+
         ItemStatus.IN_PROGRESS -> creationDate
     }
 
@@ -33,7 +34,7 @@ data class Order(
     override fun getCardDetail(context: Context): String {
         val formattedDate = getRelevantDate()?.format() ?: context.getString(R.string.unknown_date)
 
-        return when(status) {
+        return when (status) {
             ItemStatus.COMPLETED -> context.getString(R.string.received_on, formattedDate)
             ItemStatus.PENDING -> context.getString(R.string.pending_reception, formattedDate)
             ItemStatus.BLOCKED,

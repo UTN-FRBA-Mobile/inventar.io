@@ -20,13 +20,13 @@ fun DrawScope.drawScanOverlay(scanBoxPx: Float) {
 
     val path = Path().apply {
         addRoundRect(
-                RoundRect(
-                        left = rectLeft,
-                        top = rectTop,
-                        right = rectLeft + scanBoxPx,
-                        bottom = rectTop + scanBoxPx,
-                        cornerRadius = CornerRadius(32f, 32f)
-                )
+            RoundRect(
+                left = rectLeft,
+                top = rectTop,
+                right = rectLeft + scanBoxPx,
+                bottom = rectTop + scanBoxPx,
+                cornerRadius = CornerRadius(32f, 32f)
+            )
         )
     }
 
