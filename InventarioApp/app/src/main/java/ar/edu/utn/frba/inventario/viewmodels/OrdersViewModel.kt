@@ -25,11 +25,11 @@ class OrdersViewModel @Inject constructor(
     private val orderRepository: OrderRepository,
     savedStateHandle: SavedStateHandle,
     private val selfRepository: SelfRepository,
-    preferencesManager: PreferencesManager
+    preferencesManager: PreferencesManager,
 ) : BaseItemViewModel<Order>(
     savedStateHandle = savedStateHandle,
     preferencesManager = preferencesManager,
-    statusFilterKey = "orders"
+    statusFilterKey = "orders",
 ) {
 
     private val _items: SnapshotStateList<Order> = mutableStateListOf()
@@ -46,8 +46,7 @@ class OrdersViewModel @Inject constructor(
 
     override fun getStatus(item: Order) = item.status
 
-    override fun getFilterDate(item: Order) =
-        item.creationDate //TODO analizar si usamos creationDate o deberíamos ordenar por otra fecha
+    override fun getFilterDate(item: Order) = item.creationDate
 
     fun getOrders() {
         viewModelScope.launch(Dispatchers.Default) {
@@ -69,7 +68,7 @@ class OrdersViewModel @Inject constructor(
                 is NetworkResult.Error -> {
                     Log.d(
                         "OrdersViewModel",
-                        "Error: code=${ordersResult.code}, message=${ordersResult.message}"
+                        "Error: code=${ordersResult.code}, message=${ordersResult.message}",
                     )
                     _error.value = ordersResult.message ?: "Error desconocido al cargar pedidos."
                 }

@@ -15,7 +15,7 @@ class PreferencesManager(context: Context) {
 
     fun saveSelectedStatus(key: String, statusSet: Set<ItemStatus>) {
         val json = gson.toJson(statusSet.map { it.name })
-        preferences.edit() { putString(key, json) }
+        preferences.edit { putString(key, json) }
     }
 
     fun getSelectedStatus(key: String): Set<ItemStatus> {
@@ -36,6 +36,6 @@ class PreferencesManager(context: Context) {
     }
 
     fun clearSelectedStatus(key: String) {
-        preferences.edit() { remove(key) }
+        preferences.edit { remove(key) }
     }
 }

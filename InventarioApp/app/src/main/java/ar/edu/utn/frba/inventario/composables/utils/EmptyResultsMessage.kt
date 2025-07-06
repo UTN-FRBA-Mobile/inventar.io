@@ -27,10 +27,7 @@ import androidx.compose.ui.unit.dp
 import ar.edu.utn.frba.inventario.R
 
 @Composable
-fun EmptyResultsMessage(
-    message: String,
-    modifier: Modifier = Modifier
-) {
+fun EmptyResultsMessage(message: String, modifier: Modifier = Modifier) {
     val iconIdByTheme = if (isSystemInDarkTheme()) {
         R.drawable.empty_results_dark
     } else {
@@ -38,18 +35,18 @@ fun EmptyResultsMessage(
     }
     Box(
         modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-            modifier = Modifier.offset(y = (-48).dp)
+            modifier = Modifier.offset(y = (-48).dp),
         ) {
             Image(
                 painter = painterResource(id = iconIdByTheme),
                 contentDescription = null,
                 modifier = Modifier.size(80.dp),
-                contentScale = ContentScale.Fit
+                contentScale = ContentScale.Fit,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -58,9 +55,9 @@ fun EmptyResultsMessage(
                 modifier = Modifier.padding(horizontal = 32.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.9f)
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.9f),
                 ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             ) {
                 Text(
                     text = message,
@@ -68,7 +65,7 @@ fun EmptyResultsMessage(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.padding(16.dp),
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
             }
         }

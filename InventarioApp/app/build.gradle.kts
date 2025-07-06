@@ -1,5 +1,5 @@
-import java.util.Properties
 import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -7,8 +7,41 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
+
+    // Code formatting plugin
+    id("com.diffplug.spotless") version "7.0.4"
 }
 
+spotless {
+    kotlin {
+        target("src/**/*.kt")
+        ktlint().editorConfigOverride(
+            mapOf(
+                "ktlint_standard_no-wildcard-imports" to "disabled",
+                "ktlint_standard_filename" to "disabled",
+                "ktlint_standard_backing-property-naming" to "disabled",
+                "ktlint_standard_property-naming" to "disabled",
+                "ktlint_standard_function-naming" to "disabled",
+                "indent_size" to "4",
+                "continuation_indent_size" to "4",
+                "max_line_length" to "100",
+            ),
+        )
+    }
+
+    kotlinGradle {
+        target("*.gradle.kts", "**/*.gradle.kts")
+        ktlint().editorConfigOverride(
+            mapOf(
+                "ktlint_standard_no-wildcard-imports" to "disabled",
+                "ktlint_standard_property-naming" to "disabled",
+                "ktlint_standard_function-naming" to "disabled",
+                "indent_size" to "4",
+                "continuation_indent_size" to "4",
+            ),
+        )
+    }
+}
 
 android {
     namespace = "ar.edu.utn.frba.inventario"
@@ -41,7 +74,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -88,12 +121,12 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // For using the camera
-    implementation (libs.androidx.camera.core)
-    implementation (libs.androidx.camera.camera2)
-    implementation (libs.androidx.camera.lifecycle)
-    implementation (libs.androidx.camera.video)
-    implementation (libs.androidx.camera.view)
-    implementation (libs.androidx.camera.extensions)
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.video)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.androidx.camera.extensions)
 
     // For getting user location
     implementation(libs.play.services.location)

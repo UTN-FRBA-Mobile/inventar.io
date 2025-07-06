@@ -28,11 +28,11 @@ class ShipmentsViewModel @Inject constructor(
     private val shipmentRepository: ShipmentRepository,
     private val productRepository: ProductRepository,
     savedStateHandle: SavedStateHandle,
-    preferencesManager: PreferencesManager
+    preferencesManager: PreferencesManager,
 ) : BaseItemViewModel<Shipment>(
     savedStateHandle = savedStateHandle,
     preferencesManager = preferencesManager,
-    statusFilterKey = "shipments"
+    statusFilterKey = "shipments",
 ) {
     private val _shipments = MutableStateFlow<List<ShipmentResponse>>(emptyList())
     val shipments: StateFlow<List<ShipmentResponse>> = _shipments.asStateFlow()
@@ -56,14 +56,14 @@ class ShipmentsViewModel @Inject constructor(
                 is NetworkResult.Success -> {
                     Log.d(
                         "ShipmentsViewModel",
-                        "Init check stock blocked shipments Success: ${shipmentsToCheckUnblockingResult.data}"
+                        "Init check stock blocked shipments Success: ${shipmentsToCheckUnblockingResult.data}",
                     )
 
                     shipmentsToCheckUnblockingResult.data.forEach { sr ->
                         if (sr.status == ItemStatus.BLOCKED) {
                             Log.d(
                                 "ShipmentsViewModel",
-                                "Iniciando pedido a API del envio: ${sr.id}"
+                                "Iniciando pedido a API del envio: ${sr.id}",
                             )
                             val productIds =
                                 sr.productAmount.keys.map { prodId -> prodId.toString() }
@@ -75,17 +75,20 @@ class ShipmentsViewModel @Inject constructor(
                                 is NetworkResult.Success -> {
                                     Log.d(
                                         "ShipmentsViewModel",
-                                        "Success, Product ids :${resultStockProducts.data.stockCount.keys}"
+                                        "Success, Product ids :${resultStockProducts.data.stockCount.keys}",
                                     )
 
                                     val currentStockProducts = resultStockProducts.data.stockCount
                                     val enoughAllStock =
-                                        sr.productAmount.all { ps -> currentStockProducts[ps.key.toString()]!! >= ps.value }
+                                        sr.productAmount.all { ps ->
+                                            currentStockProducts[ps.key.toString()]!! >=
+                                                ps.value
+                                        }
 
                                     if (enoughAllStock) {
                                         Log.d(
                                             "ShipmentsViewModel",
-                                            "Hay Stock suficiente para los productos del envio ${sr.id}, Stock disponible: $currentStockProducts"
+                                            "Hay Stock suficiente para los productos del envio ${sr.id}, Stock disponible: $currentStockProducts",
                                         )
                                         if (sr.status == ItemStatus.BLOCKED) {
                                             val resultUnBlockShipment =
@@ -95,21 +98,21 @@ class ShipmentsViewModel @Inject constructor(
                                                 is NetworkResult.Success -> {
                                                     Log.d(
                                                         "ShipmentsViewModel-POST_Shipment_UnBlock",
-                                                        "Success, new status:${resultUnBlockShipment.data.status}"
+                                                        "Success, new status:${resultUnBlockShipment.data.status}",
                                                     )
                                                 }
 
                                                 is NetworkResult.Error -> {
                                                     Log.d(
                                                         "ShipmentsViewModel-POST_Shipment_UnBlock",
-                                                        "Error: Code=${resultUnBlockShipment.code}, message=${resultUnBlockShipment.message}"
+                                                        "Error: Code=${resultUnBlockShipment.code}, message=${resultUnBlockShipment.message}",
                                                     )
                                                 }
 
                                                 is NetworkResult.Exception -> {
                                                     Log.d(
                                                         "ShipmentsViewModel-POST_Shipment_UnBlock",
-                                                        "Error Crítico: ${resultUnBlockShipment.e.message}"
+                                                        "Error Crítico: ${resultUnBlockShipment.e.message}",
                                                     )
                                                 }
                                             }
@@ -117,7 +120,7 @@ class ShipmentsViewModel @Inject constructor(
                                     } else {
                                         Log.d(
                                             "ShipmentsViewModel",
-                                            "NO hay Stock suficiente para los productos del envio ${sr.id}, Stock disponible: $currentStockProducts"
+                                            "NO hay Stock suficiente para los productos del envio ${sr.id}, Stock disponible: $currentStockProducts",
                                         )
                                     }
                                 }
@@ -125,18 +128,17 @@ class ShipmentsViewModel @Inject constructor(
                                 is NetworkResult.Error -> {
                                     Log.d(
                                         "ShipmentsViewModel",
-                                        "Error: Code=${resultStockProducts.code}, message=${resultStockProducts.message}"
+                                        "Error: Code=${resultStockProducts.code}, message=${resultStockProducts.message}",
                                     )
                                 }
 
                                 is NetworkResult.Exception -> {
                                     Log.d(
                                         "ShipmentsViewModel",
-                                        "Error Crítico: ${resultStockProducts.e.message}"
+                                        "Error Crítico: ${resultStockProducts.e.message}",
                                     )
                                 }
                             }
-
                         }
                     }
                 }
@@ -144,7 +146,7 @@ class ShipmentsViewModel @Inject constructor(
                 is NetworkResult.Error -> {
                     Log.d(
                         "ShipmentsViewModel",
-                        "Error: code=${shipmentsToCheckUnblockingResult.code}, message=${shipmentsToCheckUnblockingResult.message}"
+                        "Error: code=${shipmentsToCheckUnblockingResult.code}, message=${shipmentsToCheckUnblockingResult.message}",
                     )
                     _error.value = shipmentsToCheckUnblockingResult.message
                         ?: "Error desconocido al cargar envíos."
@@ -153,13 +155,12 @@ class ShipmentsViewModel @Inject constructor(
                 is NetworkResult.Exception -> {
                     Log.d(
                         "ShipmentsViewModel",
-                        "Error crítico: ${shipmentsToCheckUnblockingResult.e.message}"
+                        "Error crítico: ${shipmentsToCheckUnblockingResult.e.message}",
                     )
                     _error.value = shipmentsToCheckUnblockingResult.e.message
                         ?: "Excepción desconocida al cargar envíos."
                 }
             }
-
 
             when (val shipmentResult = shipmentRepository.getShipmentList()) {
                 is NetworkResult.Success -> {
@@ -174,7 +175,7 @@ class ShipmentsViewModel @Inject constructor(
                 is NetworkResult.Error -> {
                     Log.d(
                         "ShipmentsViewModel",
-                        "Error: code=${shipmentResult.code}, message=${shipmentResult.message}"
+                        "Error: code=${shipmentResult.code}, message=${shipmentResult.message}",
                     )
                     _error.value = shipmentResult.message ?: "Error desconocido al cargar envíos."
                 }
@@ -193,18 +194,18 @@ class ShipmentsViewModel @Inject constructor(
 
     override fun getFilterDate(item: Shipment) = item.creationDate
 
-    fun parseMapShipment(shipmentResponse: ShipmentResponse): Shipment {
-        return Shipment(
-            id = shipmentResponse.id.toString(),
-            number = "S${shipmentResponse.idLocation}E${shipmentResponse.id}",
-            customerName = shipmentResponse.customerName,
-            status = shipmentResponse.status,
-            products = shipmentResponse.productAmount.map { pa ->
-                ProductOperation(
-                    id = pa.key.toString(), name = "generic", quantity = pa.value,
-                )
-            },
-            creationDate = shipmentResponse.creationDate.toLocalDateTime()
-        )
-    }
+    fun parseMapShipment(shipmentResponse: ShipmentResponse): Shipment = Shipment(
+        id = shipmentResponse.id.toString(),
+        number = "S${shipmentResponse.idLocation}E${shipmentResponse.id}",
+        customerName = shipmentResponse.customerName,
+        status = shipmentResponse.status,
+        products = shipmentResponse.productAmount.map { pa ->
+            ProductOperation(
+                id = pa.key.toString(),
+                name = "generic",
+                quantity = pa.value,
+            )
+        },
+        creationDate = shipmentResponse.creationDate.toLocalDateTime(),
+    )
 }

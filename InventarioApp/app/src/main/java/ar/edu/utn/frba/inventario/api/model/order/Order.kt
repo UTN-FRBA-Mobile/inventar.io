@@ -19,12 +19,13 @@ data class Order(
     val productNames: Map<Long, String>,
     override val creationDate: LocalDateTime,
     val scheduledDate: LocalDateTime,
-    val lastModifiedDate: LocalDateTime
+    val lastModifiedDate: LocalDateTime,
 ) : Item {
     override fun getRelevantDate() = when (status) {
         ItemStatus.COMPLETED -> lastModifiedDate
         ItemStatus.BLOCKED,
-        ItemStatus.PENDING -> scheduledDate
+        ItemStatus.PENDING,
+        -> scheduledDate
 
         ItemStatus.IN_PROGRESS -> creationDate
     }
@@ -38,7 +39,8 @@ data class Order(
             ItemStatus.COMPLETED -> context.getString(R.string.received_on, formattedDate)
             ItemStatus.PENDING -> context.getString(R.string.pending_reception, formattedDate)
             ItemStatus.BLOCKED,
-            ItemStatus.IN_PROGRESS -> context.getString(R.string.reception_start, formattedDate)
+            ItemStatus.IN_PROGRESS,
+            -> context.getString(R.string.reception_start, formattedDate)
         }
     }
 }

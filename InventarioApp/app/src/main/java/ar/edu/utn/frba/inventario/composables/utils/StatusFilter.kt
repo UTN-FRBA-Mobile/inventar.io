@@ -24,7 +24,7 @@ fun StatusFilter(
     selectedStatusList: Set<ItemStatus>,
     onStatusSelected: (ItemStatus) -> Unit,
     onClearFilters: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
 
@@ -34,7 +34,7 @@ fun StatusFilter(
             .padding(vertical = 2.dp)
             .horizontalScroll(scrollState),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         // Filtro "Todos"
         FilterChip(
@@ -43,8 +43,8 @@ fun StatusFilter(
             label = { Text(stringResource(R.string.all_status_selected)) },
             colors = FilterChipDefaults.filterChipColors(
                 selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
-            )
+                selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            ),
         )
 
         statusList.forEach { status: ItemStatus ->
@@ -55,7 +55,7 @@ fun StatusFilter(
                 label = { Text(status.displayName) },
                 colors = FilterChipDefaults.filterChipColors(
                     selectedContainerColor = status.color.copy(alpha = 0.2f),
-                )
+                ),
             )
         }
     }

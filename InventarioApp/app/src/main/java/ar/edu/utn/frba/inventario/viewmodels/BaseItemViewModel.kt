@@ -15,7 +15,7 @@ import java.time.LocalDateTime
 abstract class BaseItemViewModel<T>(
     internal val savedStateHandle: SavedStateHandle,
     private val preferencesManager: PreferencesManager,
-    private val statusFilterKey: String
+    private val statusFilterKey: String,
 ) : ViewModel() {
     protected abstract val items: SnapshotStateList<T>
 
@@ -26,16 +26,14 @@ abstract class BaseItemViewModel<T>(
         _selectedStatusList.value = preferencesManager.getSelectedStatus(statusFilterKey)
         Log.d(
             "VIEWMODEL_BASE_ITEM",
-            "Filtros cargados desde Preferences: ${_selectedStatusList.value}"
+            "Filtros cargados desde Preferences: ${_selectedStatusList.value}",
         )
     }
 
-    fun getFilteredItems(): List<T> {
-        return if (_selectedStatusList.value.isEmpty()) {
-            getSortedItems(items.toList())
-        } else {
-            getSortedItems(items.filter { getStatus(it) in _selectedStatusList.value })
-        }
+    fun getFilteredItems(): List<T> = if (_selectedStatusList.value.isEmpty()) {
+        getSortedItems(items.toList())
+    } else {
+        getSortedItems(items.filter { getStatus(it) in _selectedStatusList.value })
     }
 
     fun updateSelectedStatusList(status: ItemStatus) {
@@ -54,16 +52,14 @@ abstract class BaseItemViewModel<T>(
         preferencesManager.clearSelectedStatus(statusFilterKey)
         Log.d(
             "VIEWMODEL_BASE_ITEM",
-            "clearFilter aplicado : ${preferencesManager.getSelectedStatus(statusFilterKey)}"
+            "clearFilter aplicado : ${preferencesManager.getSelectedStatus(statusFilterKey)}",
         )
     }
 
-    private fun getSortedItems(items: List<T>): List<T> {
-        return items.sortedWith(
-            compareBy<T> { getStatus(it).ordinal }
-                .thenBy { getFilterDate(it) }
-        )
-    }
+    private fun getSortedItems(items: List<T>): List<T> = items.sortedWith(
+        compareBy<T> { getStatus(it).ordinal }
+            .thenBy { getFilterDate(it) },
+    )
 
     abstract fun getStatus(item: T): ItemStatus
 

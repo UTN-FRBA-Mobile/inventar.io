@@ -37,9 +37,7 @@ fun ManualOrderScreen(navController: NavController) {
 }
 
 @Composable
-fun ManualOrderIdBodyContent(
-    navController: NavController
-) {
+fun ManualOrderIdBodyContent(navController: NavController) {
     var orderId by remember { mutableStateOf("") }
     var isError by remember { mutableStateOf(false) }
 
@@ -48,7 +46,7 @@ fun ManualOrderIdBodyContent(
             .fillMaxSize()
             .padding(24.dp),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(stringResource(R.string.order_id_input), fontSize = 20.sp)
 
@@ -65,9 +63,9 @@ fun ManualOrderIdBodyContent(
             singleLine = true,
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Done
+                imeAction = ImeAction.Done,
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -79,15 +77,15 @@ fun ManualOrderIdBodyContent(
                     return@Button
                 }
                 val destination = Screen.OrderResult.withNavArgs(
-                    OrderResultArgs.OrderId to orderId
+                    OrderResultArgs.OrderId to orderId,
                 )
                 navController.navigate(destination)
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             Text(
                 stringResource(R.string.confirm),
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
             )
         }
 

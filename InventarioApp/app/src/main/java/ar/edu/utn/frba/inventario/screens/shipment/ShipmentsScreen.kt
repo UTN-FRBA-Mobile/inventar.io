@@ -36,20 +36,20 @@ import ar.edu.utn.frba.inventario.viewmodels.UserScreenViewModel
 fun ShipmentsScreen(
     navController: NavController,
     shipmentsViewModel: ShipmentsViewModel = hiltViewModel(),
-    userScreenViewModel: UserScreenViewModel = hiltViewModel()
+    userScreenViewModel: UserScreenViewModel = hiltViewModel(),
 ) {
     val selectedStatusListVM by shipmentsViewModel.selectedStatusList.collectAsStateWithLifecycle()
     val branchName by userScreenViewModel.branchLocationName.collectAsStateWithLifecycle()
     val loading by shipmentsViewModel.loading.collectAsStateWithLifecycle()
     val error by shipmentsViewModel.error.collectAsStateWithLifecycle()
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) {
         BranchLocationBar(
             branchName = branchName,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 12.dp)
+                .padding(top = 12.dp),
         )
         StatusFilter(
             statusList = ItemStatus.entries,
@@ -57,7 +57,7 @@ fun ShipmentsScreen(
             onStatusSelected = { shipmentsViewModel.updateSelectedStatusList(it) },
             onClearFilters = { shipmentsViewModel.clearFilters() },
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(),
         )
 
         LaunchedEffect(Unit) {
@@ -72,16 +72,16 @@ fun ShipmentsBodyContent(
     navController: NavController,
     shipments: List<Shipment>,
     loading: Boolean,
-    error: String?
+    error: String?,
 ) {
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxSize(),
     ) {
         Text(
             text = "Envíos",
             style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(vertical = 16.dp)
+            modifier = Modifier.padding(vertical = 16.dp),
         )
         when {
             loading -> {
@@ -89,7 +89,7 @@ fun ShipmentsBodyContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     Spinner(true)
                 }
@@ -100,11 +100,11 @@ fun ShipmentsBodyContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     Text(
                         text = error,
-                        color = MaterialTheme.colorScheme.error
+                        color = MaterialTheme.colorScheme.error,
                     )
                 }
             }
@@ -112,17 +112,19 @@ fun ShipmentsBodyContent(
             shipments.isEmpty() -> {
                 EmptyResultsMessage(
                     message = stringResource(R.string.no_results_for_filters),
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
             }
 
             else -> {
                 LazyColumn(
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     itemsIndexed(shipments) { _, shipment ->
                         CardItem(navController, shipment, onItemClick = { clickedItem: Item ->
-                            navController.navigate(Screen.ShipmentDetail.route + "/${clickedItem.id}")
+                            navController.navigate(
+                                Screen.ShipmentDetail.route + "/${clickedItem.id}",
+                            )
                         })
                     }
                 }

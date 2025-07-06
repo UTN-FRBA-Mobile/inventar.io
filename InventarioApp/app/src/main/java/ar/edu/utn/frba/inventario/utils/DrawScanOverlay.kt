@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.inventario.utils;
+package ar.edu.utn.frba.inventario.utils
 
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.RoundRect
@@ -25,8 +25,8 @@ fun DrawScope.drawScanOverlay(scanBoxPx: Float) {
                 top = rectTop,
                 right = rectLeft + scanBoxPx,
                 bottom = rectTop + scanBoxPx,
-                cornerRadius = CornerRadius(32f, 32f)
-            )
+                cornerRadius = CornerRadius(32f, 32f),
+            ),
         )
     }
 

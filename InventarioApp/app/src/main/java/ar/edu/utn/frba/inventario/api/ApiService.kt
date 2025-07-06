@@ -45,7 +45,7 @@ interface ApiService {
     @POST("/api/v1/orders/{id}/finish")
     suspend fun finishOrder(
         @Path("id") id: Long,
-        @Body productQuantities: Map<String, Int>
+        @Body productQuantities: Map<String, Int>,
     ): Response<OrderResponse>
 
     /*Shipment*/
@@ -72,11 +72,17 @@ interface ApiService {
     suspend fun getProductList(@Query("ean13s") ean13s: List<String>): Response<Map<Long, Product>>
 
     @GET("/api/v1/products")
-    suspend fun getProductListById(@Query("id") id: List<String>): Response<Map<String, ProductResponse>>
+    suspend fun getProductListById(
+        @Query("id") id: List<String>,
+    ): Response<Map<String, ProductResponse>>
 
     @GET("/api/v1/products/stock")
-    suspend fun getStockByProductId(@Query("ids") ids: String): Response<ProductStockLocationResponse>
+    suspend fun getStockByProductId(
+        @Query("ids") ids: String,
+    ): Response<ProductStockLocationResponse>
 
     @GET("/api/v1/products/stock")
-    suspend fun getStockByProductIdList(@Query("ids") ids: List<String>): Response<ProductStockLocationResponse>
+    suspend fun getStockByProductIdList(
+        @Query("ids") ids: List<String>,
+    ): Response<ProductStockLocationResponse>
 }

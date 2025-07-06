@@ -25,50 +25,52 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private final JwtUtil jwtUtil;
+	private final JwtUtil jwtUtil;
 
-    /**
-     * Filters incoming HTTP requests to extract and validate JWT access tokens.
-     *
-     * @param request           the incoming HTTP request.
-     * @param response          the outgoing HTTP response.
-     * @param filterChain       the filter chain to continue processing the request.
-     * @throws ServletException in case of a servlet error.
-     * @throws IOException      in case of I/O error.
-     */
-    @Override
-    protected void doFilterInternal(
-        @NonNull HttpServletRequest request,
-        @NonNull HttpServletResponse response,
-        @NonNull FilterChain filterChain
-    ) throws ServletException, IOException {
-        final String authHeader = request.getHeader("Authorization");
+	/**
+	 * Filters incoming HTTP requests to extract and validate JWT access tokens.
+	 *
+	 * @param request
+	 *            the incoming HTTP request.
+	 * @param response
+	 *            the outgoing HTTP response.
+	 * @param filterChain
+	 *            the filter chain to continue processing the request.
+	 * @throws ServletException
+	 *             in case of a servlet error.
+	 * @throws IOException
+	 *             in case of I/O error.
+	 */
+	@Override
+	protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+			@NonNull FilterChain filterChain) throws ServletException, IOException {
+		final String authHeader = request.getHeader("Authorization");
 
-        // If there's no Bearer token, fail miserably
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
-            //response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
+		// If there's no Bearer token, fail miserably
+		if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+			filterChain.doFilter(request, response);
+			// response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+			return;
+		}
 
-        final String token = authHeader.substring(7);
+		final String token = authHeader.substring(7);
 
-        // If the token is valid, set the authentication in the SecurityContext
-        if (jwtUtil.isTokenValid(token, "access")) {
-            Claims claims = jwtUtil.extractClaims(token);
-            String username = claims.getSubject();
-            Long locationId = claims.get("locationId", Long.class);
+		// If the token is valid, set the authentication in the SecurityContext
+		if (jwtUtil.isTokenValid(token, "access")) {
+			Claims claims = jwtUtil.extractClaims(token);
+			String username = claims.getSubject();
+			Long locationId = claims.get("locationId", Long.class);
 
-            // Check if user is not already authenticated
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UsernamePasswordAuthenticationToken auth =
-                        new UsernamePasswordAuthenticationToken(username, null, List.of());
-                auth.setDetails(new AuthenticationDetails(locationId));
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            }
-        }
+			// Check if user is not already authenticated
+			if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(username, null,
+						List.of());
+				auth.setDetails(new AuthenticationDetails(locationId));
+				SecurityContextHolder.getContext().setAuthentication(auth);
+			}
+		}
 
-        // Continue the filter chain
-        filterChain.doFilter(request, response);
-    }
+		// Continue the filter chain
+		filterChain.doFilter(request, response);
+	}
 }

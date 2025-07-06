@@ -16,9 +16,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class LocationRepository @Inject constructor(
-    @ApplicationContext private val context: Context
-) {
+class LocationRepository @Inject constructor(@ApplicationContext private val context: Context) {
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
     private val _location = MutableStateFlow<Location?>(null)
@@ -31,7 +29,8 @@ class LocationRepository @Inject constructor(
         if (locationCallback != null) return // evita múltiples listeners
 
         val request = LocationRequest.Builder(
-            Priority.PRIORITY_HIGH_ACCURACY, 5000L
+            Priority.PRIORITY_HIGH_ACCURACY,
+            5000L,
         ).build()
 
         locationCallback = object : LocationCallback() {
@@ -45,7 +44,7 @@ class LocationRepository @Inject constructor(
         fusedLocationClient.requestLocationUpdates(
             request,
             locationCallback!!,
-            Looper.getMainLooper()
+            Looper.getMainLooper(),
         )
     }
 
@@ -56,12 +55,7 @@ class LocationRepository @Inject constructor(
         }
     }
 
-    fun getLatitude(): Double? {
-        return location.value?.latitude
-    }
+    fun getLatitude(): Double? = location.value?.latitude
 
-    fun getLongitude(): Double? {
-        return location.value?.longitude
-    }
+    fun getLongitude(): Double? = location.value?.longitude
 }
-

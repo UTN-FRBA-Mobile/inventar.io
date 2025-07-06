@@ -16,13 +16,9 @@ class TokenManager(context: Context) {
         private const val REFRESH_TOKEN_KEY = "refresh_token"
     }
 
-    fun getAccessToken(): String? {
-        return sharedPreferences.getString(ACCESS_TOKEN_KEY, null)
-    }
+    fun getAccessToken(): String? = sharedPreferences.getString(ACCESS_TOKEN_KEY, null)
 
-    fun getRefreshToken(): String? {
-        return sharedPreferences.getString(REFRESH_TOKEN_KEY, null)
-    }
+    fun getRefreshToken(): String? = sharedPreferences.getString(REFRESH_TOKEN_KEY, null)
 
     fun saveSession(accessToken: String, refreshToken: String) {
         sharedPreferences.edit {
@@ -39,15 +35,9 @@ class TokenManager(context: Context) {
         }
     }
 
-    fun hasSession(): Boolean {
-        return hasAccessToken() && hasRefreshToken()
-    }
+    fun hasSession(): Boolean = hasAccessToken() && hasRefreshToken()
 
-    fun hasAccessToken(): Boolean {
-        return getAccessToken() != null
-    }
+    fun hasAccessToken(): Boolean = getAccessToken() != null
 
-    fun hasRefreshToken(): Boolean {
-        return getRefreshToken() != null
-    }
+    fun hasRefreshToken(): Boolean = getRefreshToken() != null
 }

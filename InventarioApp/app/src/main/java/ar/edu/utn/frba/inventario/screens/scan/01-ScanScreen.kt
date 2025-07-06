@@ -56,15 +56,15 @@ import com.google.mlkit.vision.common.InputImage
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
-
 @Composable
 fun ScanScreen(navController: NavController, origin: String) {
     val hasCameraPermission = rememberCameraPermissionState()
 
-    if (hasCameraPermission)
+    if (hasCameraPermission) {
         ScanCameraContent(navController, origin)
-    else
+    } else {
         PermissionDeniedContent(navController, origin)
+    }
 }
 
 @OptIn(ExperimentalGetImage::class)
@@ -80,7 +80,7 @@ fun ScanCameraContent(navController: NavController, origin: String) {
     }
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) {
         // CAMERA PREVIEW
         AndroidView(
@@ -91,15 +91,15 @@ fun ScanCameraContent(navController: NavController, origin: String) {
                     cameraExecutor,
                     viewModel,
                     navController,
-                    origin
+                    origin,
                 )
             },
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         )
 
         // OVERLAY UI
         Box(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         ) {
             val scanBoxSize = 250.dp
             val scanBoxPx = with(LocalDensity.current) { scanBoxSize.toPx() }
@@ -114,23 +114,24 @@ fun ScanCameraContent(navController: NavController, origin: String) {
                     .fillMaxWidth()
                     .padding(top = 48.dp)
                     .align(Alignment.TopCenter),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = stringResource(
-                        if (origin == "shipment")
+                        if (origin == "shipment") {
                             R.string.scan_camera_instruction_ean_13
-                        else
+                        } else {
                             R.string.scan_camera_instruction_qr
+                        },
                     ),
                     color = Color.White,
                     fontSize = 18.sp,
                     modifier = Modifier
                         .background(
                             Color.Black.copy(alpha = 0.5f),
-                            shape = RoundedCornerShape(8.dp)
+                            shape = RoundedCornerShape(8.dp),
                         )
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
                 )
             }
             Box(
@@ -138,9 +139,13 @@ fun ScanCameraContent(navController: NavController, origin: String) {
                     .fillMaxWidth()
                     .padding(bottom = 48.dp)
                     .align(Alignment.BottomCenter),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
-                ManualInputButton(navController = navController, origin = origin, modifier = Modifier)
+                ManualInputButton(
+                    navController = navController,
+                    origin = origin,
+                    modifier = Modifier,
+                )
             }
         }
     }
@@ -159,11 +164,11 @@ fun ManualInputButton(navController: NavController, origin: String, modifier: Mo
         shape = RoundedCornerShape(50),
         modifier = modifier
             .width(180.dp)
-            .height(40.dp)
+            .height(40.dp),
     ) {
         Text(
             stringResource(R.string.scan_manual_input_button),
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium,
         )
     }
 }
@@ -175,19 +180,19 @@ fun PermissionDeniedContent(navController: NavController, origin: String) {
             .fillMaxSize()
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         Text(
             text = stringResource(R.string.scan_camera_permission_denied_title),
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.primary,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(12.dp))
         Text(
             text = stringResource(R.string.scan_camera_permission_denied_body),
             style = MaterialTheme.typography.bodyMedium,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -202,14 +207,15 @@ fun rememberCameraPermissionState(): Boolean {
     val hasPermission = remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(
-                context, Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED
+                context,
+                Manifest.permission.CAMERA,
+            ) == PackageManager.PERMISSION_GRANTED,
         )
     }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
-        onResult = { hasPermission.value = it }
+        onResult = { hasPermission.value = it },
     )
 
     LaunchedEffect(Unit) {
@@ -228,7 +234,7 @@ fun createCameraPreviewView(
     cameraExecutor: Executor,
     viewModel: ScanViewModel,
     navController: NavController,
-    origin: String
+    origin: String,
 ): PreviewView {
     val previewView = PreviewView(context)
     val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
@@ -259,7 +265,7 @@ fun createCameraPreviewView(
                                 scannedCodes,
                                 navController,
                                 context,
-                                origin
+                                origin,
                             )
                         }
                     }
@@ -280,7 +286,7 @@ fun createCameraPreviewView(
                 lifecycleOwner,
                 CameraSelector.DEFAULT_BACK_CAMERA,
                 preview,
-                imageAnalysis
+                imageAnalysis,
             )
         } catch (e: Exception) {
             Log.e("[ScanScreen]", "Camera binding failed", e)

@@ -14,9 +14,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class OrderDetailViewModel @Inject constructor(
-    private val orderRepository: OrderRepository
-) : ViewModel() {
+class OrderDetailViewModel @Inject constructor(private val orderRepository: OrderRepository) :
+    ViewModel() {
 
     companion object {
         val UnknownError = R.string.unknown_error
@@ -34,7 +33,6 @@ class OrderDetailViewModel @Inject constructor(
 
     fun loadOrder(id: String) {
         viewModelScope.launch {
-
             _loading.value = true
             _error.value = null
 

@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 class OrderProductsViewModel @Inject constructor(
     private val productRepository: ProductRepository,
     private val orderRepository: OrderRepository,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val _orderProducts = MutableStateFlow<List<Product>>(emptyList())
@@ -100,7 +100,7 @@ class OrderProductsViewModel @Inject constructor(
             _errorMessage.value = "El pedido ${order.id} no contiene productos registrados."
             Log.d(
                 "OrderProductsViewModel",
-                "El pedido ${order.id} no contiene productos registrados."
+                "El pedido ${order.id} no contiene productos registrados.",
             )
             return
         }
@@ -113,7 +113,7 @@ class OrderProductsViewModel @Inject constructor(
                 _orderProducts.value = emptyList()
                 Log.e(
                     "OrderProductsViewModel",
-                    "Error al cargar detalles de productos: ${productsResult.message}"
+                    "Error al cargar detalles de productos: ${productsResult.message}",
                 )
             }
 
@@ -124,7 +124,7 @@ class OrderProductsViewModel @Inject constructor(
                 Log.e(
                     "OrderProductsViewModel",
                     "Excepción al cargar detalles de productos",
-                    productsResult.e
+                    productsResult.e,
                 )
             }
         }
@@ -140,7 +140,7 @@ class OrderProductsViewModel @Inject constructor(
                     ean13 = response.ean13,
                     imageURL = response.imageURL,
                     innerLocation = null,
-                    currentStock = productOp.quantity
+                    currentStock = productOp.quantity,
                 )
             }
         }
@@ -151,7 +151,7 @@ class OrderProductsViewModel @Inject constructor(
             _errorMessage.value = "No se encontraron productos para esta orden."
             Log.w(
                 "OrderProductsViewModel",
-                "No se encontraron productos para esta orden: ${order.id}"
+                "No se encontraron productos para esta orden: ${order.id}",
             )
         } else {
             _errorMessage.value = null
@@ -160,7 +160,7 @@ class OrderProductsViewModel @Inject constructor(
 
     private fun handleOrderError(id: String, message: String?) {
         val isNotFound = message?.contains("Not Found", ignoreCase = true) == true ||
-                message?.contains("404", ignoreCase = true) == true
+            message?.contains("404", ignoreCase = true) == true
 
         _errorMessage.value = if (isNotFound) {
             "El pedido con ID '$id' no fue encontrado."
@@ -206,12 +206,14 @@ class OrderProductsViewModel @Inject constructor(
                     product.id to (product.currentStock ?: 0)
                 }
 
-                when (val result =
-                    orderRepository.finishOrder(orderIdToFinish, productQuantities)) {
+                when (
+                    val result =
+                        orderRepository.finishOrder(orderIdToFinish, productQuantities)
+                ) {
                     is NetworkResult.Success -> {
                         _isFinishingOrder.value = false
                         _orderFinishedSuccessfully.value = true
-                        Log.d("OrderProductsViewModel", "Orden ${orderId} finalizada con éxito.")
+                        Log.d("OrderProductsViewModel", "Orden $orderId finalizada con éxito.")
                     }
 
                     is NetworkResult.Error -> {
@@ -221,7 +223,7 @@ class OrderProductsViewModel @Inject constructor(
                         _orderFinishedSuccessfully.value = false
                         Log.e(
                             "OrderProductsViewModel",
-                            "Error al finalizar el pedido: ${result.message}"
+                            "Error al finalizar el pedido: ${result.message}",
                         )
                     }
 
@@ -233,7 +235,7 @@ class OrderProductsViewModel @Inject constructor(
                         Log.e(
                             "OrderProductsViewModel",
                             "Excepción al finalizar el pedido",
-                            result.e
+                            result.e,
                         )
                     }
                 }

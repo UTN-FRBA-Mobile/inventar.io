@@ -10,18 +10,19 @@ import java.util.Optional;
 /**
  * Repository interface for performing CRUD operations on {@link User} entities.
  * <p>
- * Extends {@link JpaRepository} to inherit methods for saving, deleting,
- * and finding {@link User} entities by their ID or other criteria.
+ * Extends {@link JpaRepository} to inherit methods for saving, deleting, and
+ * finding {@link User} entities by their ID or other criteria.
  * </p>
  */
 @Transactional
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    /**
-     * Finds a user by username.
-     *
-     * @param username the username to search
-     * @return an {@link Optional} containing the user if found
-     */
-    Optional<User> findByUsername(String username);
+	/**
+	 * Finds a user by username.
+	 *
+	 * @param username
+	 *            the username to search
+	 * @return an {@link Optional} containing the user if found
+	 */
+	Optional<User> findByUsername(String username);
 }

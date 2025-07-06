@@ -29,30 +29,24 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideTokenManager(@ApplicationContext context: Context): TokenManager {
-        return TokenManager(context)
-    }
+    fun provideTokenManager(@ApplicationContext context: Context): TokenManager =
+        TokenManager(context)
 
     @Provides
     @Singleton
-    fun provideLoggingInterceptor(): HttpLoggingInterceptor {
-        return LoggingInterceptor.get()
-    }
+    fun provideLoggingInterceptor(): HttpLoggingInterceptor = LoggingInterceptor.get()
 
     @Provides
     @Singleton
-    fun provideAuthInterceptor(tokenManager: TokenManager): AuthInterceptor {
-        return AuthInterceptor(tokenManager)
-    }
+    fun provideAuthInterceptor(tokenManager: TokenManager): AuthInterceptor =
+        AuthInterceptor(tokenManager)
 
     @Provides
     @Singleton
     fun provideTokenRefreshAuthenticator(
         tokenManager: TokenManager,
         authRepository: Provider<AuthRepository>,
-    ): TokenRefreshAuthenticator {
-        return TokenRefreshAuthenticator(tokenManager, authRepository)
-    }
+    ): TokenRefreshAuthenticator = TokenRefreshAuthenticator(tokenManager, authRepository)
 
     @Provides
     @Singleton
@@ -60,22 +54,22 @@ object NetworkModule {
         loggingInterceptor: HttpLoggingInterceptor,
         authInterceptor: AuthInterceptor,
         tokenRefreshAuthenticator: TokenRefreshAuthenticator,
-    ): OkHttpClient {
-        return OkHttpClient.Builder()
-            .addInterceptor(loggingInterceptor)
-            .addInterceptor(authInterceptor)
-            .authenticator(tokenRefreshAuthenticator)
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .readTimeout(10, TimeUnit.SECONDS)
-            .writeTimeout(10, TimeUnit.SECONDS)
-            .build()
-    }
+    ): OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(loggingInterceptor)
+        .addInterceptor(authInterceptor)
+        .authenticator(tokenRefreshAuthenticator)
+        .connectTimeout(10, TimeUnit.SECONDS)
+        .readTimeout(10, TimeUnit.SECONDS)
+        .writeTimeout(10, TimeUnit.SECONDS)
+        .build()
 
     @Provides
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         if (API_BASE_URL.isEmpty() || API_BASE_URL == "http://default-url") {
-            throw IllegalArgumentException("Please set API_BASE_URL=http://192.168.XXX.XXX:8080 in local.properties (root project folder)")
+            throw IllegalArgumentException(
+                "Please set API_BASE_URL=http://192.168.XXX.XXX:8080 in local.properties (root project folder)",
+            )
         } else {
             println("API_BASE_URL: $API_BASE_URL")
         }
@@ -89,13 +83,10 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideApiService(retrofit: Retrofit): ApiService {
-        return retrofit.create(ApiService::class.java)
-    }
+    fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
 
     @Provides
     @Singleton
-    fun providePreferencesManager(@ApplicationContext context: Context): PreferencesManager {
-        return PreferencesManager(context)
-    }
+    fun providePreferencesManager(@ApplicationContext context: Context): PreferencesManager =
+        PreferencesManager(context)
 }

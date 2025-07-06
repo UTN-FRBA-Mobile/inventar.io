@@ -2,10 +2,42 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.5'
     id 'io.spring.dependency-management' version '1.1.7'
+
+    // Code formatting plugin
+    id 'com.diffplug.spotless' version '7.0.4'
 }
 
 group = 'ar.edu.utn.frba'
 version = '0.1.0-SNAPSHOT'
+
+spotless {
+    java {
+        target 'src/**/*.java'
+        eclipse().configProperties([
+                'org.eclipse.jdt.core.formatter.tabulation.char': 'space',
+                'org.eclipse.jdt.core.formatter.tabulation.size': '4'
+        ] as String)
+    }
+
+    kotlinGradle {
+        target '*.gradle.kts', '**/*.gradle.kts'
+        ktlint().editorConfigOverride([
+                'ktlint_standard_no-wildcard-imports': 'disabled',
+                'ktlint_standard_property-naming'    : 'disabled',
+                'ktlint_standard_function-naming'    : 'disabled',
+                'indent_size'                        : '4',
+                'continuation_indent_size'           : '4'
+        ])
+    }
+
+    yaml {
+        target '**/*.yml', '**/*.yaml'
+        trimTrailingWhitespace()
+        endWithNewline()
+        leadingTabsToSpaces 2
+    }
+}
+
 
 java {
     toolchain {
