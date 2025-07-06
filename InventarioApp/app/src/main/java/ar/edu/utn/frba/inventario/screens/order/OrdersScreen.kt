@@ -19,7 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -44,6 +43,7 @@ fun OrdersScreen(
     userScreenViewModel: UserScreenViewModel = hiltViewModel()
 ) {
     val selectedStatusList by ordersViewModel.selectedStatusList.collectAsStateWithLifecycle()
+    val availableStatusList = ItemStatus.entries.filterNot { it == ItemStatus.BLOCKED }
     val branchName by userScreenViewModel.branchLocationName.collectAsStateWithLifecycle()
     val loading by ordersViewModel.loading.collectAsStateWithLifecycle()
     val error by ordersViewModel.error.collectAsStateWithLifecycle()
@@ -63,7 +63,7 @@ fun OrdersScreen(
                 .padding(top = 12.dp)
         )
         StatusFilter(
-            statusList = ItemStatus.entries,
+            statusList = availableStatusList,
             selectedStatusList = selectedStatusList,
             onStatusSelected = { ordersViewModel.updateSelectedStatusList(it) },
             onClearFilters = { ordersViewModel.clearFilters() },
