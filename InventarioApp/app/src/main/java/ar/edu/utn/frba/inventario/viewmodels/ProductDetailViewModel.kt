@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProductDetailViewModel @Inject constructor(
     private val productRepository: ProductRepository,
-    private val savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _productDetail: MutableStateFlow<Product?> = MutableStateFlow(null)
@@ -62,20 +62,20 @@ class ProductDetailViewModel @Inject constructor(
                         ean13 = details?.ean13.toString(),
                         imageURL = details?.imageURL,
                         innerLocation = null,
-                        currentStock = 0,
+                        currentStock = 0
                     )
                 } else if (detailsResult is NetworkResult.Error) {
                     _errorMessage.value = "Error al cargar detalles: ${detailsResult.message}"
                     Log.e(
                         "ProductDetailViewModel",
-                        "Error loading product details: ${detailsResult.message}",
+                        "Error loading product details: ${detailsResult.message}"
                     )
                 } else if (detailsResult is NetworkResult.Exception) {
                     _errorMessage.value = "Excepción al cargar detalles: ${detailsResult.e.message}"
                     Log.e(
                         "ProductDetailViewModel",
                         "Exception loading product details",
-                        detailsResult.e,
+                        detailsResult.e
                     )
                 }
 
@@ -86,14 +86,14 @@ class ProductDetailViewModel @Inject constructor(
 
                     loadedProduct = loadedProduct?.copy(
                         innerLocation = productInnerLocation,
-                        currentStock = productCurrentStock,
+                        currentStock = productCurrentStock
                     )
                 } else if (stockLocationResult is NetworkResult.Error) {
                     _errorMessage.value =
                         "Error al cargar stock/ubicación: ${stockLocationResult.message}"
                     Log.e(
                         "ProductDetailViewModel",
-                        "Error loading product stock/location: ${stockLocationResult.message}",
+                        "Error loading product stock/location: ${stockLocationResult.message}"
                     )
                 } else if (stockLocationResult is NetworkResult.Exception) {
                     _errorMessage.value =
@@ -101,13 +101,14 @@ class ProductDetailViewModel @Inject constructor(
                     Log.e(
                         "ProductDetailViewModel",
                         "Exception loading product stock/location",
-                        stockLocationResult.e,
+                        stockLocationResult.e
                     )
                 }
 
                 if (loadedProduct != null) {
                     _productDetail.value = loadedProduct
                 }
+
             } catch (e: Exception) {
                 _errorMessage.value = "Error inesperado: ${e.message}"
                 Log.e("ProductDetailViewModel", "Unexpected error loading product details", e)

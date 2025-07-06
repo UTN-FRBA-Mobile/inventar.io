@@ -37,8 +37,8 @@ fun CardItem(navController: NavController, item: Item, onItemClick: (Item) -> Un
             .padding(bottom = 7.5.dp)
             .clickable { onItemClick(item) },
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-        ),
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+        )
     ) {
         CardContent(item)
     }
@@ -50,7 +50,7 @@ private fun CardContent(item: Item) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         StatusIcon(item.status)
         CardText(item)
@@ -73,24 +73,24 @@ private fun StatusIcon(status: ItemStatus) {
         modifier = Modifier
             .width(56.dp)
             .padding(start = 8.dp),
-        contentAlignment = Alignment.Center,
+        contentAlignment = Alignment.Center
     ) {
         Image(
             painter = painterResource(id = status.iconResourceId),
             contentDescription = stringResource(R.string.state_icon),
             modifier = Modifier.fillMaxSize(0.9f),
-            contentScale = ContentScale.Fit,
+            contentScale = ContentScale.Fit
         )
     }
 }
 
 @Composable
-private fun StatusTitle(text: String, color: Color) { // ok
+private fun StatusTitle(text: String, color: Color) { //ok
     Text(
         text = text,
         style = MaterialTheme.typography.titleMedium,
         fontWeight = FontWeight.Bold,
-        color = color,
+        color = color
     )
 }
 
@@ -101,7 +101,7 @@ private fun CardItemTitle(displayName: String) {
         style = MaterialTheme.typography.bodyMedium,
         fontWeight = FontWeight.SemiBold,
         maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
+        overflow = TextOverflow.Ellipsis
     )
 }
 
@@ -109,6 +109,6 @@ private fun CardItemTitle(displayName: String) {
 private fun CardItemDetail(detail: String) {
     Text(
         text = detail,
-        style = MaterialTheme.typography.bodySmall,
+        style = MaterialTheme.typography.bodySmall
     )
 }

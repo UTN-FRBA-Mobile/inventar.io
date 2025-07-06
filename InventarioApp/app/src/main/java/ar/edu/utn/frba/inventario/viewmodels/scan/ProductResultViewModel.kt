@@ -15,8 +15,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProductResultViewModel @Inject constructor(private val productRepository: ProductRepository) :
-    ViewModel() {
+class ProductResultViewModel @Inject constructor(
+    private val productRepository: ProductRepository
+) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading
@@ -46,7 +47,7 @@ class ProductResultViewModel @Inject constructor(private val productRepository: 
                         _errorMessage.value = "Producto no encontrado"
                         ShipmentScanFlowState.scannedProduct = null
                         _isLoading.value = false
-                        return@launch
+                        return@launch;
                     }
 
                     val selectedShipment = ShipmentScanFlowState.selectedShipment
@@ -58,7 +59,7 @@ class ProductResultViewModel @Inject constructor(private val productRepository: 
                         _errorMessage.value = "Este producto no está en el envío"
                         ShipmentScanFlowState.scannedProduct = null
                         _isLoading.value = false
-                        return@launch
+                        return@launch;
                     }
 
                     val productAlreadyLoaded = ShipmentProductToScanList.isProductLoaded(product.id)
@@ -68,7 +69,7 @@ class ProductResultViewModel @Inject constructor(private val productRepository: 
                         _errorMessage.value = "Este producto ya fué cargado"
                         ShipmentScanFlowState.scannedProduct = null
                         _isLoading.value = false
-                        return@launch
+                        return@launch;
                     }
 
                     _foundProduct.value = product

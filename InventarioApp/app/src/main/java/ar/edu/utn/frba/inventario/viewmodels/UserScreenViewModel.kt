@@ -48,7 +48,7 @@ class UserScreenViewModel @Inject constructor(
                 is NetworkResult.Error -> {
                     Log.d(
                         "UserScreenViewModel",
-                        "Error: code=${userResult.code}, message=${userResult.message}",
+                        "Error: code=${userResult.code}, message=${userResult.message}"
                     )
                 }
 
@@ -67,7 +67,7 @@ class UserScreenViewModel @Inject constructor(
                     _branchLocationName.value = result.data?.name ?: UnknownLocation.toString()
                     Log.d(
                         "UserScreenViewModel",
-                        "Branch location loaded: ${_branchLocationName.value}",
+                        "Branch location loaded: ${_branchLocationName.value}"
                     )
                 }
 

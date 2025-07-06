@@ -78,23 +78,25 @@
     <string name="product_result_search_success">Producto encontrado</string>
 
     <!-- ShipmentDetailScreen -->
-    <string name="shipment_detail_title">Detalle del envío</string>
-    <string name="shipment_detail_shipment">Envío %1$s</string>
-    <string name="shipment_detail_customer">Comprador: %1$s</string>
-    <string name="shipment_detail_total">Total de productos únicos: %1$s</string>
-    <string name="shipment_detail_quantity_required">%1$s Requeridos</string>
-    <string name="shipment_detail_quantity_loaded">%1$s Cargados</string>
-    <string name="shipment_detail_next_button">Siguiente</string>
-    <string name="shipment_detail_scan_button">Escanear</string>
-    <string name="shipment_detail_insuff_stock_title_alert">Stock insuficiente</string>
-    <string name="shipment_detail_insuff_stock_message_alert">No hay existencias suficientes para algunos productos. Se bloquea el envío y será redirigido.</string>
-    <string name="shipment_detail_insuff_stock_accept_button_alert">Aceptar</string>
-    <string name="shipment_detail_confirm_exit_title_alert">Confirmar salida</string>
-    <string name="shipment_detail_confirm_exit_message_alert">¿Está seguro que desea salir? Los productos cargados se perderán.</string>
-    <string name="shipment_detail_confirm_exit_accept_button_alert">Salir</string>
-    <string name="shipment_detail_confirm_exit_cancel_button_alert">Cancelar</string>
-    <string name="shipment_detail_confirm_complete_title_alert">Confirmar envío</string>
-    <string name="shipment_detail_confirm_complete_message_alert">¿Está seguro que desea completar este envío y salir?</string>
+    <string name="shipment_detail_screen_title">Detalle del envío</string>
+    <string name="shipment_detail_screen_shipment">Envío %1$s</string>
+    <string name="shipment_detail_screen_customer">Comprador: %1$s</string>
+    <string name="shipment_detail_screen_total">Total de productos únicos: %1$s</string>
+    <string name="shipment_detail_screen_quantity_required">%1$s Requeridos</string>
+    <string name="shipment_detail_screen_quantity_loaded">%1$s Cargados</string>
+    <string name="shipment_detail_screen_next_button">Siguiente</string>
+    <string name="shipment_detail_screen_scan_button">Escanear</string>
+    <string name="shipment_detail_screen_insufficient_stock_title_alert_dialog">Stock insuficiente</string>
+    <string name="shipment_detail_screen_insufficient_stock_message_alert_dialog">No hay existencias suficientes para algunos productos. Se bloquea el envío y será redirigido.</string>
+    <string name="shipment_detail_screen_insufficient_stock_accept_button_alert_dialog">Aceptar</string>
+    <string name="shipment_detail_screen_confirm_exit_title_alert_dialog">Confirmar salida</string>
+    <string name="shipment_detail_screen_confirm_exit_message_alert_dialog">¿Está seguro que desea salir? Los productos cargados se perderán.</string>
+    <string name="shipment_detail_screen_confirm_exit_accept_button_alert_dialog">Salir</string>
+    <string name="shipment_detail_screen_confirm_exit_cancel_button_alert_dialog">Cancelar</string>
+    <string name="shipment_detail_screen_confirm_complete_title_alert_dialog">Confirmar envío</string>
+    <string name="shipment_detail_screen_confirm_complete_message_alert_dialog">¿Está seguro que desea completar este envío y salir?</string>
+    <string name="shipment_detail_screen_confirm_complete_confirm_button_alert_dialog">Confirmar</string>
+    <string name="shipment_detail_screen_confirm_complete_cancel_button_alert_dialog">Cancelar</string>
 
     <!-- OrderDetailScreen -->
     <string name="order_detail_screen_title">Detalle del pedido</string>
@@ -118,8 +120,10 @@
     <string name="received_quantity">Cant. recibida: %1$s</string>
     <string name="expected_quantity">Cant. solicitada: %1$s</string>
     <string name="no_products_found_for_order">No se encontraron productos</string>
-    <string name="order_products_screen_confirm_complete_title_alert">Confirmar Pedido</string>
-    <string name="order_products_screen_confirm_complete_message_alert">¿Estás seguro que quieres confirmar este pedido y salir?</string>
+    <string name="order_products_screen_confirm_complete_title_alert_dialog">Confirmar Pedido</string>
+    <string name="order_products_screen_confirm_complete_message_alert_dialog">¿Estás seguro que quieres confirmar este pedido y salir?</string>
+    <string name="order_products_screen_confirm_complete_confirm_button_alert_dialog">Confirmar</string>
+    <string name="order_products_screen_confirm_complete_cancel_button_alert_dialog">Cancelar</string>
 
     <!-- OrderResultScreen -->
     <string name="order_result_search_success">Pedido encontrado</string>

@@ -6,11 +6,12 @@ object ShipmentProductToScanList {
     private var active: Boolean = false
     private val ProductToScanList: MutableMap<String, Int> = mutableMapOf()
 
+
     fun addProduct(productId: String, loadedQuantity: Int) {
         ProductToScanList[productId] = loadedQuantity
         Log.d(
             "ShipmentProductToScanList",
-            "Se agrega el productId $productId con loadedQuantity: $loadedQuantity",
+            "Se agrega el productId $productId con loadedQuantity: $loadedQuantity"
         )
     }
 
@@ -19,7 +20,7 @@ object ShipmentProductToScanList {
             ProductToScanList[productId] = loadedQuantity
             Log.d(
                 "ShipmentProductToScanList",
-                "Se actualiza el productId $productId con loadedQuantity: $loadedQuantity",
+                "Se actualiza el productId $productId con loadedQuantity: $loadedQuantity"
             )
         } else {
             Log.d("ShipmentProductToScanList", "No existe el productId: $productId")
@@ -30,20 +31,28 @@ object ShipmentProductToScanList {
         active = true
     }
 
-    fun statusShipmentProductToScanList(): Boolean = active
+    fun statusShipmentProductToScanList(): Boolean {
+        return active
+    }
 
-    fun getLoadedProducts(): Map<String, Int> = ProductToScanList
+    fun getLoadedProducts(): Map<String, Int> {
+        return ProductToScanList
+    }
 
-    fun existProductId(productId: String): Boolean = ProductToScanList.containsKey(productId)
+    fun existProductId(productId: String): Boolean {
+        return ProductToScanList.containsKey(productId)
+    }
 
-    fun isProductLoaded(productId: String): Boolean = (ProductToScanList[productId] ?: 0) > 0
+    fun isProductLoaded(productId: String): Boolean {
+        return (ProductToScanList[productId] ?: 0) > 0
+    }
 
     fun clear() {
         active = false
         ProductToScanList.clear()
         Log.d(
             "ShipmentProductToScanList",
-            "Se limpia los valores, ya que se salio del circuito de ShipmentDetail",
+            "Se limpia los valores, ya que se salio del circuito de ShipmentDetail"
         )
     }
 }

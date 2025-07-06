@@ -63,7 +63,7 @@ import ar.edu.utn.frba.inventario.viewmodels.LoginScreenViewModel
 fun LoginScreen(
     navController: NavController,
     loginScreenViewModel: LoginScreenViewModel = hiltViewModel(),
-    locationViewModel: LocationViewModel = hiltViewModel(),
+    locationViewModel: LocationViewModel = hiltViewModel()
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
     val user by loginScreenViewModel.user.collectAsStateWithLifecycle()
@@ -83,12 +83,10 @@ fun LoginScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val locationPermission = Manifest.permission.ACCESS_FINE_LOCATION
-    val locationPermissionGranted by locationViewModel
-        .locationPermissionGranted
-        .collectAsStateWithLifecycle()
+    val locationPermissionGranted by locationViewModel.locationPermissionGranted.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val locationPermissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission(),
+        ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
             locationViewModel.setLocationPermissionGranted(true)
@@ -116,7 +114,7 @@ fun LoginScreen(
     LaunchedEffect(Unit) {
         if (ContextCompat.checkSelfPermission(
                 context,
-                locationPermission,
+                locationPermission
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             locationPermissionLauncher.launch(locationPermission)
@@ -129,13 +127,13 @@ fun LoginScreen(
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackBarHostState) },
+        snackbarHost = { SnackbarHost(snackBarHostState) }
     ) { paddingValues ->
         Box(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
-                .padding(WindowInsets.ime.asPaddingValues()),
+                .padding(WindowInsets.ime.asPaddingValues())
         ) {
             // si llega a cancelar permisos y quiere loguearse de vuelta, no muestra el login
             // y muestra un botón para solicitar permisos
@@ -144,7 +142,7 @@ fun LoginScreen(
                     modifier = Modifier
                         .fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
+                    verticalArrangement = Arrangement.Center
                 ) {
                     Text(
                         text = "Activar permisos de ubicacion",
@@ -156,7 +154,7 @@ fun LoginScreen(
                             .padding(top = 8.dp),
                         onClick = {
                             locationPermissionLauncher.launch(locationPermission)
-                        },
+                        }
                     ) {
                         Text(
                             text = "Activar ubicacion",
@@ -169,21 +167,21 @@ fun LoginScreen(
                 Column(
                     modifier = Modifier
                         .padding(paddingValues)
-                        .fillMaxSize(),
+                        .fillMaxSize()
                 ) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1f),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
+                        verticalArrangement = Arrangement.Center
                     ) {
                         Image(
                             painter = painterResource(id = logoResourceId),
                             contentDescription = stringResource(R.string.logo),
                             modifier = Modifier
                                 .size(screenWidth * 0.8f),
-                            contentScale = ContentScale.Fit,
+                            contentScale = ContentScale.Fit
                         )
                     }
                     Column(
@@ -191,7 +189,7 @@ fun LoginScreen(
                             .fillMaxWidth()
                             .weight(2f),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
+                        verticalArrangement = Arrangement.Center
                     ) {
                         OutlinedTextField(
                             value = user,
@@ -199,14 +197,14 @@ fun LoginScreen(
                             label = { Text("Usuario") },
                             keyboardOptions = KeyboardOptions.Default.copy(
                                 keyboardType = KeyboardType.Text,
-                                imeAction = ImeAction.Next,
+                                imeAction = ImeAction.Next
                             ),
                             keyboardActions = KeyboardActions(
                                 onNext = {
                                     focusManager.moveFocus(FocusDirection.Down)
-                                },
+                                }
                             ),
-                            singleLine = true,
+                            singleLine = true
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         OutlinedTextField(
@@ -216,25 +214,25 @@ fun LoginScreen(
                             visualTransformation = PasswordVisualTransformation(),
                             keyboardOptions = KeyboardOptions.Default.copy(
                                 keyboardType = KeyboardType.Password,
-                                imeAction = ImeAction.Done,
+                                imeAction = ImeAction.Done
                             ),
                             keyboardActions = KeyboardActions(
                                 onDone = {
                                     executeLogin(
                                         loginScreenViewModel,
                                         keyboardController,
-                                        focusManager,
+                                        focusManager
                                     )
-                                },
+                                }
                             ),
-                            singleLine = true,
+                            singleLine = true
                         )
                         Spacer(modifier = Modifier.height(32.dp))
                         Button(onClick = {
                             executeLogin(
                                 loginScreenViewModel,
                                 keyboardController,
-                                focusManager,
+                                focusManager
                             )
                         }) {
                             Text("Login")
@@ -251,7 +249,7 @@ fun LoginScreen(
 fun executeLogin(
     loginScreenViewModel: LoginScreenViewModel,
     keyboardController: SoftwareKeyboardController?,
-    focusManager: FocusManager,
+    focusManager: FocusManager
 ) {
     focusManager.clearFocus()
     keyboardController?.hide()

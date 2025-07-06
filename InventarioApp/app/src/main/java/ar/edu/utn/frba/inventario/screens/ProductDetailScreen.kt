@@ -56,7 +56,7 @@ fun ProductDetailScreen(
     onBackClick: () -> Unit,
     navController: NavController,
     productId: String?,
-    viewModel: ProductDetailViewModel = hiltViewModel(),
+    viewModel: ProductDetailViewModel = hiltViewModel()
 ) {
     val productDetail by viewModel.productDetail.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
@@ -74,16 +74,16 @@ fun ProductDetailScreen(
                         .height(56.dp)
                         .padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(
                         onClick = onBackClick,
-                        modifier = Modifier.size(48.dp),
+                        modifier = Modifier.size(48.dp)
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.go_back),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                     Text(
@@ -91,13 +91,13 @@ fun ProductDetailScreen(
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.weight(1f),
-                        textAlign = TextAlign.Center,
+                        textAlign = TextAlign.Center
                     )
 
                     Spacer(modifier = Modifier.size(48.dp))
                 }
             }
-        },
+        }
     ) { innerPadding ->
         when {
             isLoading -> {
@@ -106,7 +106,7 @@ fun ProductDetailScreen(
                         .fillMaxSize()
                         .padding(innerPadding),
                     verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     CircularProgressIndicator()
                     Text(text = stringResource(R.string.loading_product_detail))
@@ -119,11 +119,11 @@ fun ProductDetailScreen(
                         .fillMaxSize()
                         .padding(innerPadding),
                     verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
                         text = errorMessage ?: "Error desconocido",
-                        color = MaterialTheme.colorScheme.error,
+                        color = MaterialTheme.colorScheme.error
                     )
                 }
             }
@@ -133,13 +133,13 @@ fun ProductDetailScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding)
-                        .verticalScroll(rememberScrollState()),
+                        .verticalScroll(rememberScrollState())
                 ) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Box(
                             modifier = Modifier
@@ -147,29 +147,27 @@ fun ProductDetailScreen(
                                 .shadow(
                                     elevation = 8.dp,
                                     shape = RoundedCornerShape(12.dp),
-                                    clip = true,
+                                    clip = true
                                 )
                                 .background(
                                     color = MaterialTheme.colorScheme.surfaceVariant,
-                                    shape = RoundedCornerShape(12.dp),
+                                    shape = RoundedCornerShape(12.dp)
                                 )
-                                .clip(RoundedCornerShape(12.dp)),
+                                .clip(RoundedCornerShape(12.dp))
                         ) {
                             if (!productDetail?.imageURL.isNullOrBlank()) {
                                 Image(
-                                    painter = rememberAsyncImagePainter(
-                                        model = productDetail!!.imageURL,
-                                    ),
+                                    painter = rememberAsyncImagePainter(model = productDetail!!.imageURL),
                                     contentDescription = stringResource(R.string.product_image),
                                     contentScale = ContentScale.Crop,
-                                    modifier = Modifier.fillMaxSize(),
+                                    modifier = Modifier.fillMaxSize()
                                 )
                             } else {
                                 Image(
                                     painter = painterResource(id = R.drawable.image_not_found),
                                     contentDescription = stringResource(R.string.product_image),
                                     contentScale = ContentScale.Fit,
-                                    modifier = Modifier.fillMaxSize(),
+                                    modifier = Modifier.fillMaxSize()
                                 )
                             }
                         }
@@ -177,29 +175,29 @@ fun ProductDetailScreen(
                         Spacer(modifier = Modifier.width(16.dp))
 
                         Column(
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier.weight(1f)
                         ) {
                             Text(
                                 text = productDetail?.name.toString(),
                                 style = MaterialTheme.typography.headlineSmall,
                                 color = MaterialTheme.colorScheme.onBackground,
                                 maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
+                                overflow = TextOverflow.Ellipsis
                             )
 
                             Spacer(modifier = Modifier.height(4.dp))
 
                             Text(
-                                text = "EAN13: ${productDetail?.ean13}",
+                                text = "EAN13: ${productDetail?.ean13.toString()}",
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Text(
                                 text = productDetail?.description.toString(),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
+                                overflow = TextOverflow.Ellipsis
                             )
                         }
                     }
@@ -211,21 +209,21 @@ fun ProductDetailScreen(
                             .shadow(
                                 elevation = 4.dp,
                                 shape = RoundedCornerShape(12.dp),
-                                clip = true,
+                                clip = true
                             ),
                         shape = RoundedCornerShape(12.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface,
-                        ),
+                            containerColor = MaterialTheme.colorScheme.surface
+                        )
                     ) {
                         Column(
-                            modifier = Modifier.padding(16.dp),
+                            modifier = Modifier.padding(16.dp)
                         ) {
                             DetailRow(
                                 iconLight = R.drawable.location_light,
                                 iconDark = R.drawable.location_dark,
                                 text = productDetail?.innerLocation.toString(),
-                                label = stringResource(R.string.inner_location),
+                                label = stringResource(R.string.inner_location)
                             )
 
                             Spacer(modifier = Modifier.height(28.dp))
@@ -234,7 +232,7 @@ fun ProductDetailScreen(
                                 iconLight = R.drawable.current_stock_light,
                                 iconDark = R.drawable.current_stock_dark,
                                 text = productDetail?.currentStock.toString(),
-                                label = stringResource(R.string.current_stock),
+                                label = stringResource(R.string.current_stock)
                             )
                         }
                     }
@@ -250,31 +248,31 @@ private fun DetailRow(
     @DrawableRes iconDark: Int,
     text: String,
     label: String,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     val iconRes = if (isSystemInDarkTheme()) iconDark else iconLight
 
     Row(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             painter = painterResource(id = iconRes),
             contentDescription = null,
             modifier = Modifier.size(36.dp),
-            tint = MaterialTheme.colorScheme.primary,
+            tint = MaterialTheme.colorScheme.primary
         )
         Spacer(modifier = Modifier.width(12.dp))
         Column {
             Text(
                 text = label,
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
                 text = text,
                 style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onBackground,
+                color = MaterialTheme.colorScheme.onBackground
             )
         }
     }

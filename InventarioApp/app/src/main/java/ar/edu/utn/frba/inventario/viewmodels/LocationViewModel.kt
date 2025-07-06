@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.inventario.viewmodels
 
+
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
@@ -17,16 +18,18 @@ import java.io.IOException
 import java.util.Locale
 import javax.inject.Inject
 
+
 @HiltViewModel
-class LocationViewModel @Inject constructor(private val locationRepository: LocationRepository) :
-    ViewModel() {
+class LocationViewModel @Inject constructor(
+    private val locationRepository: LocationRepository
+) : ViewModel() {
     val location: StateFlow<Location?> = locationRepository.location
 
     private val _locationPermissionGranted = MutableStateFlow(false)
     var locationPermissionGranted: StateFlow<Boolean> = _locationPermissionGranted
 
     fun setLocationPermissionGranted(flag: Boolean) {
-        _locationPermissionGranted.value = flag
+        _locationPermissionGranted.value = flag;
     }
 
     fun startLocationUpdates() {
@@ -38,15 +41,17 @@ class LocationViewModel @Inject constructor(private val locationRepository: Loca
         locationRepository.stopLocationUpdates()
     }
 
-    fun hasLocationPermission(context: Context): Boolean = ContextCompat.checkSelfPermission(
-        context,
-        Manifest.permission.ACCESS_FINE_LOCATION,
-    ) == PackageManager.PERMISSION_GRANTED
+    fun hasLocationPermission(context: Context): Boolean {
+        return ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+    }
 
     suspend fun getAddressFromLocation(
         context: Context,
         latitude: Double,
-        longitude: Double,
+        longitude: Double
     ): String? = withContext(Dispatchers.IO) {
         try {
             val geocoder = Geocoder(context, Locale.getDefault())
@@ -57,4 +62,5 @@ class LocationViewModel @Inject constructor(private val locationRepository: Loca
             null
         }
     }
+
 }

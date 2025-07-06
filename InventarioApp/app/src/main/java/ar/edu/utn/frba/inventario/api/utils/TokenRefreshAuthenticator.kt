@@ -18,8 +18,7 @@ class TokenRefreshAuthenticator constructor(
         val requestAccessToken = response.request.header("Authorization")?.substringAfter("Bearer ")
 
         if ((response.code == 401 || response.code == 403) &&
-            currentAccessToken != null &&
-            currentAccessToken == requestAccessToken
+            currentAccessToken != null && currentAccessToken == requestAccessToken
         ) {
             synchronized(this) {
                 val newAccessTokenCheck = tokenManager.getAccessToken()
@@ -38,7 +37,7 @@ class TokenRefreshAuthenticator constructor(
                         val newLoginResponse = refreshResult.data
                         tokenManager.saveSession(
                             newLoginResponse.accessToken,
-                            newLoginResponse.refreshToken,
+                            newLoginResponse.refreshToken
                         )
 
                         return response.request.newBuilder()

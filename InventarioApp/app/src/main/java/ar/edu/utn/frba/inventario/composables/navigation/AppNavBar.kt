@@ -22,7 +22,7 @@ fun AppNavBar(navController: NavController, items: List<Screen>) {
     val currentRoute = navBackStackEntry?.destination?.route?.removeRouteParams()
 
     NavigationBar(
-        modifier = Modifier.height(82.dp),
+        modifier = Modifier.height(82.dp)
     ) {
         items.forEach { screen: Screen ->
 
@@ -37,7 +37,7 @@ fun AppNavBar(navController: NavController, items: List<Screen>) {
                     Image(
                         painter = painterResource(id = iconRes),
                         contentDescription = null,
-                        modifier = Modifier.size(24.dp),
+                        modifier = Modifier.size(24.dp)
                     )
                 },
                 selected = currentRoute == screen.route,
@@ -47,7 +47,7 @@ fun AppNavBar(navController: NavController, items: List<Screen>) {
                         popUpTo(Screen.Shipments.route)
                         launchSingleTop = true
                     }
-                },
+                }
             )
         }
     }
