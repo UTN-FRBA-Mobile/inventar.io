@@ -95,7 +95,7 @@ fun ManualCodeBodyContent(navController: NavController) {
         ) {
             Text(
                 stringResource(R.string.confirm),
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
             )
         }
 

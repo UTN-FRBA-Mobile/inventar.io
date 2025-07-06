@@ -142,8 +142,8 @@ fun ProductAmountScreen(
             }) {
                 Text(
                     stringResource(R.string.product_amount_confirm_button),
-                    style = MaterialTheme.typography.titleMedium
-                    )
+                    style = MaterialTheme.typography.titleMedium,
+                )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -157,8 +157,8 @@ fun ProductAmountScreen(
             }) {
                 Text(
                     stringResource(R.string.cancel),
-                    style = MaterialTheme.typography.titleMedium
-                    )
+                    style = MaterialTheme.typography.titleMedium,
+                )
             }
         } else {
             Button(onClick = {

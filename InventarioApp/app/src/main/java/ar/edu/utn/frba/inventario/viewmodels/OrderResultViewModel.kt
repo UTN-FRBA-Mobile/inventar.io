@@ -24,7 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class OrderResultViewModel @Inject constructor(
     private val orderRepository: OrderRepository,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val _foundOrder = MutableStateFlow<OrderResponse?>(null)
@@ -123,7 +123,7 @@ class OrderResultViewModel @Inject constructor(
                             _startOrderLoading.value = false
                             Log.e(
                                 "OrderResultViewModel",
-                                "Error al iniciar pedido: ${result.message}"
+                                "Error al iniciar pedido: ${result.message}",
                             )
                         }
 
@@ -151,7 +151,7 @@ class OrderResultViewModel @Inject constructor(
 
     private fun navigateToOrderProductsList(navController: NavController, orderId: String) {
         val destination = Screen.OrderProductsList.withNavArgs(
-            OrderProductsListArgs.OrderId to orderId
+            OrderProductsListArgs.OrderId to orderId,
         )
         navController.navigate(destination)
     }

@@ -1,7 +1,5 @@
 package ar.edu.utn.frba.inventario.screens.shipment
 
-import android.annotation.SuppressLint
-import android.content.res.Configuration
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
@@ -363,8 +361,6 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
                         enabled = viewModel.isStateCompleteShipment.value,
                         onClick = {
                             viewModel.showCompleteShipmentConfirmation()
-                            // viewModel.completedShipment(viewModel.selectedShipment.value.id)
-                            // navController.navigate(Screen.Shipments.route)
                         },
                         shape = RoundedCornerShape(50),
                         modifier = Modifier

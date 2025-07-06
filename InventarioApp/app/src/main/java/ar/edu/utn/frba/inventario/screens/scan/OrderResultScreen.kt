@@ -160,14 +160,14 @@ fun OrderResultBodyContent(
                     fontSize = 22.sp,
                     color = Color.Gray,
                     modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
             } else {
                 Button(onClick = onContinueClick) {
                     Text(
                         stringResource(R.string._continue),
-                        style = MaterialTheme.typography.titleMedium
-                        )
+                        style = MaterialTheme.typography.titleMedium,
+                    )
                 }
             }
         } else {
@@ -181,7 +181,7 @@ fun OrderResultBodyContent(
         }) {
             Text(
                 stringResource(R.string.try_again),
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
             )
         }
     }

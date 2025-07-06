@@ -160,7 +160,7 @@ fun ProductResultBodyContent(
             }) {
                 Text(
                     stringResource(R.string._continue),
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
                 )
             }
         } else {
@@ -174,7 +174,7 @@ fun ProductResultBodyContent(
         }) {
             Text(
                 stringResource(R.string.try_again),
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
             )
         }
     }

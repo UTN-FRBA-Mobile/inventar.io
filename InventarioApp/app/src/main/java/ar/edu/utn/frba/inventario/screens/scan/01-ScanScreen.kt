@@ -141,7 +141,11 @@ fun ScanCameraContent(navController: NavController, origin: String) {
                     .align(Alignment.BottomCenter),
                 contentAlignment = Alignment.Center,
             ) {
-                ManualInputButton(navController = navController, origin = origin, modifier = Modifier)
+                ManualInputButton(
+                    navController = navController,
+                    origin = origin,
+                    modifier = Modifier,
+                )
             }
         }
     }
@@ -160,11 +164,11 @@ fun ManualInputButton(navController: NavController, origin: String, modifier: Mo
         shape = RoundedCornerShape(50),
         modifier = modifier
             .width(180.dp)
-            .height(40.dp)
+            .height(40.dp),
     ) {
         Text(
             stringResource(R.string.scan_manual_input_button),
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium,
         )
     }
 }
