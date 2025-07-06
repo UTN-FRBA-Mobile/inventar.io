@@ -2,12 +2,12 @@ package ar.edu.utn.frba.inventario.api.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import androidx.core.content.edit
 
-class PreferencesManager (context: Context) {
+class PreferencesManager(context: Context) {
 
     private val preferences: SharedPreferences =
         context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)

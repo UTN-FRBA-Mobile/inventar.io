@@ -46,7 +46,8 @@ class OrdersViewModel @Inject constructor(
 
     override fun getStatus(item: Order) = item.status
 
-    override fun getFilterDate(item: Order) = item.creationDate //TODO analizar si usamos creationDate o deberíamos ordenar por otra fecha
+    override fun getFilterDate(item: Order) =
+        item.creationDate //TODO analizar si usamos creationDate o deberíamos ordenar por otra fecha
 
     fun getOrders() {
         viewModelScope.launch(Dispatchers.Default) {
@@ -64,13 +65,19 @@ class OrdersViewModel @Inject constructor(
                         _items.addAll(ordersParsed)
                     }
                 }
+
                 is NetworkResult.Error -> {
-                    Log.d("OrdersViewModel", "Error: code=${ordersResult.code}, message=${ordersResult.message}")
+                    Log.d(
+                        "OrdersViewModel",
+                        "Error: code=${ordersResult.code}, message=${ordersResult.message}"
+                    )
                     _error.value = ordersResult.message ?: "Error desconocido al cargar pedidos."
                 }
+
                 is NetworkResult.Exception -> {
                     Log.d("OrdersViewModel", "Error crítico: ${ordersResult.e.message}")
-                    _error.value = ordersResult.e.message ?: "Excepción desconocida al cargar pedidos."
+                    _error.value =
+                        ordersResult.e.message ?: "Excepción desconocida al cargar pedidos."
                 }
             }
             _loading.value = false

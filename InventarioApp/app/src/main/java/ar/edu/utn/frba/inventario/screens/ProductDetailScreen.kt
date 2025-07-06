@@ -21,6 +21,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -82,7 +83,7 @@ fun ProductDetailScreen(
                         modifier = Modifier.size(48.dp)
                     ) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.go_back),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -104,7 +105,9 @@ fun ProductDetailScreen(
         when {
             isLoading -> {
                 Column(
-                    modifier = Modifier.fillMaxSize().padding(innerPadding),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -112,13 +115,19 @@ fun ProductDetailScreen(
                     Text(text = stringResource(R.string.loading_product_detail))
                 }
             }
+
             errorMessage != null -> {
                 Column(
-                    modifier = Modifier.fillMaxSize().padding(innerPadding),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = errorMessage ?: "Error desconocido", color = MaterialTheme.colorScheme.error)
+                    Text(
+                        text = errorMessage ?: "Error desconocido",
+                        color = MaterialTheme.colorScheme.error
+                    )
                 }
             }
 

@@ -1,7 +1,5 @@
 package ar.edu.utn.frba.inventario.screens.order
 
-import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,7 +48,6 @@ fun OrdersScreen(
     val loading by ordersViewModel.loading.collectAsStateWithLifecycle()
     val error by ordersViewModel.error.collectAsStateWithLifecycle()
 
-
     LaunchedEffect(Unit) {
         ordersViewModel.getOrders()
     }
@@ -58,7 +55,6 @@ fun OrdersScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.secondaryContainer)
     ) {
         BranchLocationBar(
             branchName = branchName,
@@ -94,13 +90,12 @@ fun OrderBodyContent(
 ) {
     Box(modifier = modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
             Text(
                 text = "Pedidos",
                 style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(vertical = 16.dp)
             )
 
             when {
@@ -114,6 +109,7 @@ fun OrderBodyContent(
                         Spinner(true)
                     }
                 }
+
                 error != null -> {
                     Box(
                         modifier = Modifier
@@ -127,12 +123,14 @@ fun OrderBodyContent(
                         )
                     }
                 }
+
                 orders.isEmpty() -> {
                     EmptyResultsMessage(
                         message = stringResource(R.string.no_results_for_filters),
                         modifier = Modifier.weight(1f)
                     )
                 }
+
                 else -> {
                     LazyColumn(
                         modifier = Modifier.weight(1f)
@@ -162,16 +160,6 @@ fun OrderBodyContent(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(horizontal = 15.dp, vertical = 0.dp)
             )
-        }
-
-        BackHandler {
-            navController.navigate(Screen.Shipments.route) {
-                popUpTo(navController.graph.startDestinationId) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
         }
     }
 }

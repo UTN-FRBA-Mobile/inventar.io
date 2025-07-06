@@ -13,12 +13,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
-import ar.edu.utn.frba.inventario.ui.theme.Purple40
 
 @Composable
 fun StatusFilter(
@@ -33,21 +31,23 @@ fun StatusFilter(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 2.dp)
+            .padding(vertical = 2.dp)
             .horizontalScroll(scrollState),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+        // Filtro "Todos"
         FilterChip(
             selected = selectedStatusList.isEmpty(),
             onClick = onClearFilters,
             label = { Text(stringResource(R.string.all_status_selected)) },
             colors = FilterChipDefaults.filterChipColors(
-                selectedContainerColor = Purple40.copy(alpha = 0.2f),
+                selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
                 selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
             )
         )
-        statusList.forEach { status ->
+
+        statusList.forEach { status: ItemStatus ->
             val isSelected = status in selectedStatusList
             FilterChip(
                 selected = isSelected,
@@ -55,7 +55,6 @@ fun StatusFilter(
                 label = { Text(status.displayName) },
                 colors = FilterChipDefaults.filterChipColors(
                     selectedContainerColor = status.color.copy(alpha = 0.2f),
-                    selectedLabelColor = Color.Black
                 )
             )
         }

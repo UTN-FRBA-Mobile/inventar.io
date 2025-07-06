@@ -44,6 +44,7 @@ class TokenRefreshAuthenticator constructor(
                             .header("Authorization", "Bearer ${newLoginResponse.accessToken}")
                             .build()
                     }
+
                     is NetworkResult.Error, is NetworkResult.Exception -> {
                         // El refresh falló (ej. refresh token inválido o expirado)
                         tokenManager.clearSession()

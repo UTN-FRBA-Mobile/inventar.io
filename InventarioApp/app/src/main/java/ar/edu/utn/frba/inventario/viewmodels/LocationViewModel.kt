@@ -22,13 +22,13 @@ import javax.inject.Inject
 @HiltViewModel
 class LocationViewModel @Inject constructor(
     private val locationRepository: LocationRepository
-): ViewModel() {
+) : ViewModel() {
     val location: StateFlow<Location?> = locationRepository.location
 
     private val _locationPermissionGranted = MutableStateFlow(false)
     var locationPermissionGranted: StateFlow<Boolean> = _locationPermissionGranted
 
-    fun setLocationPermissionGranted(flag: Boolean){
+    fun setLocationPermissionGranted(flag: Boolean) {
         _locationPermissionGranted.value = flag;
     }
 

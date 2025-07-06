@@ -6,28 +6,29 @@ import ar.edu.utn.frba.inventario.api.model.shipment.ShipmentResponse
 import javax.inject.Inject
 
 class ShipmentRepository @Inject constructor(
-    private val apiService: ApiService):Repository() {
+    private val apiService: ApiService
+) : Repository() {
     suspend fun getShipment(idShipment: Long): NetworkResult<ShipmentResponse> {
-        return safeApiCall {apiService.getShipment(idShipment)}
+        return safeApiCall { apiService.getShipment(idShipment) }
     }
 
     suspend fun getShipmentList(): NetworkResult<List<ShipmentResponse>> {
-        return safeApiCall {apiService.getShipmentList()}
+        return safeApiCall { apiService.getShipmentList() }
     }
 
     suspend fun startShipment(idShipment: Long): NetworkResult<ShipmentResponse> {
-        return safeApiCall {apiService.startShipment(idShipment)}
+        return safeApiCall { apiService.startShipment(idShipment) }
     }
 
     suspend fun finishShipment(idShipment: Long): NetworkResult<ShipmentResponse> {
-        return safeApiCall {apiService.finishShipment(idShipment)}
+        return safeApiCall { apiService.finishShipment(idShipment) }
     }
 
     suspend fun blockShipment(idShipment: Long): NetworkResult<ShipmentResponse> {
-        return safeApiCall {apiService.blockShipment(idShipment)}
+        return safeApiCall { apiService.blockShipment(idShipment) }
     }
 
     suspend fun unBlockShipment(idShipment: Long): NetworkResult<ShipmentResponse> {
-        return safeApiCall {apiService.unBlockShipment(idShipment)}
+        return safeApiCall { apiService.unBlockShipment(idShipment) }
     }
 }

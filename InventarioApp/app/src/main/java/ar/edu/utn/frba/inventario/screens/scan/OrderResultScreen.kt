@@ -101,8 +101,7 @@ fun OrderResultBodyContent(
                 apiError,
                 fontSize = 18.sp,
             )
-        }
-        else if (startOrderError != null) {
+        } else if (startOrderError != null) {
             Text(
                 text = stringResource(R.string.order_initialization_failed),
                 fontSize = 24.sp,
@@ -114,8 +113,7 @@ fun OrderResultBodyContent(
                 startOrderError,
                 fontSize = 18.sp,
             )
-        }
-        else if (foundOrder != null) {
+        } else if (foundOrder != null) {
             Text(
                 text = stringResource(R.string.order_result_search_success),
                 fontSize = 24.sp,
@@ -142,7 +140,10 @@ fun OrderResultBodyContent(
             Spacer(Modifier.height(16.dp))
 
             Text(
-                text = stringResource(R.string.unique_total_products, foundOrder.productAmount.size),
+                text = stringResource(
+                    R.string.unique_total_products,
+                    foundOrder.productAmount.size
+                ),
                 fontSize = 22.sp,
                 color = Color.Gray
             )

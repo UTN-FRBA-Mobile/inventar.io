@@ -113,7 +113,11 @@ fun ProductAmountScreen(
             text = if (enoughStock)
                 stringResource(R.string.product_amount_required_quantity, requiredAmount)
             else
-                stringResource(R.string.product_amount_insufficient_stock, requiredAmount, scannedProduct.name),
+                stringResource(
+                    R.string.product_amount_insufficient_stock,
+                    requiredAmount,
+                    scannedProduct.name
+                ),
             style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Center
         )
@@ -123,7 +127,10 @@ fun ProductAmountScreen(
         if (enoughStock) {
             Button(onClick = {
                 // ToDo - Pegarle al endpoint necesario, para confirmar el ingreso del producto
-                ShipmentProductToScanList.updateLoadedQuantity(productId = scannedProduct.id, loadedQuantity = requiredAmount)
+                ShipmentProductToScanList.updateLoadedQuantity(
+                    productId = scannedProduct.id,
+                    loadedQuantity = requiredAmount
+                )
 
                 navController.navigate(Screen.ShipmentDetail.route + "/${selectedShipment.id}") {
                     popUpTo(Screen.ShipmentDetail.route) { inclusive = true }
@@ -136,7 +143,10 @@ fun ProductAmountScreen(
 
             OutlinedButton(onClick = {
                 ShipmentScanFlowState.clear()
-                navController.popBackStack(Screen.ShipmentDetail.route + "/${selectedShipment.id}", false)
+                navController.popBackStack(
+                    Screen.ShipmentDetail.route + "/${selectedShipment.id}",
+                    false
+                )
             }) {
                 Text(stringResource(R.string.cancel))
             }

@@ -51,7 +51,8 @@ class ProductResultViewModel @Inject constructor(
                     }
 
                     val selectedShipment = ShipmentScanFlowState.selectedShipment
-                    val productInShipment = selectedShipment?.products?.any { it.id == product.id } == true
+                    val productInShipment =
+                        selectedShipment?.products?.any { it.id == product.id } == true
 
                     if (!productInShipment) {
                         _foundProduct.value = null
