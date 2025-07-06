@@ -47,6 +47,9 @@ class OrderProductsViewModel @Inject constructor(
 
     private val orderId: String = savedStateHandle["orderId"] ?: ""
 
+    private val _showCompleteOrderConfirmationDialog = MutableStateFlow(false)
+    val showCompleteOrderConfirmationDialog = _showCompleteOrderConfirmationDialog.asStateFlow()
+
     init {
         if (orderId.isNotEmpty()) {
             Log.d("OrderProductsViewModel", "Initializing with orderId: $orderId")
@@ -241,5 +244,12 @@ class OrderProductsViewModel @Inject constructor(
                 Log.e("OrderProductsViewModel", "Error inesperado al finalizar el pedido", e)
             }
         }
+    }
+
+    fun showCompleteOrderConfirmation() {
+        _showCompleteOrderConfirmationDialog.value = true
+    }
+    fun dismissCompleteOrderConfirmation() {
+        _showCompleteOrderConfirmationDialog.value = false
     }
 }
