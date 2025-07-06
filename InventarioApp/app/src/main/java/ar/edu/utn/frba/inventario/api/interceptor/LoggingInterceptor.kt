@@ -7,7 +7,5 @@ object LoggingInterceptor {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
-    fun get(): HttpLoggingInterceptor {
-        return loggingInterceptor
-    }
+    fun get(): HttpLoggingInterceptor = loggingInterceptor
 }

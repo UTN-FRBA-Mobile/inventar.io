@@ -6,25 +6,16 @@ import ar.edu.utn.frba.inventario.api.model.order.OrderResponse
 import javax.inject.Inject
 
 class OrderRepository @Inject constructor(
-    private val apiService: ApiService
+    private val apiService: ApiService,
 ) : Repository() {
-    suspend fun getOrderById(orderId: String): NetworkResult<OrderResponse> {
-        return safeApiCall { apiService.getOrder(orderId) }
-    }
+    suspend fun getOrderById(orderId: String): NetworkResult<OrderResponse> = safeApiCall { apiService.getOrder(orderId) }
 
-    suspend fun getOrdersList(): NetworkResult<List<OrderResponse>> {
-        return safeApiCall { apiService.getOrdersList() }
-    }
+    suspend fun getOrdersList(): NetworkResult<List<OrderResponse>> = safeApiCall { apiService.getOrdersList() }
 
-    suspend fun startOrder(id: Long): NetworkResult<OrderResponse> {
-        return safeApiCall { apiService.startOrder(id) }
-    }
+    suspend fun startOrder(id: Long): NetworkResult<OrderResponse> = safeApiCall { apiService.startOrder(id) }
 
     suspend fun finishOrder(
         id: Long,
-        productQuantities: Map<String, Int>
-    ): NetworkResult<OrderResponse> {
-        return safeApiCall { apiService.finishOrder(id, productQuantities) }
-    }
+        productQuantities: Map<String, Int>,
+    ): NetworkResult<OrderResponse> = safeApiCall { apiService.finishOrder(id, productQuantities) }
 }
-

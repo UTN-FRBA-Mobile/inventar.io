@@ -26,7 +26,7 @@ fun AppNavBar(navController: NavController, items: List<Screen>) {
                     when (screen) {
                         Screen.Shipments -> Icon(
                             Icons.AutoMirrored.Filled.Send,
-                            contentDescription = null
+                            contentDescription = null,
                         )
 
                         Screen.Orders -> Icon(Icons.Default.ShoppingCart, contentDescription = null)
@@ -36,15 +36,15 @@ fun AppNavBar(navController: NavController, items: List<Screen>) {
                 },
                 selected = currentRoute == screen.route,
                 onClick = {
-                    if (currentRoute == screen.route)
+                    if (currentRoute == screen.route) {
                         return@NavigationBarItem
+                    }
 
                     navController.navigate(screen.route) {
                         popUpTo(Screen.Shipments.route)
                         launchSingleTop = true
                     }
-
-                }
+                },
             )
         }
     }

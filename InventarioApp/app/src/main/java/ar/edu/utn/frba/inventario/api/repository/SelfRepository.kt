@@ -9,11 +9,7 @@ import javax.inject.Inject
 class SelfRepository @Inject constructor(
     private val apiService: ApiService,
 ) : Repository() {
-    suspend fun getMyUser(): NetworkResult<UserResponse> {
-        return safeApiCall { apiService.getMyUser() }
-    }
+    suspend fun getMyUser(): NetworkResult<UserResponse> = safeApiCall { apiService.getMyUser() }
 
-    suspend fun getMyLocation(): NetworkResult<LocationResponse> {
-        return safeApiCall { apiService.getMyLocation() }
-    }
+    suspend fun getMyLocation(): NetworkResult<LocationResponse> = safeApiCall { apiService.getMyLocation() }
 }

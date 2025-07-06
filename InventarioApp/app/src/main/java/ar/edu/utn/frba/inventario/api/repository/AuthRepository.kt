@@ -9,11 +9,7 @@ import javax.inject.Inject
 class AuthRepository @Inject constructor(
     private val apiService: ApiService,
 ) : Repository() {
-    suspend fun login(loginRequest: LoginRequest): NetworkResult<LoginResponse> {
-        return safeApiCall { apiService.login(loginRequest) }
-    }
+    suspend fun login(loginRequest: LoginRequest): NetworkResult<LoginResponse> = safeApiCall { apiService.login(loginRequest) }
 
-    fun refreshToken(refreshToken: String): NetworkResult<LoginResponse> {
-        return blockingApiCall { apiService.refreshToken(refreshToken) }
-    }
+    fun refreshToken(refreshToken: String): NetworkResult<LoginResponse> = blockingApiCall { apiService.refreshToken(refreshToken) }
 }

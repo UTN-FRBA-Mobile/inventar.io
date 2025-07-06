@@ -33,7 +33,6 @@ import ar.edu.utn.frba.inventario.composables.utils.Spinner
 import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.viewmodels.scan.ProductResultViewModel
 
-
 @Composable
 fun ProductResultScreen(
     navController: NavController,
@@ -41,7 +40,7 @@ fun ProductResultScreen(
     codeType: String?,
     errorMessage: String?,
     origin: String,
-    viewModel: ProductResultViewModel = hiltViewModel()
+    viewModel: ProductResultViewModel = hiltViewModel(),
 ) {
     if (errorMessage != null) {
         ProductResultBodyContent(
@@ -50,7 +49,7 @@ fun ProductResultScreen(
             codeType = codeType,
             errorMessage = errorMessage,
             origin = origin,
-            foundProduct = null
+            foundProduct = null,
         )
         return
     }
@@ -74,7 +73,7 @@ fun ProductResultScreen(
         codeType = codeType,
         errorMessage = error,
         origin = origin,
-        foundProduct = foundProduct
+        foundProduct = foundProduct,
     )
 }
 
@@ -85,7 +84,7 @@ fun ProductResultBodyContent(
     codeType: String?,
     errorMessage: String?,
     origin: String,
-    foundProduct: Product?
+    foundProduct: Product?,
 ) {
     // TODO - Revisar si "origin" es necesario, entiendo que ya no
 
@@ -94,14 +93,14 @@ fun ProductResultBodyContent(
             .fillMaxSize()
             .padding(horizontal = 24.dp),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         if (errorMessage != null) {
             Text(
                 text = stringResource(R.string.search_failed),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Red
+                color = Color.Red,
             )
             Spacer(Modifier.height(8.dp))
             Text(
@@ -114,7 +113,7 @@ fun ProductResultBodyContent(
                 text = stringResource(R.string.product_result_search_success),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF2E7D32)
+                color = Color(0xFF2E7D32),
             )
 
             Spacer(Modifier.height(16.dp))
@@ -122,7 +121,7 @@ fun ProductResultBodyContent(
             Text(
                 text = foundProduct.name,
                 fontSize = 22.sp,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
             )
 
             Spacer(Modifier.height(8.dp))
@@ -130,7 +129,7 @@ fun ProductResultBodyContent(
             Text(
                 text = foundProduct.description,
                 fontSize = 18.sp,
-                color = Color.DarkGray
+                color = Color.DarkGray,
             )
 
             Spacer(Modifier.height(24.dp))
@@ -142,7 +141,7 @@ fun ProductResultBodyContent(
                         .size(180.dp)
                         .clip(CircleShape)
                         .border(2.dp, Color.Gray, CircleShape)
-                        .shadow(4.dp, CircleShape)
+                        .shadow(4.dp, CircleShape),
                 )
                 Spacer(Modifier.height(24.dp))
             }
@@ -150,7 +149,7 @@ fun ProductResultBodyContent(
             Text(
                 text = "Código EAN-13:\n$code",
                 fontSize = 14.sp,
-                color = Color.Gray
+                color = Color.Gray,
             )
 
             Spacer(Modifier.height(32.dp))
@@ -160,7 +159,6 @@ fun ProductResultBodyContent(
             }) {
                 Text(stringResource(R.string._continue))
             }
-
         } else {
             Text("Error desconocido", fontSize = 16.sp, color = Color.Gray)
         }
@@ -174,6 +172,3 @@ fun ProductResultBodyContent(
         }
     }
 }
-
-
-

@@ -14,14 +14,9 @@ import javax.inject.Singleton
 object RepositoryModule {
     @Provides
     @Singleton
-    fun provideAuthRepository(apiService: ApiService): AuthRepository {
-        return AuthRepository(apiService)
-    }
+    fun provideAuthRepository(apiService: ApiService): AuthRepository = AuthRepository(apiService)
 
     @Provides
     @Singleton
-    fun provideSelfRepository(apiService: ApiService): SelfRepository {
-        return SelfRepository(apiService)
-    }
-
+    fun provideSelfRepository(apiService: ApiService): SelfRepository = SelfRepository(apiService)
 }

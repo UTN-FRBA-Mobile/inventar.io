@@ -1,6 +1,5 @@
 package ar.edu.utn.frba.inventario.screens.shipment
 
-
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.util.Log
@@ -72,7 +71,7 @@ import kotlinx.coroutines.launch
 fun ShipmentDetailScreen(
     viewModel: ShipmentDetailViewModel = hiltViewModel(),
     navController: NavController,
-    id: String
+    id: String,
 ) {
     val showExitDialog by viewModel.showExitConfirmationDialog.collectAsState()
 
@@ -91,7 +90,7 @@ fun ShipmentDetailScreen(
                         .height(56.dp)
                         .padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     IconButton(
                         onClick = {
@@ -101,12 +100,12 @@ fun ShipmentDetailScreen(
                                 viewModel.showExitConfirmation()
                             }
                         },
-                        modifier = Modifier.size(48.dp)
+                        modifier = Modifier.size(48.dp),
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.go_back),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                     Text(
@@ -115,13 +114,13 @@ fun ShipmentDetailScreen(
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.weight(1f),
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
 
                     Spacer(modifier = Modifier.size(48.dp))
                 }
             }
-        }
+        },
     ) { innerPadding ->
         ShipmentDetailBodyContent(viewModel, navController, id, innerPadding)
     }
@@ -147,7 +146,7 @@ fun ShipmentDetailScreen(
                 }) {
                     Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_cancel_button_alert_dialog))
                 }
-            }
+            },
         )
     }
 }
@@ -157,7 +156,7 @@ fun ShipmentDetailBodyContent(
     viewModel: ShipmentDetailViewModel,
     navController: NavController,
     id: String,
-    innerPadding: PaddingValues
+    innerPadding: PaddingValues,
 ) {
     LaunchedEffect(id) {
         viewModel.loadShipment(id)
@@ -168,65 +167,66 @@ fun ShipmentDetailBodyContent(
     if (selectedShipment.id == "0") {
         CircularProgressIndicator()
     } else {
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(innerPadding),
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(16.dp))
-                    .background(color = MaterialTheme.colorScheme.primaryContainer)
+                    .background(color = MaterialTheme.colorScheme.primaryContainer),
             ) {
                 Column(
                     modifier = Modifier
-                        .padding(15.dp)
+                        .padding(15.dp),
                 ) {
                     Text(
                         text = stringResource(
                             R.string.shipment_detail_screen_shipment,
-                            selectedShipment.number
+                            selectedShipment.number,
                         ),
                         style = MaterialTheme.typography.titleLarge,
                         fontSize = 25.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                     Text(
                         text = stringResource(
                             R.string.shipment_detail_screen_customer,
-                            selectedShipment.customerName
+                            selectedShipment.customerName,
                         ),
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
                     )
                     Text(
                         text = stringResource(
                             R.string.shipment_detail_screen_total,
-                            selectedShipment.products.size
+                            selectedShipment.products.size,
                         ),
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
                     )
                 }
             }
             LazyColumn(
                 modifier = Modifier
-                    .padding(top = 15.dp)
+                    .padding(top = 15.dp),
             ) {
                 items(selectedShipment.products) { product ->
                     ProductItem(
-                        viewModel, product,
+                        viewModel,
+                        product,
                         onProductClick = { clickedProduct ->
                             navController.navigate(Screen.ProductDetail.route + "/${clickedProduct.id}")
-                        })
+                        },
+                    )
                     Spacer(modifier = Modifier.height(5.dp))
                 }
             }
             Spacer(
                 modifier = Modifier
-                    .height(10.dp)
+                    .height(10.dp),
             )
         }
     }
@@ -234,8 +234,9 @@ fun ShipmentDetailBodyContent(
 
 @Composable
 fun ProductItem(
-    viewModel: ShipmentDetailViewModel, product: ProductOperation,
-    onProductClick: (ProductOperation) -> Unit
+    viewModel: ShipmentDetailViewModel,
+    product: ProductOperation,
+    onProductClick: (ProductOperation) -> Unit,
 ) {
     val statusProd = viewModel.getProductStatus(product.id)
 
@@ -244,42 +245,45 @@ fun ProductItem(
         modifier = Modifier
             .fillMaxSize()
             .padding(2.dp)
-            .clickable { onProductClick(product) }) {
+            .clickable { onProductClick(product) },
+    ) {
         Row(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize(),
         ) {
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(15.dp)
+                    .padding(15.dp),
             ) {
                 Text(
                     text = product.name,
                     fontWeight = FontWeight.Bold,
                     fontSize = 15.sp,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
                 )
                 Spacer(
                     modifier = Modifier
-                        .height(10.dp)
+                        .height(10.dp),
                 )
                 Row {
                     Text(
                         text = stringResource(
                             R.string.shipment_detail_screen_quantity_required,
-                            product.quantity
-                        ), style = MaterialTheme.typography.bodySmall
+                            product.quantity,
+                        ),
+                        style = MaterialTheme.typography.bodySmall,
                     )
                     Spacer(modifier = Modifier.width(60.dp))
                     Box(
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.Center,
                     ) {
                         Text(
                             text = stringResource(
                                 R.string.shipment_detail_screen_quantity_loaded,
-                                viewModel.getLoadedQuantityProduct(product.id)
-                            ), style = MaterialTheme.typography.bodySmall
+                                viewModel.getLoadedQuantityProduct(product.id),
+                            ),
+                            style = MaterialTheme.typography.bodySmall,
                         )
                     }
                 }
@@ -290,15 +294,14 @@ fun ProductItem(
                     .padding(end = 12.dp)
                     .size(40.dp)
                     .align(alignment = Alignment.CenterVertically),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Image(
                     painter = painterResource(id = statusProd.iconResourceId),
                     contentDescription = stringResource(R.string.product_state_icon),
                     modifier = Modifier.fillMaxSize(0.9f),
-                    contentScale = ContentScale.Fit
+                    contentScale = ContentScale.Fit,
                 )
-
             }
         }
     }
@@ -316,37 +319,37 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
     if (viewModel.showButtonBox()) {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(70.dp)
-                    .padding(horizontal = 18.dp, vertical = 10.dp)
+                    .padding(horizontal = 18.dp, vertical = 10.dp),
             ) {
                 Row(
                     modifier = Modifier.fillMaxSize(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Button(
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.surfaceTint),
                         enabled = viewModel.isStateCompleteShipment.value,
                         onClick = {
                             viewModel.showCompleteShipmentConfirmation()
-                            //viewModel.completedShipment(viewModel.selectedShipment.value.id)
-                            //navController.navigate(Screen.Shipments.route)
+                            // viewModel.completedShipment(viewModel.selectedShipment.value.id)
+                            // navController.navigate(Screen.Shipments.route)
                         },
                         shape = RoundedCornerShape(50),
                         modifier = Modifier
                             .weight(1f)
-                            .height(50.dp)
+                            .height(50.dp),
                     ) {
                         Text(
                             text = stringResource(R.string.next),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(horizontal = 15.dp, vertical = 0.dp)
+                            modifier = Modifier.padding(horizontal = 15.dp, vertical = 0.dp),
                         )
                     }
 
@@ -356,9 +359,7 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
                         enabled = !viewModel.isStateCompleteShipment.value,
                         onClick = {
-
                             coroutineScope.launch {
-
                                 val shipmentId = viewModel.selectedShipment.value.id
 
                                 val hasEnoughStock = viewModel.enoughStockProducts(shipmentId)
@@ -370,29 +371,28 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
 
                                     Log.d(
                                         "ShipmentDetailScreen",
-                                        "Selected Shipment: ${ShipmentScanFlowState.selectedShipment}"
+                                        "Selected Shipment: ${ShipmentScanFlowState.selectedShipment}",
                                     )
 
                                     navController.navigate(Screen.Scan.route + "?origin=shipment")
                                 } else {
                                     Log.d(
                                         "ShipmentDetailScreen",
-                                        "No hay stock suficiente, se redirecciona a la pantalla de Shipments"
+                                        "No hay stock suficiente, se redirecciona a la pantalla de Shipments",
                                     )
                                 }
                             }
-
                         },
                         shape = RoundedCornerShape(50),
                         modifier = Modifier
                             .weight(1f)
-                            .height(50.dp)
+                            .height(50.dp),
                     ) {
                         Text(
                             text = stringResource(R.string.scan),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(horizontal = 15.dp, vertical = 0.dp)
+                            modifier = Modifier.padding(horizontal = 15.dp, vertical = 0.dp),
                         )
                     }
                 }
@@ -416,7 +416,7 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
                 }) {
                     Text(text = stringResource(R.string.shipment_detail_screen_insufficient_stock_accept_button_alert_dialog))
                 }
-            }
+            },
         )
     }
     if (showCompleteConfirmationDialog) {
@@ -441,7 +441,7 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
                 }) {
                     Text(text = stringResource(R.string.shipment_detail_screen_confirm_complete_cancel_button_alert_dialog))
                 }
-            }
+            },
         )
     }
 }
@@ -457,6 +457,3 @@ fun vistaFinal() {
 fun vistaFinalDark() {
     ShipmentDetailScreen(navController = rememberNavController(), id = "S01-3")
 }
-
-
-

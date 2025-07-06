@@ -36,12 +36,11 @@ import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.viewmodels.OrdersViewModel
 import ar.edu.utn.frba.inventario.viewmodels.UserScreenViewModel
 
-
 @Composable
 fun OrdersScreen(
     navController: NavController,
     ordersViewModel: OrdersViewModel = hiltViewModel(),
-    userScreenViewModel: UserScreenViewModel = hiltViewModel()
+    userScreenViewModel: UserScreenViewModel = hiltViewModel(),
 ) {
     val selectedStatusList by ordersViewModel.selectedStatusList.collectAsStateWithLifecycle()
     val branchName by userScreenViewModel.branchLocationName.collectAsStateWithLifecycle()
@@ -54,13 +53,13 @@ fun OrdersScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxSize(),
     ) {
         BranchLocationBar(
             branchName = branchName,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 12.dp)
+                .padding(top = 12.dp),
         )
         StatusFilter(
             statusList = ItemStatus.entries,
@@ -68,14 +67,14 @@ fun OrdersScreen(
             onStatusSelected = { ordersViewModel.updateSelectedStatusList(it) },
             onClearFilters = { ordersViewModel.clearFilters() },
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(),
         )
         OrderBodyContent(
             navController,
             ordersViewModel.getFilteredItems(),
             loading,
             error,
-            Modifier.weight(1f)
+            Modifier.weight(1f),
         )
     }
 }
@@ -86,16 +85,16 @@ fun OrderBodyContent(
     orders: List<Order>,
     loading: Boolean,
     error: String?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         ) {
             Text(
                 text = "Pedidos",
                 style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(vertical = 16.dp)
+                modifier = Modifier.padding(vertical = 16.dp),
             )
 
             when {
@@ -104,7 +103,7 @@ fun OrderBodyContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1f),
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.Center,
                     ) {
                         Spinner(true)
                     }
@@ -115,11 +114,11 @@ fun OrderBodyContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1f),
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.Center,
                     ) {
                         Text(
                             text = error,
-                            color = MaterialTheme.colorScheme.error
+                            color = MaterialTheme.colorScheme.error,
                         )
                     }
                 }
@@ -127,13 +126,13 @@ fun OrderBodyContent(
                 orders.isEmpty() -> {
                     EmptyResultsMessage(
                         message = stringResource(R.string.no_results_for_filters),
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     )
                 }
 
                 else -> {
                     LazyColumn(
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     ) {
                         itemsIndexed(orders) { _, order ->
                             CardItem(navController, order, onItemClick = { clickedItem ->
@@ -152,13 +151,13 @@ fun OrderBodyContent(
                 .padding(18.dp)
                 .width(180.dp)
                 .height(50.dp),
-            containerColor = MaterialTheme.colorScheme.primary
+            containerColor = MaterialTheme.colorScheme.primary,
         ) {
             Text(
                 text = stringResource(R.string.scan),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(horizontal = 15.dp, vertical = 0.dp)
+                modifier = Modifier.padding(horizontal = 15.dp, vertical = 0.dp),
             )
         }
     }

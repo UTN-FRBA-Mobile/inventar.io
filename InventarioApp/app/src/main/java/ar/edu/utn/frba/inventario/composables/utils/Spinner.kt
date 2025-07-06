@@ -25,7 +25,7 @@ fun Spinner(isLoading: Boolean) {
                     }
                 }
             },
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         CircularProgressIndicator(color = Color.White)
     }

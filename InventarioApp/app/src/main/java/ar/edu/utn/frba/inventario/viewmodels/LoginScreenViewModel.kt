@@ -26,7 +26,7 @@ import javax.inject.Inject
 class LoginScreenViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val tokenManager: TokenManager,
-    private val locationRepository: LocationRepository
+    private val locationRepository: LocationRepository,
 ) : ViewModel() {
     private val _navigationEvent = MutableSharedFlow<NavigationEvent?>()
     val navigationEvent = _navigationEvent.asSharedFlow()
@@ -80,8 +80,8 @@ class LoginScreenViewModel @Inject constructor(
                             currentUser,
                             hashedPassword,
                             latitude,
-                            longitude
-                        )
+                            longitude,
+                        ),
                     )
                 }
 
@@ -93,7 +93,7 @@ class LoginScreenViewModel @Inject constructor(
 
                         tokenManager.saveSession(
                             loginResult.data.accessToken,
-                            loginResult.data.refreshToken
+                            loginResult.data.refreshToken,
                         )
 
                         // Log access token
@@ -104,13 +104,12 @@ class LoginScreenViewModel @Inject constructor(
                         Log.d("LoginScreenViewModel", "Redireccionando a Welcome")
                         _navigationEvent.emit(NavigationEvent.NavigateTo(Screen.Welcome.route))
                         Log.d("LoginScreenViewModel", "Listo a Welcome")
-
                     }
 
                     is NetworkResult.Error -> {
                         Log.d(
                             "LoginViewModel",
-                            "Error: code=${loginResult.code}, message=${loginResult.message}"
+                            "Error: code=${loginResult.code}, message=${loginResult.message}",
                         )
 
                         val message = when {
@@ -134,9 +133,7 @@ class LoginScreenViewModel @Inject constructor(
     }
 
     @OptIn(ExperimentalStdlibApi::class)
-    private fun sha256(input: String): String {
-        return MessageDigest.getInstance("SHA-256")
-            .digest(input.toByteArray(Charsets.UTF_8))
-            .toHexString()
-    }
+    private fun sha256(input: String): String = MessageDigest.getInstance("SHA-256")
+        .digest(input.toByteArray(Charsets.UTF_8))
+        .toHexString()
 }

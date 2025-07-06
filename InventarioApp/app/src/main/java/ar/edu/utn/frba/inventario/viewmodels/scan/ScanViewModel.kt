@@ -26,7 +26,7 @@ class ScanViewModel @Inject constructor() : ViewModel() {
         scannedCodes: List<Barcode>,
         navController: NavController,
         context: Context,
-        origin: String
+        origin: String,
     ) {
         val validCode = getValidBarcode(scannedCodes, origin)
 
@@ -41,12 +41,12 @@ class ScanViewModel @Inject constructor() : ViewModel() {
 
             val destination = if (origin == "order") {
                 Screen.OrderResult.withNavArgs(
-                    OrderResultArgs.ErrorMessage to errorMsg
+                    OrderResultArgs.ErrorMessage to errorMsg,
                 )
             } else {
                 Screen.ProductResult.withNavArgs(
                     ProductResultArgs.ErrorMessage to errorMsg,
-                    ProductResultArgs.Origin to origin
+                    ProductResultArgs.Origin to origin,
                 )
             }
             navController.navigate(destination)
@@ -62,14 +62,14 @@ class ScanViewModel @Inject constructor() : ViewModel() {
             if (orderId.isBlank()) {
                 val errorMsg = "Id de pedido vacío"
                 val destination = Screen.OrderResult.withNavArgs(
-                    OrderResultArgs.ErrorMessage to errorMsg
+                    OrderResultArgs.ErrorMessage to errorMsg,
                 )
                 navController.navigate(destination)
                 return
             }
 
             val destination = Screen.OrderResult.withNavArgs(
-                OrderResultArgs.OrderId to orderId
+                OrderResultArgs.OrderId to orderId,
             )
             navController.navigate(destination)
             return
@@ -78,18 +78,16 @@ class ScanViewModel @Inject constructor() : ViewModel() {
         val destination = Screen.ProductResult.withNavArgs(
             ProductResultArgs.CodeType to codeType,
             ProductResultArgs.Code to scannedValue,
-            ProductResultArgs.Origin to origin
+            ProductResultArgs.Origin to origin,
         )
         navController.navigate(destination)
     }
 
-    fun getValidBarcode(scannedCodes: List<Barcode>, origin: String): Barcode? {
-        return scannedCodes.firstOrNull { barcode ->
-            when (origin) {
-                "shipment" -> barcode.format == Barcode.FORMAT_EAN_13
-                "order" -> barcode.format == Barcode.FORMAT_QR_CODE
-                else -> false
-            }
+    fun getValidBarcode(scannedCodes: List<Barcode>, origin: String): Barcode? = scannedCodes.firstOrNull { barcode ->
+        when (origin) {
+            "shipment" -> barcode.format == Barcode.FORMAT_EAN_13
+            "order" -> barcode.format == Barcode.FORMAT_QR_CODE
+            else -> false
         }
     }
 
@@ -102,11 +100,9 @@ class ScanViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun getErrorMessageResId(origin: String): Int {
-        return when (origin) {
-            "shipment" -> R.string.scan_error_expected_ean13
-            "order" -> R.string.scan_error_expected_qr
-            else -> R.string.scan_error_unsupported_code_format
-        }
+    fun getErrorMessageResId(origin: String): Int = when (origin) {
+        "shipment" -> R.string.scan_error_expected_ean13
+        "order" -> R.string.scan_error_expected_qr
+        else -> R.string.scan_error_unsupported_code_format
     }
 }

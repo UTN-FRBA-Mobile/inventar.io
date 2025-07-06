@@ -36,11 +36,10 @@ import ar.edu.utn.frba.inventario.utils.ShipmentProductToScanList
 import ar.edu.utn.frba.inventario.utils.ShipmentScanFlowState
 import ar.edu.utn.frba.inventario.viewmodels.scan.ProductAmountViewModel
 
-
 @Composable
 fun ProductAmountScreen(
     navController: NavController,
-    viewModel: ProductAmountViewModel = hiltViewModel()
+    viewModel: ProductAmountViewModel = hiltViewModel(),
 ) {
     val isLoading by viewModel.isLoading.collectAsState()
     val error by viewModel.errorMessage.collectAsState()
@@ -59,7 +58,7 @@ fun ProductAmountScreen(
         Text(
             text = error ?: stringResource(R.string.product_amount_unexpected_error),
             modifier = Modifier.padding(16.dp),
-            color = Color.Red
+            color = Color.Red,
         )
         Button(onClick = {
             navController.popBackStack()
@@ -76,14 +75,14 @@ fun ProductAmountScreen(
             .fillMaxSize()
             .padding(24.dp),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = stringResource(R.string.product_amount_title),
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF2E7D32),
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -92,7 +91,7 @@ fun ProductAmountScreen(
             text = scannedProduct.name,
             fontSize = 22.sp,
             fontWeight = FontWeight.SemiBold,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -104,22 +103,23 @@ fun ProductAmountScreen(
                     .size(180.dp)
                     .clip(CircleShape)
                     .border(2.dp, Color.Gray, CircleShape)
-                    .shadow(4.dp, CircleShape)
+                    .shadow(4.dp, CircleShape),
             )
             Spacer(modifier = Modifier.height(24.dp))
         }
 
         Text(
-            text = if (enoughStock)
+            text = if (enoughStock) {
                 stringResource(R.string.product_amount_required_quantity, requiredAmount)
-            else
+            } else {
                 stringResource(
                     R.string.product_amount_insufficient_stock,
                     requiredAmount,
-                    scannedProduct.name
-                ),
+                    scannedProduct.name,
+                )
+            },
             style = MaterialTheme.typography.headlineSmall,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -129,7 +129,7 @@ fun ProductAmountScreen(
                 // ToDo - Pegarle al endpoint necesario, para confirmar el ingreso del producto
                 ShipmentProductToScanList.updateLoadedQuantity(
                     productId = scannedProduct.id,
-                    loadedQuantity = requiredAmount
+                    loadedQuantity = requiredAmount,
                 )
 
                 navController.navigate(Screen.ShipmentDetail.route + "/${selectedShipment.id}") {
@@ -145,7 +145,7 @@ fun ProductAmountScreen(
                 ShipmentScanFlowState.clear()
                 navController.popBackStack(
                     Screen.ShipmentDetail.route + "/${selectedShipment.id}",
-                    false
+                    false,
                 )
             }) {
                 Text(stringResource(R.string.cancel))

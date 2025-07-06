@@ -57,9 +57,12 @@ fun AppNavHost(navController: NavHostController) {
         modifier = Modifier
             .fillMaxSize()
             .then(
-                if (!isFullScreen) Modifier.padding(BODY_PADDING)
-                else Modifier
-            )
+                if (!isFullScreen) {
+                    Modifier.padding(BODY_PADDING)
+                } else {
+                    Modifier
+                },
+            ),
     ) {
         NavHostBody(navController)
     }
@@ -94,11 +97,11 @@ fun NavHostBody(navController: NavHostController) {
         }
         composable(
             Screen.Scan.withArgsDefinition(scanArgs),
-            arguments = navArgsOf(scanArgs)
+            arguments = navArgsOf(scanArgs),
         ) { backStackEntry ->
             ScanScreen(
                 navController,
-                backStackEntry.arguments?.getString(ScanArgs.Origin.code) ?: "shipment"
+                backStackEntry.arguments?.getString(ScanArgs.Origin.code) ?: "shipment",
             )
         }
         composable(Screen.ManualCode.route) {
@@ -106,14 +109,14 @@ fun NavHostBody(navController: NavHostController) {
         }
         composable(
             Screen.ProductResult.withArgsDefinition(productResultArgs),
-            arguments = navArgsOf(productResultArgs)
+            arguments = navArgsOf(productResultArgs),
         ) { backStackEntry ->
             ProductResultScreen(
                 navController,
                 backStackEntry.arguments?.getString(ProductResultArgs.Code.code),
                 backStackEntry.arguments?.getString(ProductResultArgs.CodeType.code),
                 backStackEntry.arguments?.getString(ProductResultArgs.ErrorMessage.code),
-                backStackEntry.arguments?.getString(ProductResultArgs.Origin.code) ?: "scan"
+                backStackEntry.arguments?.getString(ProductResultArgs.Origin.code) ?: "scan",
             )
         }
         composable(
@@ -121,8 +124,9 @@ fun NavHostBody(navController: NavHostController) {
             arguments = listOf(
                 navArgument(name = "id") {
                     type = NavType.StringType
-                }
-            )) { backStackEntry ->
+                },
+            ),
+        ) { backStackEntry ->
             val idShipment = backStackEntry.arguments?.getString("id") ?: ""
             ShipmentDetailScreen(navController = navController, id = idShipment)
         }
@@ -131,21 +135,22 @@ fun NavHostBody(navController: NavHostController) {
             arguments = listOf(
                 navArgument(name = "orderId") {
                     type = NavType.StringType
-                }
-            )) { backStackEntry ->
+                },
+            ),
+        ) { backStackEntry ->
             val idOrder = backStackEntry.arguments?.getString("orderId") ?: ""
             OrderDetailScreen(navController = navController, id = idOrder)
         }
         composable(
             route = Screen.ProductDetail.route + "/{productId}",
-            arguments = listOf(navArgument("productId") { type = NavType.StringType })
+            arguments = listOf(navArgument("productId") { type = NavType.StringType }),
         ) { backStackEntry ->
             val productId = backStackEntry.arguments?.getString("productId") ?: ""
             val viewModel: ShipmentDetailViewModel = hiltViewModel()
             ProductDetailScreen(
                 navController = navController,
                 productId = productId,
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
             )
         }
         composable(Screen.ProductAmount.route) {
@@ -153,18 +158,18 @@ fun NavHostBody(navController: NavHostController) {
         }
         composable(
             route = Screen.OrderProductsList.withArgsDefinition(orderProductsListArgs),
-            arguments = navArgsOf(orderProductsListArgs)
+            arguments = navArgsOf(orderProductsListArgs),
         ) { backStackEntry ->
             val orderId =
                 backStackEntry.arguments?.getString(OrderProductsListArgs.OrderId.code) ?: ""
             OrderProductsScreen(
                 navController = navController,
-                orderId = orderId
+                orderId = orderId,
             )
         }
         composable(
             Screen.OrderResult.withArgsDefinition(orderResultArgs),
-            arguments = navArgsOf(orderResultArgs)
+            arguments = navArgsOf(orderResultArgs),
         ) { backStackEntry ->
             val orderId = backStackEntry.arguments?.getString(OrderResultArgs.OrderId.code)
             val initialErrorMessage =
@@ -177,22 +182,19 @@ fun NavHostBody(navController: NavHostController) {
                 codeType = backStackEntry.arguments?.getString(OrderResultArgs.CodeType.code.toString())
                     ?: "",
                 origin = backStackEntry.arguments?.getString(OrderResultArgs.Origin.code.toString())
-                    ?: ""
+                    ?: "",
             )
         }
         composable(Screen.ManualOrder.route) {
             ManualOrderScreen(navController = navController)
         }
-
     }
 }
 
-fun navArgsOf(args: Array<out HasCode>): List<NamedNavArgument> {
-    return args.map {
-        navArgument(it.code) {
-            nullable = true
-            defaultValue = null
-        }
+fun navArgsOf(args: Array<out HasCode>): List<NamedNavArgument> = args.map {
+    navArgument(it.code) {
+        nullable = true
+        defaultValue = null
     }
 }
 

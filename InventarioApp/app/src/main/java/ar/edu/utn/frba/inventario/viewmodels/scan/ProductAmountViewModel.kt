@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class ProductAmountViewModel @Inject constructor(
-    private val repository: ProductRepository
+    private val repository: ProductRepository,
 ) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(true)

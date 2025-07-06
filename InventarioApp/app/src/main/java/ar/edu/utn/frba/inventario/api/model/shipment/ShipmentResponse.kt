@@ -10,5 +10,5 @@ data class ShipmentResponse(
     val idLocation: Long,
     val customerName: String,
     val productAmount: Map<Long, Int>,
-    val productNames: Map<Long, String>
+    val productNames: Map<Long, String>,
 )

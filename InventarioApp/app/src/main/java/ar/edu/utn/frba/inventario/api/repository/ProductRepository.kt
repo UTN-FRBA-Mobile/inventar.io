@@ -8,22 +8,14 @@ import ar.edu.utn.frba.inventario.api.model.product.ProductStockLocationResponse
 import javax.inject.Inject
 
 class ProductRepository @Inject constructor(
-    private val apiService: ApiService
+    private val apiService: ApiService,
 ) : Repository() {
 
-    suspend fun getProductList(ean13s: List<String>): NetworkResult<Map<Long, Product>> {
-        return safeApiCall { apiService.getProductList(ean13s) }
-    }
+    suspend fun getProductList(ean13s: List<String>): NetworkResult<Map<Long, Product>> = safeApiCall { apiService.getProductList(ean13s) }
 
-    suspend fun getProductListById(id: List<String>): NetworkResult<Map<String, ProductResponse>> {
-        return safeApiCall { apiService.getProductListById(id) }
-    }
+    suspend fun getProductListById(id: List<String>): NetworkResult<Map<String, ProductResponse>> = safeApiCall { apiService.getProductListById(id) }
 
-    suspend fun getStockByProductId(id: String): NetworkResult<ProductStockLocationResponse> {
-        return safeApiCall { apiService.getStockByProductId(id) }
-    }
+    suspend fun getStockByProductId(id: String): NetworkResult<ProductStockLocationResponse> = safeApiCall { apiService.getStockByProductId(id) }
 
-    suspend fun getStockByProductIdList(ids: List<String>): NetworkResult<ProductStockLocationResponse> {
-        return safeApiCall { apiService.getStockByProductIdList(ids) }
-    }
+    suspend fun getStockByProductIdList(ids: List<String>): NetworkResult<ProductStockLocationResponse> = safeApiCall { apiService.getStockByProductIdList(ids) }
 }

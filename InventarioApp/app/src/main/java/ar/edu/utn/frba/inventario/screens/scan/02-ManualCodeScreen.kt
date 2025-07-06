@@ -31,7 +31,6 @@ import ar.edu.utn.frba.inventario.utils.ProductResultArgs
 import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.utils.withNavArgs
 
-
 @Composable
 fun ManualCodeScreen(navController: NavController) {
     ManualCodeBodyContent(navController)
@@ -39,7 +38,7 @@ fun ManualCodeScreen(navController: NavController) {
 
 @Composable
 fun ManualCodeBodyContent(
-    navController: NavController
+    navController: NavController,
 ) {
     var code by remember { mutableStateOf("") }
     var isError by remember { mutableStateOf(false) }
@@ -49,7 +48,7 @@ fun ManualCodeBodyContent(
             .fillMaxSize()
             .padding(24.dp),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(stringResource(R.string.manual_code_insert_code_title), fontSize = 20.sp)
 
@@ -66,9 +65,9 @@ fun ManualCodeBodyContent(
             singleLine = true,
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Done
+                imeAction = ImeAction.Done,
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -88,12 +87,12 @@ fun ManualCodeBodyContent(
                 val destination = Screen.ProductResult.withNavArgs(
                     ProductResultArgs.Code to code,
                     ProductResultArgs.CodeType to "ean-13",
-                    ProductResultArgs.Origin to "manual"
+                    ProductResultArgs.Origin to "manual",
                 )
 
                 navController.navigate(destination)
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             Text(stringResource(R.string.confirm))
         }
@@ -106,8 +105,9 @@ fun ManualCodeBodyContent(
 }
 
 fun isValidEAN13(code: String): Boolean {
-    if (code.length != 13 || code.any { !it.isDigit() })
+    if (code.length != 13 || code.any { !it.isDigit() }) {
         return false
+    }
 
     val digits = code.map { it.digitToInt() }
     val checkDigit = digits.last()

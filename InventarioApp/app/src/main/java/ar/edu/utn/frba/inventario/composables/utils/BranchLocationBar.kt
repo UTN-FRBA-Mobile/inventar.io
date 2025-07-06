@@ -20,22 +20,22 @@ import ar.edu.utn.frba.inventario.R
 @Composable
 fun BranchLocationBar(
     branchName: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier
             .padding(vertical = 2.dp)
             .background(
                 color = MaterialTheme.colorScheme.surface,
-                shape = MaterialTheme.shapes.small
+                shape = MaterialTheme.shapes.small,
             ),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
 
     ) {
         Icon(
             imageVector = Icons.Outlined.LocationOn,
             contentDescription = stringResource(R.string.location_place),
-            tint = MaterialTheme.colorScheme.onSurfaceVariant
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
         Text(
@@ -44,7 +44,7 @@ fun BranchLocationBar(
             fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }
