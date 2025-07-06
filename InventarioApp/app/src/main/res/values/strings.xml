@@ -103,7 +103,7 @@
     <string name="order_detail_screen_order">Pedido P-%1$s</string>
     <string name="order_detail_screen_sender">Remitente: %1$s</string>
     <string name="order_detail_screen_total">Total de productos únicos: %1$s</string>
-    <string name="order_detail_screen_quantity">Cantidad %1$s</string>
+    <string name="order_detail_screen_quantity">Solicitado: %1$s</string>
     <string name="order_not_found">No se encontró el pedido</string>
 
     <!-- UserScreenViewModel -->

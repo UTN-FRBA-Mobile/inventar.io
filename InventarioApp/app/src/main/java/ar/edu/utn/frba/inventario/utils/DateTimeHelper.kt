@@ -6,9 +6,11 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 fun LocalDateTime.format(): String {
-    val formatter =
-        DateTimeFormatter.ofPattern(Constants.DATETIME_COMPLETE, Locale(Constants.LOCALE_ES))
-    return this.format(formatter)
+    val zonedDateTimeInUtc = this.atZone(ZoneOffset.UTC)
+    val zonedDateTimeInBuenosAires = zonedDateTimeInUtc.withZoneSameInstant(Constants.ZONE_ID_GMT_MINUS_3)
+    val formatter = DateTimeFormatter.ofPattern(Constants.DATETIME_COMPLETE, Locale(Constants.LOCALE_ES))
+
+    return zonedDateTimeInBuenosAires.format(formatter)
 }
 
 fun String.toLocalDateTime(): LocalDateTime {
