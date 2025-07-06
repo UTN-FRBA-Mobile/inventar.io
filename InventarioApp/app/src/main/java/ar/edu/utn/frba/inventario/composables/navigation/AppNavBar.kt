@@ -40,9 +40,10 @@ fun AppNavBar(navController: NavController, items: List<Screen>) {
                         return@NavigationBarItem
 
                     navController.navigate(screen.route) {
-                        popUpTo(navController.graph.startDestinationId)
+                        popUpTo(Screen.Shipments.route)
                         launchSingleTop = true
                     }
+
                 }
             )
         }

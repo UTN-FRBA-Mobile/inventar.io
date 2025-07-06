@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -30,6 +32,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -66,7 +69,6 @@ fun OrderDetailScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.secondaryContainer)
                         .height(56.dp)
                         .padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -77,7 +79,7 @@ fun OrderDetailScreen(
                         modifier = Modifier.size(48.dp)
                     ) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.go_back),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -124,10 +126,7 @@ fun OrderDetailScreen(
 
             order != null -> {
                 OrderDetailBodyContent(
-                    viewModel = viewModel,
-                    navController = navController,
-                    order = order!!,
-                    innerPadding = innerPadding
+                    order = order!!, innerPadding = innerPadding
                 )
             }
 
@@ -147,8 +146,6 @@ fun OrderDetailScreen(
 
 @Composable
 fun OrderDetailBodyContent(
-    viewModel: OrderDetailViewModel,
-    navController: NavController,
     order: Order,
     innerPadding: PaddingValues
 ) {
@@ -156,13 +153,12 @@ fun OrderDetailBodyContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.secondaryContainer)
             .padding(innerPadding)
     ) {
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
                 .background(color = MaterialTheme.colorScheme.primaryContainer)
         ) {
             Column(
@@ -191,28 +187,22 @@ fun OrderDetailBodyContent(
             }
         }
         LazyColumn(
-            modifier = Modifier
-                .padding(15.dp)
+            modifier = Modifier.padding(top = 15.dp)
         ) {
             items(order.productsInOrder) { product ->
                 ProductItem(product)
-                Spacer(modifier = Modifier.height(5.dp))
             }
         }
-        Spacer(
-            modifier = Modifier
-                .height(10.dp)
-        )
     }
 }
 
 @Composable
 fun ProductItem(product: ProductOperation) {
     ElevatedCard(
-        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface),
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
         modifier = Modifier
             .fillMaxSize()
-            .padding(2.dp)
+            .padding(bottom = 7.5.dp)
     ) {
         Row(
             modifier = Modifier
