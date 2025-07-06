@@ -51,9 +51,9 @@ import ar.edu.utn.frba.inventario.viewmodels.OrderDetailViewModel
 @Composable
 fun OrderDetailScreen(
     viewModel: OrderDetailViewModel = hiltViewModel(),
-    navController: NavController,
-    id: String,
+    navController: NavController, id: String
 ) {
+
     LaunchedEffect(id) {
         viewModel.loadOrder(id)
     }
@@ -71,16 +71,16 @@ fun OrderDetailScreen(
                         .height(56.dp)
                         .padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(
                         onClick = { navController.navigate(Screen.Orders.route) },
-                        modifier = Modifier.size(48.dp),
+                        modifier = Modifier.size(48.dp)
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.go_back),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                     Text(
@@ -89,13 +89,13 @@ fun OrderDetailScreen(
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.weight(1f),
-                        textAlign = TextAlign.Center,
+                        textAlign = TextAlign.Center
                     )
 
                     Spacer(modifier = Modifier.size(48.dp))
                 }
             }
-        },
+        }
     ) { innerPadding ->
         when {
             loading -> {
@@ -103,7 +103,7 @@ fun OrderDetailScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding),
-                    contentAlignment = Alignment.Center,
+                    contentAlignment = Alignment.Center
                 ) {
                     Spinner(true)
                 }
@@ -114,19 +114,18 @@ fun OrderDetailScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding),
-                    contentAlignment = Alignment.Center,
+                    contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = error!!,
-                        color = MaterialTheme.colorScheme.error,
+                        color = MaterialTheme.colorScheme.error
                     )
                 }
             }
 
             order != null -> {
                 OrderDetailBodyContent(
-                    order = order!!,
-                    innerPadding = innerPadding,
+                    order = order!!, innerPadding = innerPadding
                 )
             }
 
@@ -135,7 +134,7 @@ fun OrderDetailScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding),
-                    contentAlignment = Alignment.Center,
+                    contentAlignment = Alignment.Center
                 ) {
                     Text(stringResource(R.string.order_not_found))
                 }
@@ -145,45 +144,49 @@ fun OrderDetailScreen(
 }
 
 @Composable
-fun OrderDetailBodyContent(order: Order, innerPadding: PaddingValues) {
+fun OrderDetailBodyContent(
+    order: Order,
+    innerPadding: PaddingValues
+) {
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(innerPadding),
+            .padding(innerPadding)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(16.dp))
-                .background(color = MaterialTheme.colorScheme.primaryContainer),
+                .background(color = MaterialTheme.colorScheme.primaryContainer)
         ) {
             Column(
                 modifier = Modifier
-                    .padding(20.dp),
+                    .padding(20.dp)
             ) {
                 Text(
                     text = stringResource(R.string.order_detail_screen_order, order.id),
                     style = MaterialTheme.typography.titleLarge,
                     fontSize = 25.sp,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = stringResource(R.string.order_detail_screen_sender, order.sender),
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
+                    fontWeight = FontWeight.SemiBold
                 )
                 Text(
                     text = stringResource(
                         R.string.order_detail_screen_total,
-                        order.productsInOrder.size,
+                        order.productsInOrder.size
                     ),
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
+                    fontWeight = FontWeight.SemiBold
                 )
             }
         }
         LazyColumn(
-            modifier = Modifier.padding(top = 15.dp),
+            modifier = Modifier.padding(top = 15.dp)
         ) {
             items(order.productsInOrder) { product ->
                 ProductItem(product)
@@ -195,24 +198,22 @@ fun OrderDetailBodyContent(order: Order, innerPadding: PaddingValues) {
 @Composable
 fun ProductItem(product: ProductOperation) {
     ElevatedCard(
-        colors = CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-        ),
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
         modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = 7.5.dp),
+            .padding(bottom = 7.5.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(start = 10.dp),
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 modifier = Modifier
                     .weight(2f)
                     .padding(15.dp),
-                contentAlignment = Alignment.CenterStart,
+                contentAlignment = Alignment.CenterStart
             ) {
                 Text(
                     text = product.name,
@@ -220,7 +221,7 @@ fun ProductItem(product: ProductOperation) {
                     fontSize = 15.sp,
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
             Spacer(modifier = Modifier.height(10.dp))
@@ -228,11 +229,11 @@ fun ProductItem(product: ProductOperation) {
                 modifier = Modifier
                     .weight(1f)
                     .padding(15.dp),
-                contentAlignment = Alignment.Center,
+                contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = stringResource(R.string.order_detail_screen_quantity, product.quantity),
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.bodySmall
                 )
             }
         }

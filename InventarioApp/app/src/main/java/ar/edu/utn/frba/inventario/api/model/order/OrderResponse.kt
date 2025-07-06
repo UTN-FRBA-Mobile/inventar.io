@@ -11,5 +11,5 @@ data class OrderResponse(
     val idLocation: Long,
     val sender: String,
     val productAmount: Map<Long, Int>,
-    val productNames: Map<Long, String>,
+    val productNames: Map<Long, String>
 )

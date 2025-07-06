@@ -26,6 +26,6 @@ fun ImageFromURL(url: String?, modifier: Modifier = Modifier) {
         model = url,
         contentDescription = "Imagen desde URL",
         contentScale = ContentScale.Crop,
-        modifier = modifier,
+        modifier = modifier
     )
 }

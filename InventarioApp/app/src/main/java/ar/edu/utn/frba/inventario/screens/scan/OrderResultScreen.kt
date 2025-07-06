@@ -39,7 +39,7 @@ fun OrderResultScreen(
     codeType: String,
     errorMessage: String?,
     origin: String,
-    viewModel: OrderResultViewModel = hiltViewModel(),
+    viewModel: OrderResultViewModel = hiltViewModel()
 ) {
     val isLoading by viewModel.isLoading.collectAsState()
     val apiError by viewModel.errorMessage.collectAsState()
@@ -73,7 +73,7 @@ fun OrderResultScreen(
             coroutineScope.launch {
                 viewModel.handleContinueButtonClick(navController)
             }
-        },
+        }
     )
 }
 
@@ -84,21 +84,21 @@ fun OrderResultBodyContent(
     apiError: String?,
     codeType: String,
     startOrderError: String?,
-    onContinueClick: () -> Unit,
+    onContinueClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 24.dp),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (apiError != null) {
             Text(
                 text = stringResource(R.string.search_failed),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Red,
+                color = Color.Red
             )
             Spacer(Modifier.height(8.dp))
             Text(
@@ -110,7 +110,7 @@ fun OrderResultBodyContent(
                 text = stringResource(R.string.order_initialization_failed),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Red,
+                color = Color.Red
             )
             Spacer(Modifier.height(8.dp))
             Text(
@@ -122,7 +122,7 @@ fun OrderResultBodyContent(
                 text = stringResource(R.string.order_result_search_success),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF2E7D32),
+                color = Color(0xFF2E7D32)
             )
 
             Spacer(Modifier.height(16.dp))
@@ -130,7 +130,7 @@ fun OrderResultBodyContent(
             Text(
                 text = stringResource(R.string.order_id, foundOrder.id.toString()),
                 fontSize = 22.sp,
-                fontWeight = FontWeight.SemiBold,
+                fontWeight = FontWeight.SemiBold
             )
 
             Spacer(Modifier.height(16.dp))
@@ -138,7 +138,7 @@ fun OrderResultBodyContent(
             Text(
                 text = foundOrder.sender,
                 fontSize = 22.sp,
-                color = Color.Gray,
+                color = Color.Gray
             )
 
             Spacer(Modifier.height(16.dp))
@@ -146,10 +146,10 @@ fun OrderResultBodyContent(
             Text(
                 text = stringResource(
                     R.string.unique_total_products,
-                    foundOrder.productAmount.size,
+                    foundOrder.productAmount.size
                 ),
                 fontSize = 22.sp,
-                color = Color.Gray,
+                color = Color.Gray
             )
 
             Spacer(Modifier.height(16.dp))
@@ -160,16 +160,17 @@ fun OrderResultBodyContent(
                     fontSize = 22.sp,
                     color = Color.Gray,
                     modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center,
+                    textAlign = TextAlign.Center
                 )
             } else {
                 Button(onClick = onContinueClick) {
                     Text(
                         stringResource(R.string._continue),
-                        style = MaterialTheme.typography.titleMedium,
-                    )
+                        style = MaterialTheme.typography.titleMedium
+                        )
                 }
             }
+
         } else {
             Text("Error desconocido o datos no disponibles", fontSize = 16.sp, color = Color.Gray)
         }
@@ -181,7 +182,7 @@ fun OrderResultBodyContent(
         }) {
             Text(
                 stringResource(R.string.try_again),
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleMedium
             )
         }
     }

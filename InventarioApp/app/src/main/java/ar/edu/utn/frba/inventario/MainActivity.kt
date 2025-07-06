@@ -24,6 +24,7 @@ import ar.edu.utn.frba.inventario.ui.theme.InventarioTheme
 import ar.edu.utn.frba.inventario.utils.Screen
 import dagger.hilt.android.AndroidEntryPoint
 
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +43,7 @@ class MainActivity : ComponentActivity() {
                 val navBarItems: List<Screen> = listOf(
                     Screen.Shipments,
                     Screen.Orders,
-                    Screen.User,
+                    Screen.User
                 )
 
                 Scaffold(
@@ -56,7 +57,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier
                             .fillMaxSize()
                             .background(MaterialTheme.colorScheme.surface)
-                            .padding(innerPadding),
+                            .padding(innerPadding)
                     ) {
                         AppNavHost(navController)
                     }

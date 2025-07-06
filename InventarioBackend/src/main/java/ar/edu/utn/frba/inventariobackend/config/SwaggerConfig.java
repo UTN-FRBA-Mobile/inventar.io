@@ -11,7 +11,15 @@ import org.springframework.context.annotation.Configuration;
  * Configuration for Swagger UI and security schemes.
  */
 @Configuration
-@OpenAPIDefinition(info = @Info(title = "Inventario API", version = "v1"))
-@SecurityScheme(name = "bearerAuth", type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT", in = SecuritySchemeIn.HEADER)
+@OpenAPIDefinition(
+        info = @Info(title = "Inventario API", version = "v1")
+)
+@SecurityScheme(
+        name = "bearerAuth",
+        type = SecuritySchemeType.HTTP,
+        scheme = "bearer",
+        bearerFormat = "JWT",
+        in = SecuritySchemeIn.HEADER
+)
 public class SwaggerConfig {
 }

@@ -6,28 +6,31 @@ import ar.edu.utn.frba.inventario.api.model.product.ProductOperation
 
 object OrderMapper {
 
-    fun toOrder(orderResponse: OrderResponse): Order = Order(
-        id = orderResponse.id.toString(),
-        number = "P-${orderResponse.id}",
-        sender = orderResponse.sender,
-        status = orderResponse.status,
-        products = emptyList(),
-        productsInOrder = toProductsInOrder(orderResponse),
-        productAmount = orderResponse.productAmount,
-        productNames = orderResponse.productNames,
-        creationDate = orderResponse.creationDate.toLocalDateTime(),
-        scheduledDate = orderResponse.scheduledDate.toLocalDateTime(),
-        lastModifiedDate = orderResponse.lastModifiedDate.toLocalDateTime(),
-    )
+    fun toOrder(orderResponse: OrderResponse): Order {
+        return Order(
+            id = orderResponse.id.toString(),
+            number = "P-${orderResponse.id}",
+            sender = orderResponse.sender,
+            status = orderResponse.status,
+            products = emptyList(),
+            productsInOrder = toProductsInOrder(orderResponse),
+            productAmount = orderResponse.productAmount,
+            productNames = orderResponse.productNames,
+            creationDate = orderResponse.creationDate.toLocalDateTime(),
+            scheduledDate = orderResponse.scheduledDate.toLocalDateTime(),
+            lastModifiedDate = orderResponse.lastModifiedDate.toLocalDateTime()
+        )
+    }
 
-    fun toProductsInOrder(orderResponse: OrderResponse): List<ProductOperation> =
-        orderResponse.productAmount.mapNotNull { (id, quantity) ->
+    fun toProductsInOrder(orderResponse: OrderResponse): List<ProductOperation> {
+        return orderResponse.productAmount.mapNotNull { (id, quantity) ->
             orderResponse.productNames[id]?.let { name ->
                 ProductOperation(
                     id = id.toString(),
                     name = name,
-                    quantity = quantity,
+                    quantity = quantity
                 )
             }
         }
+    }
 }

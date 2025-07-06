@@ -1,3 +1,5 @@
 package ar.edu.utn.frba.inventario.utils
 
-fun String.removeRouteParams(): String = this.substringBefore("?")
+fun String.removeRouteParams(): String {
+    return this.substringBefore("?")
+}
