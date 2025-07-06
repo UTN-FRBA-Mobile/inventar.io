@@ -249,6 +249,7 @@ class OrderProductsViewModel @Inject constructor(
     fun showCompleteOrderConfirmation() {
         _showCompleteOrderConfirmationDialog.value = true
     }
+
     fun dismissCompleteOrderConfirmation() {
         _showCompleteOrderConfirmationDialog.value = false
     }

@@ -95,7 +95,7 @@ fun ShipmentDetailScreen(
                 ) {
                     IconButton(
                         onClick = {
-                            if(viewModel.selectedShipment.value.status == ItemStatus.COMPLETED || viewModel.selectedShipment.value.status == ItemStatus.BLOCKED || !viewModel.ExistProductWithLoadedQuantityUpdated()){
+                            if (viewModel.selectedShipment.value.status == ItemStatus.COMPLETED || viewModel.selectedShipment.value.status == ItemStatus.BLOCKED || !viewModel.ExistProductWithLoadedQuantityUpdated()) {
                                 navController.navigate(Screen.Shipments.route)
                             } else {
                                 viewModel.showExitConfirmation()
