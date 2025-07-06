@@ -22,11 +22,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 
 @HiltViewModel
 class ShipmentsViewModel @Inject constructor(
-    private val shipmentRepository: ShipmentRepository, private val productRepository: ProductRepository,
+    private val shipmentRepository: ShipmentRepository,
+    private val productRepository: ProductRepository,
     savedStateHandle: SavedStateHandle,
     preferencesManager: PreferencesManager
 ) : BaseItemViewModel<Shipment>(
@@ -54,14 +54,22 @@ class ShipmentsViewModel @Inject constructor(
             val shipmentsToCheckUnblockingResult = shipmentRepository.getShipmentList()
             when (shipmentsToCheckUnblockingResult) {
                 is NetworkResult.Success -> {
-                    Log.d("ShipmentsViewModel", "Init check stock blocked shipments Success: ${shipmentsToCheckUnblockingResult.data}")
+                    Log.d(
+                        "ShipmentsViewModel",
+                        "Init check stock blocked shipments Success: ${shipmentsToCheckUnblockingResult.data}"
+                    )
 
                     shipmentsToCheckUnblockingResult.data.forEach { sr ->
-                        if(sr.status == ItemStatus.BLOCKED){
-                            Log.d("ShipmentsViewModel", "Iniciando pedido a API del envio: ${sr.id}")
-                            val productIds = sr.productAmount.keys.map { prodId -> prodId.toString() }
+                        if (sr.status == ItemStatus.BLOCKED) {
+                            Log.d(
+                                "ShipmentsViewModel",
+                                "Iniciando pedido a API del envio: ${sr.id}"
+                            )
+                            val productIds =
+                                sr.productAmount.keys.map { prodId -> prodId.toString() }
 
-                            val resultStockProducts = productRepository.getStockByProductIdList(productIds)
+                            val resultStockProducts =
+                                productRepository.getStockByProductIdList(productIds)
 
                             when (resultStockProducts) {
                                 is NetworkResult.Success -> {
@@ -71,27 +79,46 @@ class ShipmentsViewModel @Inject constructor(
                                     )
 
                                     val currentStockProducts = resultStockProducts.data.stockCount
-                                    val enoughAllStock = sr.productAmount.all { ps-> currentStockProducts[ps.key.toString()]!! >= ps.value }
+                                    val enoughAllStock =
+                                        sr.productAmount.all { ps -> currentStockProducts[ps.key.toString()]!! >= ps.value }
 
-                                    if(enoughAllStock){
-                                        Log.d("ShipmentsViewModel", "Hay Stock suficiente para los productos del envio ${sr.id}, Stock disponible: $currentStockProducts")
-                                        if(sr.status == ItemStatus.BLOCKED){
-                                            val resultUnBlockShipment = shipmentRepository.unBlockShipment(sr.id)
+                                    if (enoughAllStock) {
+                                        Log.d(
+                                            "ShipmentsViewModel",
+                                            "Hay Stock suficiente para los productos del envio ${sr.id}, Stock disponible: $currentStockProducts"
+                                        )
+                                        if (sr.status == ItemStatus.BLOCKED) {
+                                            val resultUnBlockShipment =
+                                                shipmentRepository.unBlockShipment(sr.id)
 
-                                            when(resultUnBlockShipment){
+                                            when (resultUnBlockShipment) {
                                                 is NetworkResult.Success -> {
-                                                    Log.d("ShipmentsViewModel-POST_Shipment_UnBlock", "Success, new status:${resultUnBlockShipment.data.status}")
+                                                    Log.d(
+                                                        "ShipmentsViewModel-POST_Shipment_UnBlock",
+                                                        "Success, new status:${resultUnBlockShipment.data.status}"
+                                                    )
                                                 }
+
                                                 is NetworkResult.Error -> {
-                                                    Log.d("ShipmentsViewModel-POST_Shipment_UnBlock", "Error: Code=${resultUnBlockShipment.code}, message=${resultUnBlockShipment.message}")
+                                                    Log.d(
+                                                        "ShipmentsViewModel-POST_Shipment_UnBlock",
+                                                        "Error: Code=${resultUnBlockShipment.code}, message=${resultUnBlockShipment.message}"
+                                                    )
                                                 }
+
                                                 is NetworkResult.Exception -> {
-                                                    Log.d("ShipmentsViewModel-POST_Shipment_UnBlock", "Error Crítico: ${resultUnBlockShipment.e.message}")
+                                                    Log.d(
+                                                        "ShipmentsViewModel-POST_Shipment_UnBlock",
+                                                        "Error Crítico: ${resultUnBlockShipment.e.message}"
+                                                    )
                                                 }
                                             }
                                         }
-                                    }else{
-                                        Log.d("ShipmentsViewModel", "NO hay Stock suficiente para los productos del envio ${sr.id}, Stock disponible: $currentStockProducts")
+                                    } else {
+                                        Log.d(
+                                            "ShipmentsViewModel",
+                                            "NO hay Stock suficiente para los productos del envio ${sr.id}, Stock disponible: $currentStockProducts"
+                                        )
                                     }
                                 }
 
@@ -113,13 +140,23 @@ class ShipmentsViewModel @Inject constructor(
                         }
                     }
                 }
+
                 is NetworkResult.Error -> {
-                    Log.d("ShipmentsViewModel", "Error: code=${shipmentsToCheckUnblockingResult.code}, message=${shipmentsToCheckUnblockingResult.message}")
-                    _error.value = shipmentsToCheckUnblockingResult.message ?: "Error desconocido al cargar envíos."
+                    Log.d(
+                        "ShipmentsViewModel",
+                        "Error: code=${shipmentsToCheckUnblockingResult.code}, message=${shipmentsToCheckUnblockingResult.message}"
+                    )
+                    _error.value = shipmentsToCheckUnblockingResult.message
+                        ?: "Error desconocido al cargar envíos."
                 }
+
                 is NetworkResult.Exception -> {
-                    Log.d("ShipmentsViewModel", "Error crítico: ${shipmentsToCheckUnblockingResult.e.message}")
-                    _error.value = shipmentsToCheckUnblockingResult.e.message ?: "Excepción desconocida al cargar envíos."
+                    Log.d(
+                        "ShipmentsViewModel",
+                        "Error crítico: ${shipmentsToCheckUnblockingResult.e.message}"
+                    )
+                    _error.value = shipmentsToCheckUnblockingResult.e.message
+                        ?: "Excepción desconocida al cargar envíos."
                 }
             }
 
@@ -133,13 +170,19 @@ class ShipmentsViewModel @Inject constructor(
                     _items.apply { addAll(shipmentsParsed) }
                     ShipmentProductToScanList.clear()
                 }
+
                 is NetworkResult.Error -> {
-                    Log.d("ShipmentsViewModel", "Error: code=${shipmentResult.code}, message=${shipmentResult.message}")
+                    Log.d(
+                        "ShipmentsViewModel",
+                        "Error: code=${shipmentResult.code}, message=${shipmentResult.message}"
+                    )
                     _error.value = shipmentResult.message ?: "Error desconocido al cargar envíos."
                 }
+
                 is NetworkResult.Exception -> {
                     Log.d("ShipmentsViewModel", "Error crítico: ${shipmentResult.e.message}")
-                    _error.value = shipmentResult.e.message ?: "Excepción desconocida al cargar envíos."
+                    _error.value =
+                        shipmentResult.e.message ?: "Excepción desconocida al cargar envíos."
                 }
             }
             _loading.value = false
@@ -150,17 +193,17 @@ class ShipmentsViewModel @Inject constructor(
 
     override fun getFilterDate(item: Shipment) = item.creationDate
 
-    fun parseMapShipment(shipmentResponse: ShipmentResponse): Shipment{
-       return Shipment(
+    fun parseMapShipment(shipmentResponse: ShipmentResponse): Shipment {
+        return Shipment(
             id = shipmentResponse.id.toString(),
             number = "S${shipmentResponse.idLocation}E${shipmentResponse.id}",
             customerName = shipmentResponse.customerName,
             status = shipmentResponse.status,
-            products = shipmentResponse.productAmount.map { pa->
-               ProductOperation(
-                   id = pa.key.toString(), name = "generic", quantity = pa.value,
-                   )
-               },
+            products = shipmentResponse.productAmount.map { pa ->
+                ProductOperation(
+                    id = pa.key.toString(), name = "generic", quantity = pa.value,
+                )
+            },
             creationDate = shipmentResponse.creationDate.toLocalDateTime()
         )
     }

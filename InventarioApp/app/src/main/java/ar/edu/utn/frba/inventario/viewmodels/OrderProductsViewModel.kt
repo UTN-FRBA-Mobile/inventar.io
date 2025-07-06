@@ -98,21 +98,34 @@ class OrderProductsViewModel @Inject constructor(
         if (productIds.isEmpty()) {
             _orderProducts.value = emptyList()
             _errorMessage.value = "El pedido ${order.id} no contiene productos registrados."
-            Log.d("OrderProductsViewModel", "El pedido ${order.id} no contiene productos registrados.")
+            Log.d(
+                "OrderProductsViewModel",
+                "El pedido ${order.id} no contiene productos registrados."
+            )
             return
         }
 
         when (val productsResult = productRepository.getProductListById(productIds)) {
             is NetworkResult.Success -> handleProductsSuccess(order, productsResult.data)
             is NetworkResult.Error -> {
-                _errorMessage.value = "Error al cargar detalles de productos: ${productsResult.message}. "
+                _errorMessage.value =
+                    "Error al cargar detalles de productos: ${productsResult.message}. "
                 _orderProducts.value = emptyList()
-                Log.e("OrderProductsViewModel", "Error al cargar detalles de productos: ${productsResult.message}")
+                Log.e(
+                    "OrderProductsViewModel",
+                    "Error al cargar detalles de productos: ${productsResult.message}"
+                )
             }
+
             is NetworkResult.Exception -> {
-                _errorMessage.value = "Excepción al cargar detalles de productos: ${productsResult.e.message}. "
+                _errorMessage.value =
+                    "Excepción al cargar detalles de productos: ${productsResult.e.message}. "
                 _orderProducts.value = emptyList()
-                Log.e("OrderProductsViewModel", "Excepción al cargar detalles de productos", productsResult.e)
+                Log.e(
+                    "OrderProductsViewModel",
+                    "Excepción al cargar detalles de productos",
+                    productsResult.e
+                )
             }
         }
     }
@@ -136,7 +149,10 @@ class OrderProductsViewModel @Inject constructor(
 
         if (productsForDisplay.isEmpty()) {
             _errorMessage.value = "No se encontraron productos para esta orden."
-            Log.w("OrderProductsViewModel", "No se encontraron productos para esta orden: ${order.id}")
+            Log.w(
+                "OrderProductsViewModel",
+                "No se encontraron productos para esta orden: ${order.id}"
+            )
         } else {
             _errorMessage.value = null
         }
@@ -190,23 +206,35 @@ class OrderProductsViewModel @Inject constructor(
                     product.id to (product.currentStock ?: 0)
                 }
 
-                when (val result = orderRepository.finishOrder(orderIdToFinish, productQuantities)) {
+                when (val result =
+                    orderRepository.finishOrder(orderIdToFinish, productQuantities)) {
                     is NetworkResult.Success -> {
                         _isFinishingOrder.value = false
                         _orderFinishedSuccessfully.value = true
                         Log.d("OrderProductsViewModel", "Orden ${orderId} finalizada con éxito.")
                     }
+
                     is NetworkResult.Error -> {
-                        _finishOrderError.value = "Error al finalizar el pedido: ${result.message ?: "Desconocido"}"
+                        _finishOrderError.value =
+                            "Error al finalizar el pedido: ${result.message ?: "Desconocido"}"
                         _isFinishingOrder.value = false
                         _orderFinishedSuccessfully.value = false
-                        Log.e("OrderProductsViewModel", "Error al finalizar el pedido: ${result.message}")
+                        Log.e(
+                            "OrderProductsViewModel",
+                            "Error al finalizar el pedido: ${result.message}"
+                        )
                     }
+
                     is NetworkResult.Exception -> {
-                        _finishOrderError.value = "Excepción al finalizar el pedido: ${result.e.message}"
+                        _finishOrderError.value =
+                            "Excepción al finalizar el pedido: ${result.e.message}"
                         _isFinishingOrder.value = false
                         _orderFinishedSuccessfully.value = false
-                        Log.e("OrderProductsViewModel", "Excepción al finalizar el pedido", result.e)
+                        Log.e(
+                            "OrderProductsViewModel",
+                            "Excepción al finalizar el pedido",
+                            result.e
+                        )
                     }
                 }
             } catch (e: Exception) {

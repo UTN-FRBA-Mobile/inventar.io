@@ -24,6 +24,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
@@ -109,7 +110,8 @@ fun OrderProductsScreen(
         }
     }
 
-    val allProductsConfirmed = orderProducts.isNotEmpty() && productConfirmationStatus.values.all { it }
+    val allProductsConfirmed =
+        orderProducts.isNotEmpty() && productConfirmationStatus.values.all { it }
 
     LaunchedEffect(orderFinishedSuccessfully) {
         when (orderFinishedSuccessfully) {
@@ -122,7 +124,8 @@ fun OrderProductsScreen(
                     popUpTo(Screen.Orders.route) { inclusive = true }
                 }
             }
-            false -> { } //El error ya se muestra en el FloatingActionButton si existe finishOrderError
+
+            false -> {} //El error ya se muestra en el FloatingActionButton si existe finishOrderError
             null -> {}
         }
     }
@@ -148,7 +151,10 @@ fun OrderProductsScreen(
                         .padding(bottom = 16.dp),
                     contentAlignment = Alignment.BottomCenter
                 ) {
-                    FloatingActionButton(onClick = {}, containerColor = MaterialTheme.colorScheme.primary) {
+                    FloatingActionButton(
+                        onClick = {},
+                        containerColor = MaterialTheme.colorScheme.primary
+                    ) {
                         CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
                     }
                 }
@@ -171,6 +177,7 @@ fun OrderProductsScreen(
                         isError = true
                     )
                 }
+
                 orderProducts.isEmpty() -> {
                     OrderMessageView(
                         title = stringResource(R.string.order_empty_products),
@@ -180,6 +187,7 @@ fun OrderProductsScreen(
                         isError = false
                     )
                 }
+
                 else -> {
                     OrderHeader(orderId)
                     LazyColumn(
@@ -238,7 +246,7 @@ fun OrderTopBar(navController: NavController) {
                 modifier = Modifier.size(48.dp)
             ) {
                 Icon(
-                    imageVector = Icons.Default.ArrowBack,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = stringResource(R.string.go_back),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -300,7 +308,10 @@ fun ConfirmOrderButton(
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .offset(y = 50.dp)
-                    .background(MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.8f), RoundedCornerShape(8.dp))
+                    .background(
+                        MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.8f),
+                        RoundedCornerShape(8.dp)
+                    )
                     .padding(horizontal = 8.dp, vertical = 4.dp)
             )
         }
@@ -379,7 +390,8 @@ fun OrderMessageView(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val titleColor = if (isError) Color.Red else MaterialTheme.colorScheme.onSurface
-        val messageColor = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
+        val messageColor =
+            if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
 
         Text(
             text = title,
@@ -610,7 +622,8 @@ fun ProductListItem(
                             if (!isAnotherProductBeingEdited) {
                                 isEditingQuantity = true
                                 onStartEditing(product.id)
-                                editableQuantity = TextFieldValue(product.currentStock?.toString() ?: "0")
+                                editableQuantity =
+                                    TextFieldValue(product.currentStock?.toString() ?: "0")
                             } else {
                                 coroutineScope.launch {
                                     snackbarHostState.showSnackbar("Confirmar la cantidad actual antes de editar otro producto.")
@@ -622,7 +635,9 @@ fun ProductListItem(
                         Icon(
                             imageVector = Icons.Default.Edit,
                             contentDescription = "Editar Cantidad",
-                            tint = if (isAnotherProductBeingEdited) MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurfaceVariant
+                            tint = if (isAnotherProductBeingEdited) MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                alpha = 0.5f
+                            ) else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                     Spacer(modifier = Modifier.width(8.dp))

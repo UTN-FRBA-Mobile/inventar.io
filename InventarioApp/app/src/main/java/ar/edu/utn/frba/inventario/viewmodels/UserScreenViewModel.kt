@@ -44,9 +44,14 @@ class UserScreenViewModel @Inject constructor(
                     Log.d("UserScreenViewModel", "Success: ${userResult.data}")
                     _user.value = userResult.data
                 }
+
                 is NetworkResult.Error -> {
-                    Log.d("UserScreenViewModel", "Error: code=${userResult.code}, message=${userResult.message}")
+                    Log.d(
+                        "UserScreenViewModel",
+                        "Error: code=${userResult.code}, message=${userResult.message}"
+                    )
                 }
+
                 is NetworkResult.Exception -> {
                     Log.d("UserScreenViewModel", "Error crítico: ${userResult.e.message}")
                 }
@@ -59,13 +64,18 @@ class UserScreenViewModel @Inject constructor(
             _branchLocationName.value = LoadingLocation.toString()
             when (val result = selfRepository.getMyLocation()) {
                 is NetworkResult.Success -> {
-                    _branchLocationName.value = result.data?.name ?:UnknownLocation.toString()
-                    Log.d("UserScreenViewModel", "Branch location loaded: ${_branchLocationName.value}")
+                    _branchLocationName.value = result.data?.name ?: UnknownLocation.toString()
+                    Log.d(
+                        "UserScreenViewModel",
+                        "Branch location loaded: ${_branchLocationName.value}"
+                    )
                 }
+
                 is NetworkResult.Error -> {
                     _branchLocationName.value = ErrorLoadingLocation.toString()
                     Log.e("UserScreenViewModel", "Error loading branch location: ${result.message}")
                 }
+
                 is NetworkResult.Exception -> {
                     _branchLocationName.value = ErrorLoadingLocation.toString()
                     Log.e("UserScreenViewModel", "Exception loading branch location", result.e)

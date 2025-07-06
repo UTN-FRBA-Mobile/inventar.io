@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -30,6 +32,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -48,9 +51,9 @@ import ar.edu.utn.frba.inventario.viewmodels.OrderDetailViewModel
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun OrderDetailScreen(
-    viewModel:OrderDetailViewModel = hiltViewModel(),
-    navController: NavController, id:String
-){
+    viewModel: OrderDetailViewModel = hiltViewModel(),
+    navController: NavController, id: String
+) {
 
     LaunchedEffect(id) {
         viewModel.loadOrder(id)
@@ -66,18 +69,17 @@ fun OrderDetailScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.secondaryContainer)
                         .height(56.dp)
                         .padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(
-                        onClick = {navController.navigate(Screen.Orders.route)},
+                        onClick = { navController.navigate(Screen.Orders.route) },
                         modifier = Modifier.size(48.dp)
                     ) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.go_back),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -95,8 +97,7 @@ fun OrderDetailScreen(
                 }
             }
         }
-    ) {
-    innerPadding ->
+    ) { innerPadding ->
         when {
             loading -> {
                 Box(
@@ -125,10 +126,7 @@ fun OrderDetailScreen(
 
             order != null -> {
                 OrderDetailBodyContent(
-                    viewModel = viewModel,
-                    navController = navController,
-                    order = order!!,
-                    innerPadding = innerPadding
+                    order = order!!, innerPadding = innerPadding
                 )
             }
 
@@ -147,49 +145,64 @@ fun OrderDetailScreen(
 }
 
 @Composable
-fun OrderDetailBodyContent(viewModel:OrderDetailViewModel, navController: NavController, order:Order, innerPadding: PaddingValues){
+fun OrderDetailBodyContent(
+    order: Order,
+    innerPadding: PaddingValues
+) {
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .background(MaterialTheme.colorScheme.secondaryContainer)
-        .padding(innerPadding)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
     ) {
-
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .background(color = MaterialTheme.colorScheme.primaryContainer)){
-            Column (modifier = Modifier
-                .padding(20.dp)){
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
+                .background(color = MaterialTheme.colorScheme.primaryContainer)
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(20.dp)
+            ) {
                 Text(
                     text = stringResource(R.string.order_detail_screen_order, order.id),
                     style = MaterialTheme.typography.titleLarge,
                     fontSize = 25.sp,
                     fontWeight = FontWeight.Bold
                 )
-                Text(text = stringResource(R.string.order_detail_screen_sender, order.sender), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-                Text(text = stringResource(R.string.order_detail_screen_total, order.productsInOrder.size), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                Text(
+                    text = stringResource(R.string.order_detail_screen_sender, order.sender),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Text(
+                    text = stringResource(
+                        R.string.order_detail_screen_total,
+                        order.productsInOrder.size
+                    ),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
             }
         }
-        LazyColumn(modifier = Modifier
-            .padding(15.dp)) {
-            items(order.productsInOrder){
-                    product ->
+        LazyColumn(
+            modifier = Modifier.padding(top = 15.dp)
+        ) {
+            items(order.productsInOrder) { product ->
                 ProductItem(product)
-                Spacer(modifier = Modifier.height(5.dp))
             }
         }
-        Spacer(modifier = Modifier
-            .height(10.dp))
     }
 }
 
 @Composable
 fun ProductItem(product: ProductOperation) {
     ElevatedCard(
-        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface),
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
         modifier = Modifier
             .fillMaxSize()
-            .padding(2.dp)
+            .padding(bottom = 7.5.dp)
     ) {
         Row(
             modifier = Modifier

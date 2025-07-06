@@ -16,14 +16,14 @@ import javax.inject.Inject
 @HiltViewModel
 class OrderDetailViewModel @Inject constructor(
     private val orderRepository: OrderRepository
-): ViewModel(){
+) : ViewModel() {
 
     companion object {
         val UnknownError = R.string.unknown_error
         val CriticalError = R.string.critical_error
     }
 
-    private val _order  = MutableStateFlow<Order?>(null)
+    private val _order = MutableStateFlow<Order?>(null)
     val order = _order.asStateFlow()
 
     private val _loading = MutableStateFlow(false)
@@ -42,9 +42,11 @@ class OrderDetailViewModel @Inject constructor(
                 is NetworkResult.Success -> {
                     _order.value = OrderMapper.toOrder(result.data)
                 }
+
                 is NetworkResult.Error -> {
                     _error.value = (result.message ?: UnknownError).toString()
                 }
+
                 is NetworkResult.Exception -> {
                     _error.value = (result.e.message ?: CriticalError).toString()
                 }

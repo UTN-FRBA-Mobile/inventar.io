@@ -12,18 +12,23 @@ import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ar.edu.utn.frba.inventario.utils.Screen
+import ar.edu.utn.frba.inventario.utils.removeRouteParams
 
 @Composable
-fun AppNavBar(navController: NavController, items: List<Screen> ) {
+fun AppNavBar(navController: NavController, items: List<Screen>) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
+    val currentRoute = navBackStackEntry?.destination?.route?.removeRouteParams()
 
     NavigationBar {
-        items.forEach { screen ->
+        items.forEach { screen: Screen ->
             NavigationBarItem(
                 icon = {
                     when (screen) {
-                        Screen.Shipments -> Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null)
+                        Screen.Shipments -> Icon(
+                            Icons.AutoMirrored.Filled.Send,
+                            contentDescription = null
+                        )
+
                         Screen.Orders -> Icon(Icons.Default.ShoppingCart, contentDescription = null)
                         Screen.User -> Icon(Icons.Default.AccountCircle, contentDescription = null)
                         else -> throw IllegalArgumentException("Unknown screen: ${screen.route}")
@@ -35,10 +40,10 @@ fun AppNavBar(navController: NavController, items: List<Screen> ) {
                         return@NavigationBarItem
 
                     navController.navigate(screen.route) {
-                        popUpTo(navController.graph.startDestinationId) { saveState = true }
+                        popUpTo(Screen.Shipments.route)
                         launchSingleTop = true
-                        restoreState = true
                     }
+
                 }
             )
         }
