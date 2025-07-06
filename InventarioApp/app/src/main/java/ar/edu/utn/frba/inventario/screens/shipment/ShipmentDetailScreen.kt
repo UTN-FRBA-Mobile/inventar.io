@@ -1,5 +1,7 @@
 package ar.edu.utn.frba.inventario.screens.shipment
 
+import android.annotation.SuppressLint
+import android.content.res.Configuration
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
@@ -367,7 +369,7 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
                         shape = RoundedCornerShape(50),
                         modifier = Modifier
                             .weight(1f)
-                            .height(50.dp),
+                            .height(40.dp),
                     ) {
                         Text(
                             text = stringResource(R.string.next),
@@ -416,7 +418,7 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
                         shape = RoundedCornerShape(50),
                         modifier = Modifier
                             .weight(1f)
-                            .height(50.dp),
+                            .height(40.dp),
                     ) {
                         Text(
                             text = stringResource(R.string.scan),

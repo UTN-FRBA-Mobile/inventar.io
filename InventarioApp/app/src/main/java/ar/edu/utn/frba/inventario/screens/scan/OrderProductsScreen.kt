@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,10 +30,12 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -89,7 +92,7 @@ import kotlinx.coroutines.launch
 fun OrderProductsScreen(
     navController: NavController,
     orderId: String?,
-    viewModel: OrderProductsViewModel = hiltViewModel(),
+    viewModel: OrderProductsViewModel = hiltViewModel()
 ) {
     val orderProducts by viewModel.orderProducts.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
@@ -117,15 +120,14 @@ fun OrderProductsScreen(
             true -> {
                 snackbarHostState.showSnackbar(
                     message = "¡Pedido finalizado con éxito!",
-                    withDismissAction = true,
+                    withDismissAction = true
                 )
                 navController.navigate(Screen.Orders.route) {
                     popUpTo(Screen.Orders.route) { inclusive = true }
                 }
             }
 
-            // El error ya se muestra en el FloatingActionButton si existe finishOrderError
-            false -> {}
+            false -> {} //El error ya se muestra en el FloatingActionButton si existe finishOrderError
             null -> {}
         }
     }
@@ -135,17 +137,13 @@ fun OrderProductsScreen(
         topBar = { OrderTopBar(navController) },
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
-            if (!isLoading &&
-                errorMessage == null &&
-                orderProducts.isNotEmpty() &&
-                !isFinishingOrder
-            ) {
+            if (!isLoading && errorMessage == null && orderProducts.isNotEmpty() && !isFinishingOrder) {
                 ConfirmOrderButton(
                     allProductsConfirmed = allProductsConfirmed,
                     screenCoroutineScope = screenCoroutineScope,
                     snackbarHostState = snackbarHostState,
                     viewModel = viewModel,
-                    finishOrderError = finishOrderError,
+                    finishOrderError = finishOrderError
                 )
             }
             if (isFinishingOrder) {
@@ -153,22 +151,28 @@ fun OrderProductsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp),
-                    contentAlignment = Alignment.BottomCenter,
+                    contentAlignment = Alignment.BottomCenter
                 ) {
                     FloatingActionButton(
                         onClick = {},
-                        containerColor = MaterialTheme.colorScheme.primary,
+                        shape = RoundedCornerShape(50),
+                        modifier = Modifier
+                            .width(180.dp)
+                            .height(50.dp),
+                        containerColor = MaterialTheme.colorScheme.primary
                     ) {
                         CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
                     }
                 }
             }
         },
+        floatingActionButtonPosition = FabPosition.Center
+
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
+                .padding(innerPadding)
         ) {
             when {
                 isLoading -> LoadingView()
@@ -178,7 +182,7 @@ fun OrderProductsScreen(
                         message = errorMessage ?: stringResource(R.string.order_not_found),
                         buttonText = stringResource(R.string.try_again),
                         onButtonClick = { navController.popBackStack() },
-                        isError = true,
+                        isError = true
                     )
                 }
 
@@ -188,7 +192,7 @@ fun OrderProductsScreen(
                         message = stringResource(R.string.no_products_found_for_order),
                         buttonText = stringResource(R.string.try_again),
                         onButtonClick = { navController.popBackStack() },
-                        isError = false,
+                        isError = false
                     )
                 }
 
@@ -197,7 +201,7 @@ fun OrderProductsScreen(
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         items(orderProducts) { product ->
                             ProductListItem(
@@ -209,26 +213,21 @@ fun OrderProductsScreen(
                                     currentlyEditingProductId = null
                                 },
                                 onClick = {
-                                    navController.navigate(
-                                        Screen.ProductDetail.route +
-                                            "/${product.id}",
-                                    )
+                                    navController.navigate(Screen.ProductDetail.route + "/${product.id}")
                                 },
                                 onProductConfirmed = { productId ->
                                     productConfirmationStatus[productId] = true
                                     currentlyEditingProductId = null
                                 },
                                 snackbarHostState = snackbarHostState,
-                                isAnotherProductBeingEdited =
-                                currentlyEditingProductId != null &&
-                                    currentlyEditingProductId != product.id,
+                                isAnotherProductBeingEdited = currentlyEditingProductId != null && currentlyEditingProductId != product.id,
                                 onStartEditing = {
                                     currentlyEditingProductId = it
                                     if (productConfirmationStatus[it] == true) {
                                         productConfirmationStatus[it] = false
                                     }
                                 },
-                                isConfirmed = productConfirmationStatus[product.id] == true,
+                                isConfirmed = productConfirmationStatus[product.id] == true
                             )
                         }
                     }
@@ -248,16 +247,16 @@ fun OrderTopBar(navController: NavController) {
                 .height(56.dp)
                 .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconButton(
                 onClick = { navController.navigate(Screen.Orders.route) },
-                modifier = Modifier.size(48.dp),
+                modifier = Modifier.size(48.dp)
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = stringResource(R.string.go_back),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
             Text(
@@ -266,7 +265,7 @@ fun OrderTopBar(navController: NavController) {
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.weight(1f),
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.size(48.dp))
         }
@@ -279,42 +278,44 @@ fun ConfirmOrderButton(
     screenCoroutineScope: CoroutineScope,
     snackbarHostState: SnackbarHostState,
     viewModel: OrderProductsViewModel,
-    finishOrderError: String?,
+    finishOrderError: String?
 ) {
-    val showCompleteConfirmationDialog by viewModel
-        .showCompleteOrderConfirmationDialog
-        .collectAsState()
-
+    val showCompleteConfirmationDialog by viewModel.showCompleteOrderConfirmationDialog.collectAsState()
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 16.dp),
-        contentAlignment = Alignment.BottomCenter,
+        contentAlignment = Alignment.BottomCenter
     ) {
-        FloatingActionButton(
+        Button(
+            enabled = allProductsConfirmed,
             onClick = {
                 if (allProductsConfirmed) {
                     viewModel.showCompleteOrderConfirmation()
+                    //viewModel.finishOrder()
                 } else {
                     screenCoroutineScope.launch {
-                        snackbarHostState.showSnackbar(
-                            "Confirmar todos los productos antes " +
-                                "de finalizar el pedido.",
-                        )
+                        snackbarHostState.showSnackbar("Confirmar todos los productos antes de finalizar el pedido.")
                     }
                 }
             },
-            containerColor = if (allProductsConfirmed) {
-                MaterialTheme.colorScheme.primary
-            } else {
-                MaterialTheme.colorScheme.onPrimaryContainer
-            },
-            contentColor = MaterialTheme.colorScheme.background,
+            shape = RoundedCornerShape(50),
+            modifier = Modifier
+                .wrapContentWidth()
+                .height(50.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+            )
         ) {
             Text(
                 text = stringResource(R.string.confirm_order),
-                modifier = Modifier.padding(horizontal = 16.dp),
                 style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(horizontal = 15.dp),
+                maxLines = 1
             )
         }
 
@@ -328,9 +329,9 @@ fun ConfirmOrderButton(
                     .offset(y = 50.dp)
                     .background(
                         MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.8f),
-                        RoundedCornerShape(8.dp),
+                        RoundedCornerShape(8.dp)
                     )
-                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
             )
         }
     }
@@ -340,42 +341,23 @@ fun ConfirmOrderButton(
             onDismissRequest = {
                 viewModel.dismissCompleteOrderConfirmation()
             },
-            title = {
-                Text(
-                    text =
-                    stringResource(
-                        R.string.order_products_screen_confirm_complete_title_alert,
-                    ),
-                )
-            },
-            text = {
-                Text(
-                    text =
-                    stringResource(
-                        R.string
-                            .order_products_screen_confirm_complete_message_alert,
-                    ),
-                )
-            },
+            title = { Text(text = stringResource(R.string.order_products_screen_confirm_complete_title_alert_dialog)) },
+            text = { Text(text = stringResource(R.string.order_products_screen_confirm_complete_message_alert_dialog)) },
             confirmButton = {
                 Button(onClick = {
                     viewModel.dismissCompleteOrderConfirmation()
                     viewModel.finishOrder()
                 }) {
-                    Text(
-                        text = stringResource(
-                            R.string.confirm,
-                        ),
-                    )
+                    Text(text = stringResource(R.string.order_products_screen_confirm_complete_confirm_button_alert_dialog))
                 }
             },
             dismissButton = {
                 Button(onClick = {
                     viewModel.dismissCompleteOrderConfirmation()
                 }) {
-                    Text(text = stringResource(R.string.confirm))
+                    Text(text = stringResource(R.string.order_products_screen_confirm_complete_cancel_button_alert_dialog))
                 }
-            },
+            }
         )
     }
 }
@@ -385,18 +367,15 @@ fun OrderHeader(orderId: String?) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = MaterialTheme.colorScheme.primaryContainer),
+            .background(color = MaterialTheme.colorScheme.primaryContainer)
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
             Text(
-                text = stringResource(
-                    R.string.order_detail_screen_order,
-                    orderId.orEmpty(),
-                ),
+                text = stringResource(R.string.order_detail_screen_order, orderId.orEmpty()),
                 style = MaterialTheme.typography.titleLarge,
                 fontSize = 25.sp,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                color = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
     }
@@ -407,7 +386,7 @@ fun LoadingView() {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CircularProgressIndicator()
         Text(stringResource(R.string.loading_products))
@@ -420,41 +399,32 @@ fun OrderMessageView(
     message: String,
     buttonText: String,
     onButtonClick: () -> Unit,
-    isError: Boolean,
+    isError: Boolean
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 24.dp),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val titleColor =
-            if (isError) {
-                Color.Red
-            } else {
-                MaterialTheme.colorScheme.onSurface
-            }
+        val titleColor = if (isError) Color.Red else MaterialTheme.colorScheme.onSurface
         val messageColor =
-            if (isError) {
-                MaterialTheme.colorScheme.error
-            } else {
-                MaterialTheme.colorScheme.onSurfaceVariant
-            }
+            if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
 
         Text(
             text = title,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             color = titleColor,
-            textAlign = TextAlign.Center,
+            textAlign = TextAlign.Center
         )
         Spacer(Modifier.height(8.dp))
         Text(
             message,
             fontSize = 18.sp,
             color = messageColor,
-            textAlign = TextAlign.Center,
+            textAlign = TextAlign.Center
         )
         Spacer(Modifier.height(32.dp))
 
@@ -474,7 +444,7 @@ fun ProductListItem(
     snackbarHostState: SnackbarHostState,
     isAnotherProductBeingEdited: Boolean,
     onStartEditing: (productId: String) -> Unit,
-    isConfirmed: Boolean,
+    isConfirmed: Boolean
 ) {
     val context = LocalContext.current
     val expectedQuantity = remember { product.currentStock ?: 0 }
@@ -502,25 +472,25 @@ fun ProductListItem(
             .shadow(
                 elevation = 4.dp,
                 shape = RoundedCornerShape(12.dp),
-                clip = true,
+                clip = true
             )
             .clickable(enabled = !isEditingQuantity) {
                 onClick(product)
             },
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-        ),
+            containerColor = MaterialTheme.colorScheme.surface
+        )
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 modifier = Modifier
                     .size(64.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
             ) {
                 val imagePainter = rememberAsyncImagePainter(
                     model = ImageRequest.Builder(context)
@@ -528,7 +498,7 @@ fun ProductListItem(
                         .size(Size.ORIGINAL)
                         .crossfade(true)
                         .build(),
-                    contentScale = ContentScale.Crop,
+                    contentScale = ContentScale.Crop
                 )
 
                 if (product.imageURL?.isNotBlank() == true) {
@@ -536,14 +506,14 @@ fun ProductListItem(
                         painter = imagePainter,
                         contentDescription = stringResource(R.string.product_image),
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier.fillMaxSize()
                     )
                 } else {
                     Image(
                         painter = painterResource(id = R.drawable.image_not_found),
                         contentDescription = stringResource(R.string.product_image),
                         contentScale = ContentScale.Fit,
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
             }
@@ -551,38 +521,32 @@ fun ProductListItem(
             Spacer(modifier = Modifier.width(16.dp))
 
             Column(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1f)
             ) {
                 Text(
                     text = product.name,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = "EAN-13: ${product.ean13}",
                     style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = stringResource(
-                        R.string.expected_quantity,
-                        expectedQuantity,
-                    ),
+                    text = stringResource(R.string.expected_quantity, expectedQuantity),
                     style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
                 if (isEditingQuantity) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = stringResource(
-                                R.string.received_quantity,
-                                "",
-                            ),
+                            text = stringResource(R.string.received_quantity, ""),
                             style = MaterialTheme.typography.titleSmall,
-                            color = MaterialTheme.colorScheme.onSurface,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         BasicTextField(
                             value = editableQuantity,
@@ -591,17 +555,16 @@ fun ProductListItem(
                                     editableQuantity = newValue
                                 } else {
                                     coroutineScope.launch {
-                                        snackbarHostState
-                                            .showSnackbar("Solo se permiten números")
+                                        snackbarHostState.showSnackbar("Solo se permiten números")
                                     }
                                 }
                             },
                             textStyle = MaterialTheme.typography.titleSmall.copy(
-                                color = MaterialTheme.colorScheme.onSurface,
+                                color = MaterialTheme.colorScheme.onSurface
                             ),
                             keyboardOptions = KeyboardOptions(
                                 keyboardType = KeyboardType.Number,
-                                imeAction = ImeAction.Done,
+                                imeAction = ImeAction.Done
                             ),
                             keyboardActions = KeyboardActions(
                                 onDone = {
@@ -613,14 +576,10 @@ fun ProductListItem(
                                         keyboardController?.hide()
                                     } else {
                                         coroutineScope.launch {
-                                            snackbarHostState
-                                                .showSnackbar(
-                                                    "La cantidad no puede " +
-                                                        "ser negativa o vacía.",
-                                                )
+                                            snackbarHostState.showSnackbar("La cantidad no puede ser negativa o vacía.")
                                         }
                                     }
-                                },
+                                }
                             ),
                             modifier = Modifier
                                 .width(60.dp)
@@ -628,7 +587,7 @@ fun ProductListItem(
                                 .padding(horizontal = 4.dp, vertical = 2.dp)
                                 .focusRequester(focusRequester),
                             singleLine = true,
-                            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+                            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary)
                         )
                     }
                     LaunchedEffect(isEditingQuantity) {
@@ -636,18 +595,15 @@ fun ProductListItem(
                             focusRequester.requestFocus()
                             keyboardController?.show()
                             editableQuantity = editableQuantity.copy(
-                                selection = TextRange(0, editableQuantity.text.length),
+                                selection = TextRange(0, editableQuantity.text.length)
                             )
                         }
                     }
                 } else {
                     Text(
-                        text = stringResource(
-                            R.string.received_quantity,
-                            editableQuantity.text,
-                        ),
+                        text = stringResource(R.string.received_quantity, editableQuantity.text),
                         style = MaterialTheme.typography.titleSmall,
-                        color = MaterialTheme.colorScheme.onSurface,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
@@ -657,7 +613,7 @@ fun ProductListItem(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
-                    .fillMaxHeight(),
+                    .fillMaxHeight()
             ) {
                 if (isEditingQuantity) {
                     IconButton(onClick = {
@@ -669,16 +625,14 @@ fun ProductListItem(
                             keyboardController?.hide()
                         } else {
                             coroutineScope.launch {
-                                snackbarHostState.showSnackbar(
-                                    "La cantidad no puede ser negativa o vacía.",
-                                )
+                                snackbarHostState.showSnackbar("La cantidad no puede ser negativa o vacía.")
                             }
                         }
                     }) {
                         Icon(
                             imageVector = Icons.Default.Check,
                             contentDescription = "Confirmar cantidad",
-                            tint = MaterialTheme.colorScheme.primary,
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 } else {
@@ -691,26 +645,18 @@ fun ProductListItem(
                                     TextFieldValue(product.currentStock?.toString() ?: "0")
                             } else {
                                 coroutineScope.launch {
-                                    snackbarHostState
-                                        .showSnackbar(
-                                            "Confirmar la cantidad actual " +
-                                                "antes de editar otro producto.",
-                                        )
+                                    snackbarHostState.showSnackbar("Confirmar la cantidad actual antes de editar otro producto.")
                                 }
                             }
                         },
-                        enabled = !isAnotherProductBeingEdited,
+                        enabled = !isAnotherProductBeingEdited
                     ) {
                         Icon(
                             imageVector = Icons.Default.Edit,
                             contentDescription = "Editar Cantidad",
-                            tint = if (isAnotherProductBeingEdited) {
-                                MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                                    alpha = 0.5f,
-                                )
-                            } else {
-                                MaterialTheme.colorScheme.onSurfaceVariant
-                            },
+                            tint = if (isAnotherProductBeingEdited) MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                alpha = 0.5f
+                            ) else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                     Spacer(modifier = Modifier.width(8.dp))
@@ -720,12 +666,7 @@ fun ProductListItem(
                         Icon(
                             imageVector = Icons.Default.Check,
                             contentDescription = "Confirmar producto",
-                            tint =
-                            if (isConfirmed) {
-                                Color(0xFF4CAF50)
-                            } else {
-                                MaterialTheme.colorScheme.secondary
-                            },
+                            tint = if (isConfirmed) Color(0xFF4CAF50) else MaterialTheme.colorScheme.secondary
                         )
                     }
                 }

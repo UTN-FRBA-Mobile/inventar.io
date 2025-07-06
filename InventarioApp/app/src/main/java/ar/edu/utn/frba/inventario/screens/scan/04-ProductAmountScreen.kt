@@ -140,7 +140,10 @@ fun ProductAmountScreen(
                     popUpTo(Screen.ShipmentDetail.route) { inclusive = true }
                 }
             }) {
-                Text(stringResource(R.string.product_amount_confirm_button))
+                Text(
+                    stringResource(R.string.product_amount_confirm_button),
+                    style = MaterialTheme.typography.titleMedium
+                    )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -152,7 +155,10 @@ fun ProductAmountScreen(
                     false,
                 )
             }) {
-                Text(stringResource(R.string.cancel))
+                Text(
+                    stringResource(R.string.cancel),
+                    style = MaterialTheme.typography.titleMedium
+                    )
             }
         } else {
             Button(onClick = {

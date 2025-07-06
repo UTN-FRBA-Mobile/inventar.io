@@ -24,7 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class OrderResultViewModel @Inject constructor(
     private val orderRepository: OrderRepository,
-    savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _foundOrder = MutableStateFlow<OrderResponse?>(null)
@@ -72,25 +72,25 @@ class OrderResultViewModel @Inject constructor(
                             ) {
                                 "El pedido con ID '$id' no fue encontrado."
                             } else {
-                                "Orden no encontrada. Intente nuevamente. ${result.message ?: "Error desconocido"}"
+                                "No se ha encontrado el pedido ${result.message ?: "Error desconocido"}"
                             }
                         _errorMessage.value = specificError
                         _isLoading.value = false
-                        Log.e("OrderResultViewModel", "Error al cargar orden: ${result.message}")
+                        Log.e("OrderResultViewModel", "Error al cargar pedido: ${result.message}")
                     }
 
                     is NetworkResult.Exception -> {
                         _errorMessage.value =
                             "Excepción al cargar el pedido: ${result.e.message}. Por favor, intente de nuevo."
                         _isLoading.value = false
-                        Log.e("OrderResultViewModel", "Excepción al cargar orden", result.e)
+                        Log.e("OrderResultViewModel", "Excepción al cargar pedido", result.e)
                     }
                 }
             } catch (e: Exception) {
                 _errorMessage.value =
                     "Error inesperado: ${e.message}. Contacte a soporte si el problema persiste."
                 _isLoading.value = false
-                Log.e("OrderResultViewModel", "Error inesperado al cargar orden", e)
+                Log.e("OrderResultViewModel", "Error inesperado al cargar pedido", e)
             }
         }
     }
@@ -100,7 +100,7 @@ class OrderResultViewModel @Inject constructor(
 
         val currentOrder = _foundOrder.value
         if (currentOrder == null) {
-            _startOrderError.value = "No hay orden cargada para continuar."
+            _startOrderError.value = "No hay pedido cargado para continuar."
             return
         }
 
@@ -123,7 +123,7 @@ class OrderResultViewModel @Inject constructor(
                             _startOrderLoading.value = false
                             Log.e(
                                 "OrderResultViewModel",
-                                "Error al iniciar orden: ${result.message}",
+                                "Error al iniciar pedido: ${result.message}"
                             )
                         }
 
@@ -131,12 +131,12 @@ class OrderResultViewModel @Inject constructor(
                             _startOrderError.value =
                                 "Excepción al iniciar el pedido: ${result.e.message}"
                             _startOrderLoading.value = false
-                            Log.e("OrderResultViewModel", "Excepción al iniciar orden", result.e)
+                            Log.e("OrderResultViewModel", "Excepción al iniciar pedido", result.e)
                         }
                     }
                 }
             } ?: run {
-                _startOrderError.value = "ID de orden no disponible para iniciar."
+                _startOrderError.value = "ID de pedido no disponible para iniciar."
             }
         } else {
             currentOrder.id?.let { orderIdLong ->
@@ -144,14 +144,14 @@ class OrderResultViewModel @Inject constructor(
                     navigateToOrderProductsList(navController, orderIdLong.toString())
                 }
             } ?: run {
-                _startOrderError.value = "ID de orden no disponible para continuar."
+                _startOrderError.value = "ID de pedido no disponible para continuar."
             }
         }
     }
 
     private fun navigateToOrderProductsList(navController: NavController, orderId: String) {
         val destination = Screen.OrderProductsList.withNavArgs(
-            OrderProductsListArgs.OrderId to orderId,
+            OrderProductsListArgs.OrderId to orderId
         )
         navController.navigate(destination)
     }

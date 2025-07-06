@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -92,7 +93,10 @@ fun ManualCodeBodyContent(navController: NavController) {
             },
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Text(stringResource(R.string.confirm))
+            Text(
+                stringResource(R.string.confirm),
+                style = MaterialTheme.typography.titleMedium
+            )
         }
 
         if (isError) {

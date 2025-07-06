@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -157,18 +158,24 @@ fun ProductResultBodyContent(
             Button(onClick = {
                 navController.navigate(Screen.ProductAmount.route)
             }) {
-                Text(stringResource(R.string._continue))
+                Text(
+                    stringResource(R.string._continue),
+                    style = MaterialTheme.typography.titleMedium
+                )
             }
         } else {
             Text("Error desconocido", fontSize = 16.sp, color = Color.Gray)
         }
 
-        Spacer(Modifier.height(32.dp))
+        Spacer(Modifier.height(16.dp))
 
         Button(onClick = {
             navController.popBackStack()
         }) {
-            Text(stringResource(R.string.try_again))
+            Text(
+                stringResource(R.string.try_again),
+                style = MaterialTheme.typography.titleMedium
+            )
         }
     }
 }
