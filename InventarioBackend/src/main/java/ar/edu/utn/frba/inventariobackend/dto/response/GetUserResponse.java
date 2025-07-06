@@ -6,35 +6,31 @@ import ar.edu.utn.frba.inventariobackend.model.User;
 import java.util.List;
 
 /**
- * DTO for sending user details in responses.
- * This record excludes sensitive information such as the password.
+ * DTO for sending user details in responses. This record excludes sensitive
+ * information such as the password.
  *
- * @param id               the unique identifier of the user
- * @param username         the username of the user
- * @param name             the full name of the user
- * @param imageURL         link to the user's image
- * @param allowedLocations a list of locations the user is allowed to work from
+ * @param id
+ *            the unique identifier of the user
+ * @param username
+ *            the username of the user
+ * @param name
+ *            the full name of the user
+ * @param imageURL
+ *            link to the user's image
+ * @param allowedLocations
+ *            a list of locations the user is allowed to work from
  */
-public record GetUserResponse(
-    Long id,
-    String username,
-    String name,
-    String imageURL,
-    List<LocationResponse> allowedLocations
-) {
-    /**
-     * Creates a {@code GetUserResponse} from a {@code User} entity.
-     *
-     * @param user the user entity to map from
-     * @return a {@code GetUserResponse} with all non-sensitive fields from the user
-     */
-    public static GetUserResponse from(User user, List<Location> locations) {
-        return new GetUserResponse(
-            user.getId(),
-            user.getUsername(),
-            user.getName(),
-            user.getImageURL(),
-            locations.stream().map(LocationResponse::fromLocation).toList()
-        );
-    }
+public record GetUserResponse(Long id, String username, String name, String imageURL,
+		List<LocationResponse> allowedLocations) {
+	/**
+	 * Creates a {@code GetUserResponse} from a {@code User} entity.
+	 *
+	 * @param user
+	 *            the user entity to map from
+	 * @return a {@code GetUserResponse} with all non-sensitive fields from the user
+	 */
+	public static GetUserResponse from(User user, List<Location> locations) {
+		return new GetUserResponse(user.getId(), user.getUsername(), user.getName(), user.getImageURL(),
+				locations.stream().map(LocationResponse::fromLocation).toList());
+	}
 }
