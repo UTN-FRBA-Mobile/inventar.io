@@ -133,7 +133,8 @@ fun OrderBodyContent(
 
                 else -> {
                     LazyColumn(
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        contentPadding = androidx.compose.foundation.layout.PaddingValues(bottom = 58.dp)
                     ) {
                         itemsIndexed(orders) { _, order ->
                             CardItem(navController, order, onItemClick = { clickedItem ->

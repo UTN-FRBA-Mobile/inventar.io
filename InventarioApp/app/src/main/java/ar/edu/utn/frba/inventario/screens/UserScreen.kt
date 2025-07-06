@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -52,7 +53,28 @@ fun UserScreen(
     userScreenViewModel: UserScreenViewModel = hiltViewModel(),
     locationViewModel: LocationViewModel = hiltViewModel()
 ) {
-    UserBodyContent(navController, userScreenViewModel, locationViewModel)
+    Box(modifier = Modifier.fillMaxSize()) {
+        UserBodyContent(navController, userScreenViewModel, locationViewModel)
+        Button(
+            onClick = {
+                userScreenViewModel.doLogout()
+                navController.navigate(Screen.Login.route) {
+                    popUpTo(0) { inclusive = true }
+                    launchSingleTop = true
+                }
+            },
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 18.dp)
+                .width(180.dp)
+                .height(40.dp)
+        ) {
+            Text(
+                stringResource(R.string.logout),
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
+    }
 }
 
 @Composable
@@ -69,7 +91,8 @@ fun UserBodyContent(
     }
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
     ) {
         if (user == null) {
             Column(
@@ -118,7 +141,10 @@ fun UserBodyContent(
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(bottom = 15.dp)
                 )
-                LazyColumn(modifier = Modifier.weight(1f)) {
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                    contentPadding = PaddingValues(bottom = 58.dp)
+                ) {
                     items(user!!.allowedLocations.size) { index ->
                         var address by remember { mutableStateOf<String?>(null) }
 
@@ -160,24 +186,7 @@ fun UserBodyContent(
                         }
                     }
                 }
-                Button(
-                        onClick = {
-                            userScreenViewModel.doLogout()
-                            navController.navigate(Screen.Login.route) {
-                                popUpTo(0) { inclusive = true }
-                                launchSingleTop = true
-                            }
-                        },
-                        modifier = Modifier
-                            .width(180.dp)
-                            .height(40.dp)
-                    ) {
-                        Text(
-                            stringResource(R.string.logout),
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
-                }
             }
         }
     }
+}
