@@ -5,8 +5,10 @@ import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import ar.edu.utn.frba.inventario.api.model.network.NetworkResult
 import ar.edu.utn.frba.inventario.api.model.product.ProductOperation
@@ -53,6 +55,18 @@ class ShipmentDetailViewModel @Inject constructor(
 
     private val _navigationEvent = MutableSharedFlow<NavigationEvent?>()
     val navigationEvent = _navigationEvent.asSharedFlow()
+
+    private val _showInsufficientStockDialog = MutableStateFlow(false)
+    val showInsufficientStockDialog = _showInsufficientStockDialog.asStateFlow()
+
+    private val _insufficientStockMessage = MutableStateFlow("")
+    val insufficientStockMessage = _insufficientStockMessage.asStateFlow()
+
+    private val _showExitConfirmationDialog = MutableStateFlow(false)
+    val showExitConfirmationDialog = _showExitConfirmationDialog.asStateFlow()
+
+    private val _showCompleteShipmentConfirmationDialog = MutableStateFlow(false)
+    val showCompleteShipmentConfirmationDialog = _showCompleteShipmentConfirmationDialog.asStateFlow()
 
     fun loadShipment(id:String){
         viewModelScope.launch(Dispatchers.IO) {
@@ -293,6 +307,8 @@ class ShipmentDetailViewModel @Inject constructor(
                             }
 
                         }
+                        _insufficientStockMessage.value = ""
+                        _showInsufficientStockDialog.value = true
                         false
                     }
                 }
@@ -302,6 +318,8 @@ class ShipmentDetailViewModel @Inject constructor(
                         "ShipmentDetailViewModel",
                         "Error: Code=${resultStockProducts.code}, message=${resultStockProducts.message}"
                     )
+                    _insufficientStockMessage.value = resultStockProducts.message!!
+                    _showInsufficientStockDialog.value = true
                     false
                 }
 
@@ -310,10 +328,28 @@ class ShipmentDetailViewModel @Inject constructor(
                         "ShipmentDetailViewModel",
                         "Error Crítico: ${resultStockProducts.e.message}"
                     )
+                    _insufficientStockMessage.value = resultStockProducts.e.message!!
+                    _showInsufficientStockDialog.value = true
                     false
                 }
             }
 
         }
+    }
+    fun dismissInsufficientStockDialog() {
+        _showInsufficientStockDialog.value = false
+        _insufficientStockMessage.value = ""
+    }
+    fun showExitConfirmation() {
+        _showExitConfirmationDialog.value = true
+    }
+    fun dismissExitConfirmation() {
+        _showExitConfirmationDialog.value = false
+    }
+    fun showCompleteShipmentConfirmation() {
+        _showCompleteShipmentConfirmationDialog.value = true
+    }
+    fun dismissCompleteShipmentConfirmation() {
+        _showCompleteShipmentConfirmationDialog.value = false
     }
 }
