@@ -93,12 +93,14 @@ fun UserBodyContent(
                         .padding(vertical = 40.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
-                ){
-                    ImageFromURL(url = user!!.imageURL, modifier = Modifier
-                        .size(100.dp)
-                        .clip(CircleShape)
-                        .border(2.dp, Color.Gray, CircleShape)
-                        .shadow(4.dp, CircleShape) )
+                ) {
+                    ImageFromURL(
+                        url = user!!.imageURL, modifier = Modifier
+                            .size(100.dp)
+                            .clip(CircleShape)
+                            .border(2.dp, Color.Gray, CircleShape)
+                            .shadow(4.dp, CircleShape)
+                    )
                     Spacer(modifier = Modifier.width(16.dp))
                     Column {
                         Text(text = user!!.name, fontSize = 24.sp, fontWeight = FontWeight.Bold)
@@ -117,10 +119,11 @@ fun UserBodyContent(
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(bottom = 15.dp)
                 )
-                LazyColumn(modifier =
-                    Modifier
-                        .padding(8.dp)
-                        .weight(1f)
+                LazyColumn(
+                    modifier =
+                        Modifier
+                            .padding(8.dp)
+                            .weight(1f)
                 ) {
                     items(user!!.allowedLocations.size) { index ->
                         var address by remember { mutableStateOf<String?>(null) }
@@ -171,22 +174,23 @@ fun UserBodyContent(
                     }
                 }) {
                     Text(stringResource(R.string.logout))
-                Button(
-                    onClick = {
-                        userScreenViewModel.doLogout()
-                        navController.navigate(Screen.Login.route) {
-                            popUpTo(0) { inclusive = true }
-                            launchSingleTop = true
-                        }
-                    },
-                    modifier = Modifier
-                        .width(180.dp)
-                        .height(40.dp)
-                ) {
-                    Text(
-                        stringResource(R.string.logout),
-                        style = MaterialTheme.typography.titleMedium
-                    )
+                    Button(
+                        onClick = {
+                            userScreenViewModel.doLogout()
+                            navController.navigate(Screen.Login.route) {
+                                popUpTo(0) { inclusive = true }
+                                launchSingleTop = true
+                            }
+                        },
+                        modifier = Modifier
+                            .width(180.dp)
+                            .height(40.dp)
+                    ) {
+                        Text(
+                            stringResource(R.string.logout),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
                 }
             }
         }
