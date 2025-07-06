@@ -27,10 +27,7 @@ import androidx.compose.ui.unit.dp
 import ar.edu.utn.frba.inventario.R
 
 @Composable
-fun EmptyResultsMessage(
-    message: String,
-    modifier: Modifier = Modifier,
-) {
+fun EmptyResultsMessage(message: String, modifier: Modifier = Modifier) {
     val iconIdByTheme = if (isSystemInDarkTheme()) {
         R.drawable.empty_results_dark
     } else {

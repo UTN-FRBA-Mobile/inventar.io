@@ -18,9 +18,8 @@ import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
-class LocationViewModel @Inject constructor(
-    private val locationRepository: LocationRepository,
-) : ViewModel() {
+class LocationViewModel @Inject constructor(private val locationRepository: LocationRepository) :
+    ViewModel() {
     val location: StateFlow<Location?> = locationRepository.location
 
     private val _locationPermissionGranted = MutableStateFlow(false)

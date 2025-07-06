@@ -18,10 +18,7 @@ import androidx.compose.ui.unit.dp
 import ar.edu.utn.frba.inventario.R
 
 @Composable
-fun BranchLocationBar(
-    branchName: String,
-    modifier: Modifier = Modifier,
-) {
+fun BranchLocationBar(branchName: String, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .padding(vertical = 2.dp)

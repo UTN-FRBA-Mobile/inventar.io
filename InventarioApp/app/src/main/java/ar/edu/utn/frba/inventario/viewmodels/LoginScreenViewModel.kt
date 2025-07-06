@@ -113,8 +113,10 @@ class LoginScreenViewModel @Inject constructor(
                         )
 
                         val message = when {
-                            loginResult.code == 401 && loginResult.message == "wrong credentials" -> "Credenciales inválidas"
-                            loginResult.code == 401 && loginResult.message == "no location" -> "Muy alejado de una ubicación válida"
+                            loginResult.code == 401 && loginResult.message == "wrong credentials" ->
+                                "Credenciales inválidas"
+                            loginResult.code == 401 && loginResult.message == "no location" ->
+                                "Muy alejado de una ubicación válida"
                             else -> "Error desconocido. Intente nuevamente más tarde"
                         }
 

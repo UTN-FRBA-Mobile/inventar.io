@@ -36,9 +36,7 @@ fun ManualOrderScreen(navController: NavController) {
 }
 
 @Composable
-fun ManualOrderIdBodyContent(
-    navController: NavController,
-) {
+fun ManualOrderIdBodyContent(navController: NavController) {
     var orderId by remember { mutableStateOf("") }
     var isError by remember { mutableStateOf(false) }
 

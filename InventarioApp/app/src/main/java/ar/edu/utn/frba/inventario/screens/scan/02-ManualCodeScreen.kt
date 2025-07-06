@@ -37,9 +37,7 @@ fun ManualCodeScreen(navController: NavController) {
 }
 
 @Composable
-fun ManualCodeBodyContent(
-    navController: NavController,
-) {
+fun ManualCodeBodyContent(navController: NavController) {
     var code by remember { mutableStateOf("") }
     var isError by remember { mutableStateOf(false) }
 

@@ -46,7 +46,7 @@ class OrdersViewModel @Inject constructor(
 
     override fun getStatus(item: Order) = item.status
 
-    override fun getFilterDate(item: Order) = item.creationDate // TODO analizar si usamos creationDate o deberíamos ordenar por otra fecha
+    override fun getFilterDate(item: Order) = item.creationDate
 
     fun getOrders() {
         viewModelScope.launch(Dispatchers.Default) {

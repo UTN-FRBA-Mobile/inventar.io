@@ -33,10 +33,7 @@ fun WelcomeScreen(
 }
 
 @Composable
-fun WelcomeBodyContent(
-    navController: NavController,
-    userScreenViewModel: UserScreenViewModel,
-) {
+fun WelcomeBodyContent(navController: NavController, userScreenViewModel: UserScreenViewModel) {
     val userLocation by userScreenViewModel.branchLocationName.collectAsState()
     val user by userScreenViewModel.user.collectAsState()
 
@@ -70,7 +67,9 @@ fun WelcomeBodyContent(
             verticalArrangement = Arrangement.Center,
         ) {
             Text(
-                text = "${stringResource(R.string.welcome_screen_location_indicator)} $userLocation",
+                text = "${stringResource(
+                    R.string.welcome_screen_location_indicator,
+                )} $userLocation",
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center,

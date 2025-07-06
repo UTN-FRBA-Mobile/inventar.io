@@ -83,13 +83,14 @@ class ScanViewModel @Inject constructor() : ViewModel() {
         navController.navigate(destination)
     }
 
-    fun getValidBarcode(scannedCodes: List<Barcode>, origin: String): Barcode? = scannedCodes.firstOrNull { barcode ->
-        when (origin) {
-            "shipment" -> barcode.format == Barcode.FORMAT_EAN_13
-            "order" -> barcode.format == Barcode.FORMAT_QR_CODE
-            else -> false
+    fun getValidBarcode(scannedCodes: List<Barcode>, origin: String): Barcode? =
+        scannedCodes.firstOrNull { barcode ->
+            when (origin) {
+                "shipment" -> barcode.format == Barcode.FORMAT_EAN_13
+                "order" -> barcode.format == Barcode.FORMAT_QR_CODE
+                else -> false
+            }
         }
-    }
 
     private fun extractOrderIdFromQrCode(qrCode: String): String {
         val parts = qrCode.split('_')

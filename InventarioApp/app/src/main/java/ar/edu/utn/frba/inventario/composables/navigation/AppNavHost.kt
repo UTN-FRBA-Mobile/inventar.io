@@ -179,7 +179,8 @@ fun NavHostBody(navController: NavHostController) {
                 navController = navController,
                 code = orderId,
                 errorMessage = initialErrorMessage,
-                codeType = backStackEntry.arguments?.getString(OrderResultArgs.CodeType.code.toString())
+                codeType =
+                backStackEntry.arguments?.getString(OrderResultArgs.CodeType.code.toString())
                     ?: "",
                 origin = backStackEntry.arguments?.getString(OrderResultArgs.Origin.code.toString())
                     ?: "",

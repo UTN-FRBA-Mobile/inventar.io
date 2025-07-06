@@ -1,7 +1,5 @@
 package ar.edu.utn.frba.inventario.screens.shipment
 
-import android.annotation.SuppressLint
-import android.content.res.Configuration
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
@@ -50,12 +48,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import ar.edu.utn.frba.inventario.R
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import ar.edu.utn.frba.inventario.api.model.product.ProductOperation
@@ -65,7 +61,6 @@ import ar.edu.utn.frba.inventario.utils.ShipmentScanFlowState
 import ar.edu.utn.frba.inventario.viewmodels.ShipmentDetailViewModel
 import kotlinx.coroutines.launch
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShipmentDetailScreen(
@@ -94,7 +89,10 @@ fun ShipmentDetailScreen(
                 ) {
                     IconButton(
                         onClick = {
-                            if (viewModel.selectedShipment.value.status == ItemStatus.COMPLETED || viewModel.selectedShipment.value.status == ItemStatus.BLOCKED || !viewModel.ExistProductWithLoadedQuantityUpdated()) {
+                            if (viewModel.selectedShipment.value.status == ItemStatus.COMPLETED ||
+                                viewModel.selectedShipment.value.status == ItemStatus.BLOCKED ||
+                                !viewModel.ExistProductWithLoadedQuantityUpdated()
+                            ) {
                                 navController.navigate(Screen.Shipments.route)
                             } else {
                                 viewModel.showExitConfirmation()
@@ -109,7 +107,7 @@ fun ShipmentDetailScreen(
                         )
                     }
                     Text(
-                        text = stringResource(R.string.shipment_detail_screen_title),
+                        text = stringResource(R.string.shipment_detail_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -130,21 +128,39 @@ fun ShipmentDetailScreen(
             onDismissRequest = {
                 viewModel.dismissExitConfirmation()
             },
-            title = { Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_title_alert_dialog)) },
-            text = { Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_message_alert_dialog)) },
+            title = {
+                Text(
+                    text =
+                    stringResource(R.string.shipment_detail_confirm_exit_title_alert),
+                )
+            },
+            text = {
+                Text(
+                    text =
+                    stringResource(R.string.shipment_detail_confirm_exit_message_alert),
+                )
+            },
             confirmButton = {
                 Button(onClick = {
                     viewModel.dismissExitConfirmation()
                     navController.navigate(Screen.Shipments.route)
                 }) {
-                    Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_accept_button_alert_dialog))
+                    Text(
+                        text = stringResource(
+                            R.string.shipment_detail_confirm_exit_accept_button_alert,
+                        ),
+                    )
                 }
             },
             dismissButton = {
                 Button(onClick = {
                     viewModel.dismissExitConfirmation()
                 }) {
-                    Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_cancel_button_alert_dialog))
+                    Text(
+                        text = stringResource(
+                            R.string.shipment_detail_confirm_exit_cancel_button_alert,
+                        ),
+                    )
                 }
             },
         )
@@ -184,7 +200,7 @@ fun ShipmentDetailBodyContent(
                 ) {
                     Text(
                         text = stringResource(
-                            R.string.shipment_detail_screen_shipment,
+                            R.string.shipment_detail_shipment,
                             selectedShipment.number,
                         ),
                         style = MaterialTheme.typography.titleLarge,
@@ -193,7 +209,7 @@ fun ShipmentDetailBodyContent(
                     )
                     Text(
                         text = stringResource(
-                            R.string.shipment_detail_screen_customer,
+                            R.string.shipment_detail_customer,
                             selectedShipment.customerName,
                         ),
                         style = MaterialTheme.typography.titleMedium,
@@ -201,7 +217,7 @@ fun ShipmentDetailBodyContent(
                     )
                     Text(
                         text = stringResource(
-                            R.string.shipment_detail_screen_total,
+                            R.string.shipment_detail_total,
                             selectedShipment.products.size,
                         ),
                         style = MaterialTheme.typography.titleMedium,
@@ -218,7 +234,9 @@ fun ShipmentDetailBodyContent(
                         viewModel,
                         product,
                         onProductClick = { clickedProduct ->
-                            navController.navigate(Screen.ProductDetail.route + "/${clickedProduct.id}")
+                            navController.navigate(
+                                Screen.ProductDetail.route + "/${clickedProduct.id}",
+                            )
                         },
                     )
                     Spacer(modifier = Modifier.height(5.dp))
@@ -241,7 +259,10 @@ fun ProductItem(
     val statusProd = viewModel.getProductStatus(product.id)
 
     ElevatedCard(
-        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
+        colors = CardDefaults.elevatedCardColors(
+            containerColor =
+            MaterialTheme.colorScheme.surfaceContainerHigh,
+        ),
         modifier = Modifier
             .fillMaxSize()
             .padding(2.dp)
@@ -269,7 +290,7 @@ fun ProductItem(
                 Row {
                     Text(
                         text = stringResource(
-                            R.string.shipment_detail_screen_quantity_required,
+                            R.string.shipment_detail_quantity_required,
                             product.quantity,
                         ),
                         style = MaterialTheme.typography.bodySmall,
@@ -280,7 +301,7 @@ fun ProductItem(
                     ) {
                         Text(
                             text = stringResource(
-                                R.string.shipment_detail_screen_quantity_loaded,
+                                R.string.shipment_detail_quantity_loaded,
                                 viewModel.getLoadedQuantityProduct(product.id),
                             ),
                             style = MaterialTheme.typography.bodySmall,
@@ -314,7 +335,8 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
     val showDialog by viewModel.showInsufficientStockDialog.collectAsState()
     val dialogMessage by viewModel.insufficientStockMessage.collectAsState()
 
-    val showCompleteConfirmationDialog by viewModel.showCompleteShipmentConfirmationDialog.collectAsState()
+    val showCompleteConfirmationDialog by
+        viewModel.showCompleteShipmentConfirmationDialog.collectAsState()
 
     if (viewModel.showButtonBox()) {
         Column(
@@ -333,7 +355,9 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Button(
-                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.surfaceTint),
+                        colors = ButtonDefaults.buttonColors(
+                            MaterialTheme.colorScheme.surfaceTint,
+                        ),
                         enabled = viewModel.isStateCompleteShipment.value,
                         onClick = {
                             viewModel.showCompleteShipmentConfirmation()
@@ -356,7 +380,9 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
                     Spacer(modifier = Modifier.width(16.dp))
 
                     Button(
-                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
+                        colors = ButtonDefaults.buttonColors(
+                            MaterialTheme.colorScheme.primary,
+                        ),
                         enabled = !viewModel.isStateCompleteShipment.value,
                         onClick = {
                             coroutineScope.launch {
@@ -371,14 +397,18 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
 
                                     Log.d(
                                         "ShipmentDetailScreen",
-                                        "Selected Shipment: ${ShipmentScanFlowState.selectedShipment}",
+                                        "Selected Shipment: " +
+                                            "${ShipmentScanFlowState.selectedShipment}",
                                     )
 
-                                    navController.navigate(Screen.Scan.route + "?origin=shipment")
+                                    navController.navigate(
+                                        Screen.Scan.route + "?origin=shipment",
+                                    )
                                 } else {
                                     Log.d(
                                         "ShipmentDetailScreen",
-                                        "No hay stock suficiente, se redirecciona a la pantalla de Shipments",
+                                        "No hay stock suficiente, " +
+                                            "se redirecciona a la pantalla de Shipments",
                                     )
                                 }
                             }
@@ -407,14 +437,30 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
                 viewModel.dismissInsufficientStockDialog()
                 navController.navigate(Screen.Shipments.route)
             },
-            title = { Text(text = stringResource(R.string.shipment_detail_screen_insufficient_stock_title_alert_dialog)) },
-            text = { Text(text = dialogMessage.ifEmpty { stringResource(R.string.shipment_detail_screen_insufficient_stock_message_alert_dialog) }) },
+            title = {
+                Text(text = stringResource(R.string.shipment_detail_insuff_stock_title_alert))
+            },
+            text = {
+                Text(
+                    text = dialogMessage.ifEmpty {
+                        stringResource(
+                            R.string
+                                .shipment_detail_insuff_stock_message_alert,
+                        )
+                    },
+                )
+            },
             confirmButton = {
                 Button(onClick = {
                     viewModel.dismissInsufficientStockDialog()
                     navController.navigate(Screen.Shipments.route)
                 }) {
-                    Text(text = stringResource(R.string.shipment_detail_screen_insufficient_stock_accept_button_alert_dialog))
+                    Text(
+                        text = stringResource(
+                            R.string
+                                .shipment_detail_insuff_stock_accept_button_alert,
+                        ),
+                    )
                 }
             },
         )
@@ -424,36 +470,41 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
             onDismissRequest = {
                 viewModel.dismissCompleteShipmentConfirmation()
             },
-            title = { Text(text = stringResource(R.string.shipment_detail_screen_confirm_complete_title_alert_dialog)) },
-            text = { Text(text = stringResource(R.string.shipment_detail_screen_confirm_complete_message_alert_dialog)) },
+            title = {
+                Text(
+                    text = stringResource(
+                        R.string
+                            .shipment_detail_confirm_complete_title_alert,
+                    ),
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(
+                        R.string.shipment_detail_confirm_complete_message_alert,
+                    ),
+                )
+            },
             confirmButton = {
                 Button(onClick = {
                     viewModel.dismissCompleteShipmentConfirmation()
                     viewModel.completedShipment(viewModel.selectedShipment.value.id)
                     navController.navigate(Screen.Shipments.route)
                 }) {
-                    Text(text = stringResource(R.string.shipment_detail_screen_confirm_complete_confirm_button_alert_dialog))
+                    Text(text = stringResource(R.string.confirm))
                 }
             },
             dismissButton = {
                 Button(onClick = {
                     viewModel.dismissCompleteShipmentConfirmation()
                 }) {
-                    Text(text = stringResource(R.string.shipment_detail_screen_confirm_complete_cancel_button_alert_dialog))
+                    Text(
+                        text = stringResource(
+                            R.string.cancel,
+                        ),
+                    )
                 }
             },
         )
     }
-}
-
-@Preview
-@Composable
-fun vistaFinal() {
-    ShipmentDetailScreen(navController = rememberNavController(), id = "S01-3")
-}
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun vistaFinalDark() {
-    ShipmentDetailScreen(navController = rememberNavController(), id = "S01-3")
 }

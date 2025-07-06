@@ -20,13 +20,14 @@ object OrderMapper {
         lastModifiedDate = orderResponse.lastModifiedDate.toLocalDateTime(),
     )
 
-    fun toProductsInOrder(orderResponse: OrderResponse): List<ProductOperation> = orderResponse.productAmount.mapNotNull { (id, quantity) ->
-        orderResponse.productNames[id]?.let { name ->
-            ProductOperation(
-                id = id.toString(),
-                name = name,
-                quantity = quantity,
-            )
+    fun toProductsInOrder(orderResponse: OrderResponse): List<ProductOperation> =
+        orderResponse.productAmount.mapNotNull { (id, quantity) ->
+            orderResponse.productNames[id]?.let { name ->
+                ProductOperation(
+                    id = id.toString(),
+                    name = name,
+                    quantity = quantity,
+                )
+            }
         }
-    }
 }

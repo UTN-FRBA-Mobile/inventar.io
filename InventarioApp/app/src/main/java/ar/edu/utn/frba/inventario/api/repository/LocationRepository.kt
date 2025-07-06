@@ -16,9 +16,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class LocationRepository @Inject constructor(
-    @ApplicationContext private val context: Context,
-) {
+class LocationRepository @Inject constructor(@ApplicationContext private val context: Context) {
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
     private val _location = MutableStateFlow<Location?>(null)

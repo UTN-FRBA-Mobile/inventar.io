@@ -136,7 +136,9 @@ fun OrderBodyContent(
                     ) {
                         itemsIndexed(orders) { _, order ->
                             CardItem(navController, order, onItemClick = { clickedItem ->
-                                navController.navigate(Screen.OrderDetail.route + "/${clickedItem.id}")
+                                navController.navigate(
+                                    Screen.OrderDetail.route + "/${clickedItem.id}",
+                                )
                             })
                         }
                     }

@@ -29,7 +29,8 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideTokenManager(@ApplicationContext context: Context): TokenManager = TokenManager(context)
+    fun provideTokenManager(@ApplicationContext context: Context): TokenManager =
+        TokenManager(context)
 
     @Provides
     @Singleton
@@ -37,7 +38,8 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideAuthInterceptor(tokenManager: TokenManager): AuthInterceptor = AuthInterceptor(tokenManager)
+    fun provideAuthInterceptor(tokenManager: TokenManager): AuthInterceptor =
+        AuthInterceptor(tokenManager)
 
     @Provides
     @Singleton
@@ -65,7 +67,9 @@ object NetworkModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         if (API_BASE_URL.isEmpty() || API_BASE_URL == "http://default-url") {
-            throw IllegalArgumentException("Please set API_BASE_URL=http://192.168.XXX.XXX:8080 in local.properties (root project folder)")
+            throw IllegalArgumentException(
+                "Please set API_BASE_URL=http://192.168.XXX.XXX:8080 in local.properties (root project folder)",
+            )
         } else {
             println("API_BASE_URL: $API_BASE_URL")
         }
@@ -83,5 +87,6 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun providePreferencesManager(@ApplicationContext context: Context): PreferencesManager = PreferencesManager(context)
+    fun providePreferencesManager(@ApplicationContext context: Context): PreferencesManager =
+        PreferencesManager(context)
 }

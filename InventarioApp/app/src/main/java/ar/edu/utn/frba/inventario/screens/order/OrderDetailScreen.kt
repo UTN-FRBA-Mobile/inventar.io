@@ -145,10 +145,7 @@ fun OrderDetailScreen(
 }
 
 @Composable
-fun OrderDetailBodyContent(
-    order: Order,
-    innerPadding: PaddingValues,
-) {
+fun OrderDetailBodyContent(order: Order, innerPadding: PaddingValues) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -198,7 +195,9 @@ fun OrderDetailBodyContent(
 @Composable
 fun ProductItem(product: ProductOperation) {
     ElevatedCard(
-        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+        ),
         modifier = Modifier
             .fillMaxSize()
             .padding(bottom = 7.5.dp),

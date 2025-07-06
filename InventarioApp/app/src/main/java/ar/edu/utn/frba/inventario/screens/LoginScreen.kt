@@ -83,7 +83,9 @@ fun LoginScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val locationPermission = Manifest.permission.ACCESS_FINE_LOCATION
-    val locationPermissionGranted by locationViewModel.locationPermissionGranted.collectAsStateWithLifecycle()
+    val locationPermissionGranted by locationViewModel
+        .locationPermissionGranted
+        .collectAsStateWithLifecycle()
     val context = LocalContext.current
     val locationPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission(),

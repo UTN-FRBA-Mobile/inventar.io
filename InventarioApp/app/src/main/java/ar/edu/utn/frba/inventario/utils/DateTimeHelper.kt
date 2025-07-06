@@ -10,4 +10,5 @@ fun LocalDateTime.format(): String {
     return this.format(formatter)
 }
 
-fun String.toLocalDateTime(): LocalDateTime = LocalDateTime.parse(this, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+fun String.toLocalDateTime(): LocalDateTime =
+    LocalDateTime.parse(this, DateTimeFormatter.ISO_LOCAL_DATE_TIME)

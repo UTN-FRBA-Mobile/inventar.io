@@ -94,7 +94,9 @@ class ShipmentDetailViewModel @Inject constructor(
                         "contenido de ProductsToScan:$productToScanList",
                     )
 
-                    if ((_shipment.value.status == ItemStatus.PENDING) && (ExistProductWithLoadedQuantityUpdated())) {
+                    if ((_shipment.value.status == ItemStatus.PENDING) &&
+                        (ExistProductWithLoadedQuantityUpdated())
+                    ) {
                         val resultStartShipment = shipmentRepository.startShipment(id.toLong())
 
                         when (resultStartShipment) {
@@ -171,7 +173,9 @@ class ShipmentDetailViewModel @Inject constructor(
         }
     }
 
-    fun getLoadedQuantityProduct(id: String): Int = productToScanList.first { ps -> ps.id == id }.loadedQuantity.value
+    fun getLoadedQuantityProduct(id: String): Int = productToScanList.first { ps ->
+        ps.id == id
+    }.loadedQuantity.value
 
     fun setLoadedQuantityProduct(id: String, newValue: Int) {
         Log.d(
@@ -212,7 +216,10 @@ class ShipmentDetailViewModel @Inject constructor(
             productToScanList.all { ps -> ps.requiredQuantity == ps.loadedQuantity.value }
     }
 
-    fun ExistProductWithLoadedQuantityUpdated(): Boolean = productToScanList.any { p -> p.loadedQuantity.value != 0 }
+    fun ExistProductWithLoadedQuantityUpdated(): Boolean = productToScanList.any { p ->
+        p.loadedQuantity.value !=
+            0
+    }
 
     data class ProductToScan(
         val id: String,
@@ -301,7 +308,10 @@ class ShipmentDetailViewModel @Inject constructor(
 
                 val currentStockProducts = resultStockProducts.data.stockCount
                 val enoughAllStock =
-                    productToScanList.all { ps -> currentStockProducts[ps.id]!! >= ps.requiredQuantity }
+                    productToScanList.all { ps ->
+                        currentStockProducts[ps.id]!! >=
+                            ps.requiredQuantity
+                    }
 
                 if (enoughAllStock) {
                     Log.d(
@@ -341,7 +351,9 @@ class ShipmentDetailViewModel @Inject constructor(
                         "ShipmentDetailViewModel",
                         "No Hay Stock suficiente para los productos del envio $id, Stock disponible: $currentStockProducts",
                     )
-                    if (_shipment.value.status == ItemStatus.PENDING || _shipment.value.status == ItemStatus.IN_PROGRESS) {
+                    if (_shipment.value.status == ItemStatus.PENDING ||
+                        _shipment.value.status == ItemStatus.IN_PROGRESS
+                    ) {
                         val resultBlockShipment = shipmentRepository.blockShipment(id.toLong())
 
                         when (resultBlockShipment) {

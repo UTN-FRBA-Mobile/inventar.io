@@ -159,7 +159,9 @@ fun ProductDetailScreen(
                         ) {
                             if (!productDetail?.imageURL.isNullOrBlank()) {
                                 Image(
-                                    painter = rememberAsyncImagePainter(model = productDetail!!.imageURL),
+                                    painter = rememberAsyncImagePainter(
+                                        model = productDetail!!.imageURL,
+                                    ),
                                     contentDescription = stringResource(R.string.product_image),
                                     contentScale = ContentScale.Crop,
                                     modifier = Modifier.fillMaxSize(),

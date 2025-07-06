@@ -124,7 +124,8 @@ fun OrderProductsScreen(
                 }
             }
 
-            false -> {} // El error ya se muestra en el FloatingActionButton si existe finishOrderError
+            // El error ya se muestra en el FloatingActionButton si existe finishOrderError
+            false -> {}
             null -> {}
         }
     }
@@ -134,7 +135,11 @@ fun OrderProductsScreen(
         topBar = { OrderTopBar(navController) },
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
-            if (!isLoading && errorMessage == null && orderProducts.isNotEmpty() && !isFinishingOrder) {
+            if (!isLoading &&
+                errorMessage == null &&
+                orderProducts.isNotEmpty() &&
+                !isFinishingOrder
+            ) {
                 ConfirmOrderButton(
                     allProductsConfirmed = allProductsConfirmed,
                     screenCoroutineScope = screenCoroutineScope,
@@ -204,14 +209,19 @@ fun OrderProductsScreen(
                                     currentlyEditingProductId = null
                                 },
                                 onClick = {
-                                    navController.navigate(Screen.ProductDetail.route + "/${product.id}")
+                                    navController.navigate(
+                                        Screen.ProductDetail.route +
+                                            "/${product.id}",
+                                    )
                                 },
                                 onProductConfirmed = { productId ->
                                     productConfirmationStatus[productId] = true
                                     currentlyEditingProductId = null
                                 },
                                 snackbarHostState = snackbarHostState,
-                                isAnotherProductBeingEdited = currentlyEditingProductId != null && currentlyEditingProductId != product.id,
+                                isAnotherProductBeingEdited =
+                                currentlyEditingProductId != null &&
+                                    currentlyEditingProductId != product.id,
                                 onStartEditing = {
                                     currentlyEditingProductId = it
                                     if (productConfirmationStatus[it] == true) {
@@ -271,7 +281,10 @@ fun ConfirmOrderButton(
     viewModel: OrderProductsViewModel,
     finishOrderError: String?,
 ) {
-    val showCompleteConfirmationDialog by viewModel.showCompleteOrderConfirmationDialog.collectAsState()
+    val showCompleteConfirmationDialog by viewModel
+        .showCompleteOrderConfirmationDialog
+        .collectAsState()
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -282,14 +295,20 @@ fun ConfirmOrderButton(
             onClick = {
                 if (allProductsConfirmed) {
                     viewModel.showCompleteOrderConfirmation()
-                    // viewModel.finishOrder()
                 } else {
                     screenCoroutineScope.launch {
-                        snackbarHostState.showSnackbar("Confirmar todos los productos antes de finalizar el pedido.")
+                        snackbarHostState.showSnackbar(
+                            "Confirmar todos los productos antes " +
+                                "de finalizar el pedido.",
+                        )
                     }
                 }
             },
-            containerColor = if (allProductsConfirmed) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimaryContainer,
+            containerColor = if (allProductsConfirmed) {
+                MaterialTheme.colorScheme.primary
+            } else {
+                MaterialTheme.colorScheme.onPrimaryContainer
+            },
             contentColor = MaterialTheme.colorScheme.background,
         ) {
             Text(
@@ -321,21 +340,40 @@ fun ConfirmOrderButton(
             onDismissRequest = {
                 viewModel.dismissCompleteOrderConfirmation()
             },
-            title = { Text(text = stringResource(R.string.order_products_screen_confirm_complete_title_alert_dialog)) },
-            text = { Text(text = stringResource(R.string.order_products_screen_confirm_complete_message_alert_dialog)) },
+            title = {
+                Text(
+                    text =
+                    stringResource(
+                        R.string.order_products_screen_confirm_complete_title_alert,
+                    ),
+                )
+            },
+            text = {
+                Text(
+                    text =
+                    stringResource(
+                        R.string
+                            .order_products_screen_confirm_complete_message_alert,
+                    ),
+                )
+            },
             confirmButton = {
                 Button(onClick = {
                     viewModel.dismissCompleteOrderConfirmation()
                     viewModel.finishOrder()
                 }) {
-                    Text(text = stringResource(R.string.order_products_screen_confirm_complete_confirm_button_alert_dialog))
+                    Text(
+                        text = stringResource(
+                            R.string.confirm,
+                        ),
+                    )
                 }
             },
             dismissButton = {
                 Button(onClick = {
                     viewModel.dismissCompleteOrderConfirmation()
                 }) {
-                    Text(text = stringResource(R.string.order_products_screen_confirm_complete_cancel_button_alert_dialog))
+                    Text(text = stringResource(R.string.confirm))
                 }
             },
         )
@@ -351,7 +389,10 @@ fun OrderHeader(orderId: String?) {
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
             Text(
-                text = stringResource(R.string.order_detail_screen_order, orderId.orEmpty()),
+                text = stringResource(
+                    R.string.order_detail_screen_order,
+                    orderId.orEmpty(),
+                ),
                 style = MaterialTheme.typography.titleLarge,
                 fontSize = 25.sp,
                 fontWeight = FontWeight.Bold,
@@ -388,9 +429,18 @@ fun OrderMessageView(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val titleColor = if (isError) Color.Red else MaterialTheme.colorScheme.onSurface
+        val titleColor =
+            if (isError) {
+                Color.Red
+            } else {
+                MaterialTheme.colorScheme.onSurface
+            }
         val messageColor =
-            if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
+            if (isError) {
+                MaterialTheme.colorScheme.error
+            } else {
+                MaterialTheme.colorScheme.onSurfaceVariant
+            }
 
         Text(
             text = title,
@@ -516,7 +566,10 @@ fun ProductListItem(
                     color = MaterialTheme.colorScheme.onSurface,
                 )
                 Text(
-                    text = stringResource(R.string.expected_quantity, expectedQuantity),
+                    text = stringResource(
+                        R.string.expected_quantity,
+                        expectedQuantity,
+                    ),
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
@@ -524,7 +577,10 @@ fun ProductListItem(
                 if (isEditingQuantity) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = stringResource(R.string.received_quantity, ""),
+                            text = stringResource(
+                                R.string.received_quantity,
+                                "",
+                            ),
                             style = MaterialTheme.typography.titleSmall,
                             color = MaterialTheme.colorScheme.onSurface,
                         )
@@ -535,7 +591,8 @@ fun ProductListItem(
                                     editableQuantity = newValue
                                 } else {
                                     coroutineScope.launch {
-                                        snackbarHostState.showSnackbar("Solo se permiten números")
+                                        snackbarHostState
+                                            .showSnackbar("Solo se permiten números")
                                     }
                                 }
                             },
@@ -556,7 +613,11 @@ fun ProductListItem(
                                         keyboardController?.hide()
                                     } else {
                                         coroutineScope.launch {
-                                            snackbarHostState.showSnackbar("La cantidad no puede ser negativa o vacía.")
+                                            snackbarHostState
+                                                .showSnackbar(
+                                                    "La cantidad no puede " +
+                                                        "ser negativa o vacía.",
+                                                )
                                         }
                                     }
                                 },
@@ -581,7 +642,10 @@ fun ProductListItem(
                     }
                 } else {
                     Text(
-                        text = stringResource(R.string.received_quantity, editableQuantity.text),
+                        text = stringResource(
+                            R.string.received_quantity,
+                            editableQuantity.text,
+                        ),
                         style = MaterialTheme.typography.titleSmall,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
@@ -605,7 +669,9 @@ fun ProductListItem(
                             keyboardController?.hide()
                         } else {
                             coroutineScope.launch {
-                                snackbarHostState.showSnackbar("La cantidad no puede ser negativa o vacía.")
+                                snackbarHostState.showSnackbar(
+                                    "La cantidad no puede ser negativa o vacía.",
+                                )
                             }
                         }
                     }) {
@@ -625,7 +691,11 @@ fun ProductListItem(
                                     TextFieldValue(product.currentStock?.toString() ?: "0")
                             } else {
                                 coroutineScope.launch {
-                                    snackbarHostState.showSnackbar("Confirmar la cantidad actual antes de editar otro producto.")
+                                    snackbarHostState
+                                        .showSnackbar(
+                                            "Confirmar la cantidad actual " +
+                                                "antes de editar otro producto.",
+                                        )
                                 }
                             }
                         },
@@ -650,7 +720,12 @@ fun ProductListItem(
                         Icon(
                             imageVector = Icons.Default.Check,
                             contentDescription = "Confirmar producto",
-                            tint = if (isConfirmed) Color(0xFF4CAF50) else MaterialTheme.colorScheme.secondary,
+                            tint =
+                            if (isConfirmed) {
+                                Color(0xFF4CAF50)
+                            } else {
+                                MaterialTheme.colorScheme.secondary
+                            },
                         )
                     }
                 }

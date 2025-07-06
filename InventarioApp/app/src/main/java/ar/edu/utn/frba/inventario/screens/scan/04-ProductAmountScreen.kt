@@ -54,7 +54,11 @@ fun ProductAmountScreen(
         return
     }
 
-    if (error != null || scannedProduct == null || requiredAmount == null || currentProductStock == null) {
+    if (error != null ||
+        scannedProduct == null ||
+        requiredAmount == null ||
+        currentProductStock == null
+    ) {
         Text(
             text = error ?: stringResource(R.string.product_amount_unexpected_error),
             modifier = Modifier.padding(16.dp),

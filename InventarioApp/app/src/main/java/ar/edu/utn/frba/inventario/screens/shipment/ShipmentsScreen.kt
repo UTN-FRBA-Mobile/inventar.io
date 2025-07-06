@@ -122,7 +122,9 @@ fun ShipmentsBodyContent(
                 ) {
                     itemsIndexed(shipments) { _, shipment ->
                         CardItem(navController, shipment, onItemClick = { clickedItem: Item ->
-                            navController.navigate(Screen.ShipmentDetail.route + "/${clickedItem.id}")
+                            navController.navigate(
+                                Screen.ShipmentDetail.route + "/${clickedItem.id}",
+                            )
                         })
                     }
                 }

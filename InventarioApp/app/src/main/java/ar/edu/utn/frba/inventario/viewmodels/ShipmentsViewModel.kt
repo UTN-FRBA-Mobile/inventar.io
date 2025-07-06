@@ -80,7 +80,10 @@ class ShipmentsViewModel @Inject constructor(
 
                                     val currentStockProducts = resultStockProducts.data.stockCount
                                     val enoughAllStock =
-                                        sr.productAmount.all { ps -> currentStockProducts[ps.key.toString()]!! >= ps.value }
+                                        sr.productAmount.all { ps ->
+                                            currentStockProducts[ps.key.toString()]!! >=
+                                                ps.value
+                                        }
 
                                     if (enoughAllStock) {
                                         Log.d(

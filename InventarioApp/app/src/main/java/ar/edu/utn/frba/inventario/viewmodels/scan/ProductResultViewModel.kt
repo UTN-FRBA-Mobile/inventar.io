@@ -15,9 +15,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProductResultViewModel @Inject constructor(
-    private val productRepository: ProductRepository,
-) : ViewModel() {
+class ProductResultViewModel @Inject constructor(private val productRepository: ProductRepository) :
+    ViewModel() {
 
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading
