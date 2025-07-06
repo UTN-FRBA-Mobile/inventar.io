@@ -87,8 +87,7 @@ fun ShipmentDetailScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(56.dp)
-                        .padding(horizontal = 16.dp),
+                        .height(56.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
@@ -206,7 +205,8 @@ fun ShipmentDetailBodyContent(
                             selectedShipment.products.size
                         ),
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 18.sp,
                     )
                 }
             }

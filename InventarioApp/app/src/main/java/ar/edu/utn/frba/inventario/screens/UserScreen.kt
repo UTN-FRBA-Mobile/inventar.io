@@ -83,7 +83,6 @@ fun UserBodyContent(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 10.dp)
                     .padding(bottom = 18.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -119,12 +118,7 @@ fun UserBodyContent(
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(bottom = 15.dp)
                 )
-                LazyColumn(
-                    modifier =
-                        Modifier
-                            .padding(8.dp)
-                            .weight(1f)
-                ) {
+                LazyColumn(modifier = Modifier.weight(1f)) {
                     items(user!!.allowedLocations.size) { index ->
                         var address by remember { mutableStateOf<String?>(null) }
 
