@@ -91,6 +91,10 @@
     <string name="shipment_detail_screen_confirm_exit_message_alert_dialog">¿Estás seguro que quieres salir? Los productos cargados se perderán.</string>
     <string name="shipment_detail_screen_confirm_exit_accept_button_alert_dialog">Sí, Salir</string>
     <string name="shipment_detail_screen_confirm_exit_cancel_button_alert_dialog">Cancelar</string>
+    <string name="shipment_detail_screen_confirm_complete_title_alert_dialog">Confirmar Envío</string>
+    <string name="shipment_detail_screen_confirm_complete_message_alert_dialog">¿Estás seguro que quieres completar este envío y salir?</string>
+    <string name="shipment_detail_screen_confirm_complete_confirm_button_alert_dialog">Confirmar</string>
+    <string name="shipment_detail_screen_confirm_complete_cancel_button_alert_dialog">Cancelar</string>
 
     <!-- OrderDetailScreen -->
     <string name="order_detail_screen_title">Detalle del pedido</string>

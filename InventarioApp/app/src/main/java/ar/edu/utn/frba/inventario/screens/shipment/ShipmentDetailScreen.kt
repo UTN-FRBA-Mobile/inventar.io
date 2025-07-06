@@ -281,6 +281,8 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
     val showDialog by viewModel.showInsufficientStockDialog.collectAsState()
     val dialogMessage by viewModel.insufficientStockMessage.collectAsState()
 
+    val showCompleteConfirmationDialog by viewModel.showCompleteShipmentConfirmationDialog.collectAsState()
+
     if (viewModel.showButtonBox()) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -301,8 +303,9 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.surfaceTint),
                         enabled = viewModel.isStateCompleteShipment.value,
                         onClick = {
-                            viewModel.completedShipment(viewModel.selectedShipment.value.id)
-                            navController.navigate(Screen.Shipments.route)
+                            viewModel.showCompleteShipmentConfirmation()
+                            //viewModel.completedShipment(viewModel.selectedShipment.value.id)
+                            //navController.navigate(Screen.Shipments.route)
                         },
                         shape = RoundedCornerShape(50),
                         modifier = Modifier
@@ -381,6 +384,31 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
                     navController.navigate(Screen.Shipments.route)
                 }) {
                     Text(text = stringResource(R.string.shipment_detail_screen_insufficient_stock_accept_button_alert_dialog))
+                }
+            }
+        )
+    }
+    if (showCompleteConfirmationDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                viewModel.dismissCompleteShipmentConfirmation()
+            },
+            title = { Text(text = stringResource(R.string.shipment_detail_screen_confirm_complete_title_alert_dialog)) },
+            text = { Text(text = stringResource(R.string.shipment_detail_screen_confirm_complete_message_alert_dialog)) },
+            confirmButton = {
+                Button(onClick = {
+                    viewModel.dismissCompleteShipmentConfirmation()
+                    viewModel.completedShipment(viewModel.selectedShipment.value.id)
+                    navController.navigate(Screen.Shipments.route)
+                }) {
+                    Text(text = stringResource(R.string.shipment_detail_screen_confirm_complete_confirm_button_alert_dialog))
+                }
+            },
+            dismissButton = {
+                Button(onClick = {
+                    viewModel.dismissCompleteShipmentConfirmation()
+                }) {
+                    Text(text = stringResource(R.string.shipment_detail_screen_confirm_complete_cancel_button_alert_dialog))
                 }
             }
         )

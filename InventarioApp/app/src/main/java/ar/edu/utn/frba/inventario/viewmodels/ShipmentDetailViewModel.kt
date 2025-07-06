@@ -65,6 +65,9 @@ class ShipmentDetailViewModel @Inject constructor(
     private val _showExitConfirmationDialog = MutableStateFlow(false)
     val showExitConfirmationDialog = _showExitConfirmationDialog.asStateFlow()
 
+    private val _showCompleteShipmentConfirmationDialog = MutableStateFlow(false)
+    val showCompleteShipmentConfirmationDialog = _showCompleteShipmentConfirmationDialog.asStateFlow()
+
     fun loadShipment(id:String){
         viewModelScope.launch(Dispatchers.IO) {
 
@@ -342,5 +345,11 @@ class ShipmentDetailViewModel @Inject constructor(
     }
     fun dismissExitConfirmation() {
         _showExitConfirmationDialog.value = false
+    }
+    fun showCompleteShipmentConfirmation() {
+        _showCompleteShipmentConfirmationDialog.value = true
+    }
+    fun dismissCompleteShipmentConfirmation() {
+        _showCompleteShipmentConfirmationDialog.value = false
     }
 }
