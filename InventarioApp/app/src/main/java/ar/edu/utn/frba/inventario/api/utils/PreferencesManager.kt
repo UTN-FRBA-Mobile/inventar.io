@@ -7,7 +7,7 @@ import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class PreferencesManager (context: Context) {
+class PreferencesManager(context: Context) {
 
     private val preferences: SharedPreferences =
         context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)

@@ -104,7 +104,9 @@ fun ProductDetailScreen(
         when {
             isLoading -> {
                 Column(
-                    modifier = Modifier.fillMaxSize().padding(innerPadding),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -112,13 +114,19 @@ fun ProductDetailScreen(
                     Text(text = stringResource(R.string.loading_product_detail))
                 }
             }
+
             errorMessage != null -> {
                 Column(
-                    modifier = Modifier.fillMaxSize().padding(innerPadding),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = errorMessage ?: "Error desconocido", color = MaterialTheme.colorScheme.error)
+                    Text(
+                        text = errorMessage ?: "Error desconocido",
+                        color = MaterialTheme.colorScheme.error
+                    )
                 }
             }
 

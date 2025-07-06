@@ -30,11 +30,12 @@ import ar.edu.utn.frba.inventario.api.model.item.Item
 import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 
 @Composable
-fun CardItem(navController: NavController, item:Item, onItemClick: (Item) -> Unit) {
-    Card(modifier = Modifier
-        .fillMaxWidth()
-        .padding(bottom = 7.5.dp)
-        .clickable { onItemClick(item) },
+fun CardItem(navController: NavController, item: Item, onItemClick: (Item) -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 7.5.dp)
+            .clickable { onItemClick(item) },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
         )

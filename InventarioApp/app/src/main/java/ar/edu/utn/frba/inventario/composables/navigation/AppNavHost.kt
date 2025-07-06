@@ -58,7 +58,8 @@ fun AppNavHost(navController: NavHostController) {
             .fillMaxSize()
             .then(
                 if (!isFullScreen) Modifier.padding(BODY_PADDING)
-                else Modifier)
+                else Modifier
+            )
     ) {
         NavHostBody(navController)
     }
@@ -67,7 +68,8 @@ fun AppNavHost(navController: NavHostController) {
 @Composable
 fun NavHostBody(navController: NavHostController) {
     val tokenManager = rememberTokenManager()
-    val startDestination = if (tokenManager.hasSession()) Screen.Welcome.route else Screen.Login.route
+    val startDestination =
+        if (tokenManager.hasSession()) Screen.Welcome.route else Screen.Login.route
 
     val productResultArgs = ProductResultArgs.entries.toTypedArray()
     val scanArgs = ScanArgs.entries.toTypedArray()
@@ -114,26 +116,28 @@ fun NavHostBody(navController: NavHostController) {
                 backStackEntry.arguments?.getString(ProductResultArgs.Origin.code) ?: "scan"
             )
         }
-        composable(route=Screen.ShipmentDetail.route+"/{id}",
+        composable(
+            route = Screen.ShipmentDetail.route + "/{id}",
             arguments = listOf(
-                navArgument(name = "id"){
-                    type= NavType.StringType
+                navArgument(name = "id") {
+                    type = NavType.StringType
                 }
-            )) { backStackEntry->
-            val idShipment = backStackEntry.arguments?.getString("id")?:""
+            )) { backStackEntry ->
+            val idShipment = backStackEntry.arguments?.getString("id") ?: ""
             ShipmentDetailScreen(navController = navController, id = idShipment)
         }
-        composable(route=Screen.OrderDetail.route+"/{orderId}",
+        composable(
+            route = Screen.OrderDetail.route + "/{orderId}",
             arguments = listOf(
-                navArgument(name = "orderId"){
-                    type= NavType.StringType
+                navArgument(name = "orderId") {
+                    type = NavType.StringType
                 }
-            )) { backStackEntry->
-            val idOrder = backStackEntry.arguments?.getString("orderId")?:""
+            )) { backStackEntry ->
+            val idOrder = backStackEntry.arguments?.getString("orderId") ?: ""
             OrderDetailScreen(navController = navController, id = idOrder)
         }
         composable(
-            route = Screen.ProductDetail.route +  "/{productId}",
+            route = Screen.ProductDetail.route + "/{productId}",
             arguments = listOf(navArgument("productId") { type = NavType.StringType })
         ) { backStackEntry ->
             val productId = backStackEntry.arguments?.getString("productId") ?: ""
@@ -151,7 +155,8 @@ fun NavHostBody(navController: NavHostController) {
             route = Screen.OrderProductsList.withArgsDefinition(orderProductsListArgs),
             arguments = navArgsOf(orderProductsListArgs)
         ) { backStackEntry ->
-            val orderId = backStackEntry.arguments?.getString(OrderProductsListArgs.OrderId.code) ?: ""
+            val orderId =
+                backStackEntry.arguments?.getString(OrderProductsListArgs.OrderId.code) ?: ""
             OrderProductsScreen(
                 navController = navController,
                 orderId = orderId
@@ -162,14 +167,17 @@ fun NavHostBody(navController: NavHostController) {
             arguments = navArgsOf(orderResultArgs)
         ) { backStackEntry ->
             val orderId = backStackEntry.arguments?.getString(OrderResultArgs.OrderId.code)
-            val initialErrorMessage = backStackEntry.arguments?.getString(OrderResultArgs.ErrorMessage.code)
+            val initialErrorMessage =
+                backStackEntry.arguments?.getString(OrderResultArgs.ErrorMessage.code)
 
             OrderResultScreen(
                 navController = navController,
                 code = orderId,
                 errorMessage = initialErrorMessage,
-                codeType = backStackEntry.arguments?.getString(OrderResultArgs.CodeType.code.toString()) ?: "",
-                origin = backStackEntry.arguments?.getString(OrderResultArgs.Origin.code.toString()) ?: ""
+                codeType = backStackEntry.arguments?.getString(OrderResultArgs.CodeType.code.toString())
+                    ?: "",
+                origin = backStackEntry.arguments?.getString(OrderResultArgs.Origin.code.toString())
+                    ?: ""
             )
         }
         composable(Screen.ManualOrder.route) {

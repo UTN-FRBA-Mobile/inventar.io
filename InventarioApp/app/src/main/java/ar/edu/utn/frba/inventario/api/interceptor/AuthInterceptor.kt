@@ -10,7 +10,7 @@ class AuthInterceptor(private val tokenManager: TokenManager) : Interceptor {
         val accessToken = tokenManager.getAccessToken()
 
         if (originalRequest.url.encodedPath.contains("/auth/login") ||
-            originalRequest.url.encodedPath.contains("/auth/refresh-token") ||
+            originalRequest.url.encodedPath.contains("/auth/refresh") ||
             accessToken == null
         ) {
             return chain.proceed(originalRequest)

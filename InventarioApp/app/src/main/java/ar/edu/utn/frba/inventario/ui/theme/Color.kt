@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.Color
 // Custom colors
 val GreyPending = Color(0xFF757575)
 val YellowInProgress = Color(0xFFF2B70C)
-val GreenCompleted =  Color(0xFF19C800)
+val GreenCompleted = Color(0xFF19C800)
 val RedBlocked = Color(0xFFB70000)
 
 val primaryLight = Color(0xFF415E91)

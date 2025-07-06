@@ -59,6 +59,7 @@ class LocationRepository @Inject constructor(
     fun getLatitude(): Double? {
         return location.value?.latitude
     }
+
     fun getLongitude(): Double? {
         return location.value?.longitude
     }

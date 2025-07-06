@@ -94,6 +94,7 @@ fun ShipmentsBodyContent(
                     Spinner(true)
                 }
             }
+
             error != null -> {
                 Box(
                     modifier = Modifier
@@ -107,12 +108,14 @@ fun ShipmentsBodyContent(
                     )
                 }
             }
+
             shipments.isEmpty() -> {
                 EmptyResultsMessage(
                     message = stringResource(R.string.no_results_for_filters),
                     modifier = Modifier.weight(1f)
                 )
             }
+
             else -> {
                 LazyColumn(
                     modifier = Modifier.weight(1f)

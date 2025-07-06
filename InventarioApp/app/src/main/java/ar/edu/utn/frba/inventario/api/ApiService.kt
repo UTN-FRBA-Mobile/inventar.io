@@ -34,13 +34,13 @@ interface ApiService {
 
     /*Order*/
     @GET("/api/v1/orders/{id}")
-    suspend fun getOrder(@Path("id") id:String): Response<OrderResponse>
+    suspend fun getOrder(@Path("id") id: String): Response<OrderResponse>
 
     @GET("/api/v1/orders")
     suspend fun getOrdersList(): Response<List<OrderResponse>>
 
     @POST("/api/v1/orders/{id}/start")
-    suspend fun startOrder(@Path("id") id:Long): Response<OrderResponse>
+    suspend fun startOrder(@Path("id") id: Long): Response<OrderResponse>
 
     @POST("/api/v1/orders/{id}/finish")
     suspend fun finishOrder(
@@ -50,22 +50,22 @@ interface ApiService {
 
     /*Shipment*/
     @GET("/api/v1/shipments/{id}")
-    suspend fun getShipment(@Path("id") id:Long): Response<ShipmentResponse>
+    suspend fun getShipment(@Path("id") id: Long): Response<ShipmentResponse>
 
     @GET("/api/v1/shipments")
     suspend fun getShipmentList(): Response<List<ShipmentResponse>>
 
     @POST("/api/v1/shipments/{id}/start")
-    suspend fun startShipment(@Path("id") id:Long): Response<ShipmentResponse>
+    suspend fun startShipment(@Path("id") id: Long): Response<ShipmentResponse>
 
     @POST("/api/v1/shipments/{id}/finish")
-    suspend fun finishShipment(@Path("id") id:Long): Response<ShipmentResponse>
+    suspend fun finishShipment(@Path("id") id: Long): Response<ShipmentResponse>
 
     @POST("/api/v1/shipments/{id}/block")
-    suspend fun blockShipment(@Path("id") id:Long): Response<ShipmentResponse>
+    suspend fun blockShipment(@Path("id") id: Long): Response<ShipmentResponse>
 
     @POST("/api/v1/shipments/{id}/unblock")
-    suspend fun unBlockShipment(@Path("id") id:Long): Response<ShipmentResponse>
+    suspend fun unBlockShipment(@Path("id") id: Long): Response<ShipmentResponse>
 
     /*Products*/
     @GET("/api/v1/products")

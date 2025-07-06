@@ -48,9 +48,9 @@ import ar.edu.utn.frba.inventario.viewmodels.OrderDetailViewModel
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun OrderDetailScreen(
-    viewModel:OrderDetailViewModel = hiltViewModel(),
-    navController: NavController, id:String
-){
+    viewModel: OrderDetailViewModel = hiltViewModel(),
+    navController: NavController, id: String
+) {
 
     LaunchedEffect(id) {
         viewModel.loadOrder(id)
@@ -73,7 +73,7 @@ fun OrderDetailScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(
-                        onClick = {navController.navigate(Screen.Orders.route)},
+                        onClick = { navController.navigate(Screen.Orders.route) },
                         modifier = Modifier.size(48.dp)
                     ) {
                         Icon(
@@ -95,8 +95,7 @@ fun OrderDetailScreen(
                 }
             }
         }
-    ) {
-    innerPadding ->
+    ) { innerPadding ->
         when {
             loading -> {
                 Box(
@@ -147,39 +146,63 @@ fun OrderDetailScreen(
 }
 
 @Composable
-fun OrderDetailBodyContent(viewModel:OrderDetailViewModel, navController: NavController, order:Order, innerPadding: PaddingValues){
+fun OrderDetailBodyContent(
+    viewModel: OrderDetailViewModel,
+    navController: NavController,
+    order: Order,
+    innerPadding: PaddingValues
+) {
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .background(MaterialTheme.colorScheme.secondaryContainer)
-        .padding(innerPadding)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.secondaryContainer)
+            .padding(innerPadding)
     ) {
 
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .background(color = MaterialTheme.colorScheme.primaryContainer)){
-            Column (modifier = Modifier
-                .padding(20.dp)){
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = MaterialTheme.colorScheme.primaryContainer)
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(20.dp)
+            ) {
                 Text(
                     text = stringResource(R.string.order_detail_screen_order, order.id),
                     style = MaterialTheme.typography.titleLarge,
                     fontSize = 25.sp,
                     fontWeight = FontWeight.Bold
                 )
-                Text(text = stringResource(R.string.order_detail_screen_sender, order.sender), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-                Text(text = stringResource(R.string.order_detail_screen_total, order.productsInOrder.size), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                Text(
+                    text = stringResource(R.string.order_detail_screen_sender, order.sender),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Text(
+                    text = stringResource(
+                        R.string.order_detail_screen_total,
+                        order.productsInOrder.size
+                    ),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
             }
         }
-        LazyColumn(modifier = Modifier
-            .padding(15.dp)) {
-            items(order.productsInOrder){
-                    product ->
+        LazyColumn(
+            modifier = Modifier
+                .padding(15.dp)
+        ) {
+            items(order.productsInOrder) { product ->
                 ProductItem(product)
                 Spacer(modifier = Modifier.height(5.dp))
             }
         }
-        Spacer(modifier = Modifier
-            .height(10.dp))
+        Spacer(
+            modifier = Modifier
+                .height(10.dp)
+        )
     }
 }
 

@@ -68,14 +68,15 @@ fun UserBodyContent(
         userScreenViewModel.getUser()
     }
 
-    Box(modifier = Modifier.fillMaxSize()
-    ){
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
         if (user == null) {
-            Column (
+            Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
-            ){
+            ) {
                 CircularProgressIndicator()
             }
         } else {
@@ -83,18 +84,20 @@ fun UserBodyContent(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row (
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 40.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
-                ){
-                    ImageFromURL(url = user!!.imageURL, modifier = Modifier
-                        .size(100.dp)
-                        .clip(CircleShape)                    // Hace la imagen circular
-                        .border(2.dp, Color.Gray, CircleShape)
-                        .shadow(4.dp, CircleShape) )
+                ) {
+                    ImageFromURL(
+                        url = user!!.imageURL, modifier = Modifier
+                            .size(100.dp)
+                            .clip(CircleShape)                    // Hace la imagen circular
+                            .border(2.dp, Color.Gray, CircleShape)
+                            .shadow(4.dp, CircleShape)
+                    )
                     Spacer(modifier = Modifier.width(16.dp))
                     Column {
                         Text(text = user!!.name, fontSize = 24.sp, fontWeight = FontWeight.Bold)
@@ -113,30 +116,42 @@ fun UserBodyContent(
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(bottom = 15.dp)
                 )
-                LazyColumn(modifier =
-                    Modifier.fillMaxHeight(0.9f)
+                LazyColumn(
+                    modifier =
+                        Modifier.fillMaxHeight(0.9f)
                 ) {
                     items(user!!.allowedLocations.size) { index ->
                         var address by remember { mutableStateOf<String?>(null) }
 
-                        LaunchedEffect(user!!.allowedLocations[index].latitude, user!!.allowedLocations[index].longitude) {
-                            address = locationViewModel.getAddressFromLocation(context, user!!.allowedLocations[index].latitude, user!!.allowedLocations[index].longitude)
+                        LaunchedEffect(
+                            user!!.allowedLocations[index].latitude,
+                            user!!.allowedLocations[index].longitude
+                        ) {
+                            address = locationViewModel.getAddressFromLocation(
+                                context,
+                                user!!.allowedLocations[index].latitude,
+                                user!!.allowedLocations[index].longitude
+                            )
                         }
 
-                        Column(modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 7.5.dp)) {
-                            Card (
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 7.5.dp)
+                        ) {
+                            Card(
                                 modifier = Modifier.fillMaxWidth(),
                                 colors = CardDefaults.cardColors(
                                     MaterialTheme.colorScheme.surfaceContainerHigh
                                 )
-                            ){
-                                Text(text = user!!.allowedLocations[index].name,
+                            ) {
+                                Text(
+                                    text = user!!.allowedLocations[index].name,
                                     fontSize = 18.sp,
                                     modifier =
                                         Modifier
-                                            .padding(10.dp))
+                                            .padding(10.dp)
+                                )
                                 Text(
                                     text = address ?: stringResource(R.string.loading),
                                     fontSize = 14.sp,

@@ -15,7 +15,7 @@ import ar.edu.utn.frba.inventario.utils.Screen
 import ar.edu.utn.frba.inventario.utils.removeRouteParams
 
 @Composable
-fun AppNavBar(navController: NavController, items: List<Screen> ) {
+fun AppNavBar(navController: NavController, items: List<Screen>) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route?.removeRouteParams()
 
@@ -24,7 +24,11 @@ fun AppNavBar(navController: NavController, items: List<Screen> ) {
             NavigationBarItem(
                 icon = {
                     when (screen) {
-                        Screen.Shipments -> Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null)
+                        Screen.Shipments -> Icon(
+                            Icons.AutoMirrored.Filled.Send,
+                            contentDescription = null
+                        )
+
                         Screen.Orders -> Icon(Icons.Default.ShoppingCart, contentDescription = null)
                         Screen.User -> Icon(Icons.Default.AccountCircle, contentDescription = null)
                         else -> throw IllegalArgumentException("Unknown screen: ${screen.route}")

@@ -112,12 +112,16 @@ fun LoginScreen(
         }
     }
     LaunchedEffect(Unit) {
-        if (ContextCompat.checkSelfPermission(context, locationPermission) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                context,
+                locationPermission
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             locationPermissionLauncher.launch(locationPermission)
         }
     }
     LaunchedEffect(Unit) {
-        if(!locationPermissionGranted){
+        if (!locationPermissionGranted) {
             locationPermissionLauncher.launch(locationPermission)
         }
     }
@@ -133,13 +137,13 @@ fun LoginScreen(
         ) {
             // si llega a cancelar permisos y quiere loguearse de vuelta, no muestra el login
             // y muestra un botón para solicitar permisos
-            if(!locationPermissionGranted) {
-                Column (
+            if (!locationPermissionGranted) {
+                Column(
                     modifier = Modifier
                         .fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
-                ){
+                ) {
                     Text(
                         text = "Activar permisos de ubicacion",
                         style = MaterialTheme.typography.titleLarge,
@@ -159,7 +163,7 @@ fun LoginScreen(
                         )
                     }
                 }
-            }else {
+            } else {
                 Column(
                     modifier = Modifier
                         .padding(paddingValues)

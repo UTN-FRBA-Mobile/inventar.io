@@ -75,7 +75,14 @@ class LoginScreenViewModel @Inject constructor(
                 Log.d("LoginViewModel", "Latitud: $latitude, Longitud: $longitude")
 
                 val loginResult = withContext(Dispatchers.Default) {
-                    authRepository.login(LoginRequest(currentUser, hashedPassword, latitude, longitude))
+                    authRepository.login(
+                        LoginRequest(
+                            currentUser,
+                            hashedPassword,
+                            latitude,
+                            longitude
+                        )
+                    )
                 }
 
                 Log.d("LoginViewModel", "Login ejecutado")
@@ -99,8 +106,12 @@ class LoginScreenViewModel @Inject constructor(
                         Log.d("LoginScreenViewModel", "Listo a Welcome")
 
                     }
+
                     is NetworkResult.Error -> {
-                        Log.d("LoginViewModel", "Error: code=${loginResult.code}, message=${loginResult.message}")
+                        Log.d(
+                            "LoginViewModel",
+                            "Error: code=${loginResult.code}, message=${loginResult.message}"
+                        )
 
                         val message = when {
                             loginResult.code == 401 && loginResult.message == "wrong credentials" -> "Credenciales inválidas"
@@ -110,6 +121,7 @@ class LoginScreenViewModel @Inject constructor(
 
                         _snackbarMessage.emit(message)
                     }
+
                     is NetworkResult.Exception -> {
                         Log.d("LoginViewModel", "Error crítico: ${loginResult.e.message}")
                         _snackbarMessage.emit("Ha ocurrido un error. Revise su conexión a internet")

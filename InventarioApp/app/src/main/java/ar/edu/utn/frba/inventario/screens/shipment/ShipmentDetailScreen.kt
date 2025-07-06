@@ -4,6 +4,7 @@ package ar.edu.utn.frba.inventario.screens.shipment
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,6 +26,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
@@ -56,6 +58,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import ar.edu.utn.frba.inventario.R
+import ar.edu.utn.frba.inventario.api.model.item.ItemStatus
 import ar.edu.utn.frba.inventario.api.model.product.ProductOperation
 import ar.edu.utn.frba.inventario.api.model.shipment.Shipment
 import ar.edu.utn.frba.inventario.utils.Screen
@@ -71,6 +74,12 @@ fun ShipmentDetailScreen(
     navController: NavController,
     id: String
 ) {
+    val showExitDialog by viewModel.showExitConfirmationDialog.collectAsState()
+
+    val currentShipment by viewModel.selectedShipment.collectAsState()
+    BackHandler(enabled = currentShipment.status != ItemStatus.COMPLETED) {
+        viewModel.showExitConfirmation()
+    }
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
         bottomBar = { ButtonBox(viewModel, navController) },
@@ -85,7 +94,13 @@ fun ShipmentDetailScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(
-                        onClick = {navController.navigate(Screen.Shipments.route)},
+                        onClick = {
+                            if (viewModel.selectedShipment.value.status == ItemStatus.COMPLETED) {
+                                navController.navigate(Screen.Shipments.route)
+                            } else {
+                                viewModel.showExitConfirmation()
+                            }
+                        },
                         modifier = Modifier.size(48.dp)
                     ) {
                         Icon(
@@ -110,6 +125,31 @@ fun ShipmentDetailScreen(
     ) { innerPadding ->
         ShipmentDetailBodyContent(viewModel, navController, id, innerPadding)
     }
+
+    if (showExitDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                viewModel.dismissExitConfirmation()
+            },
+            title = { Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_title_alert_dialog)) },
+            text = { Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_message_alert_dialog)) },
+            confirmButton = {
+                Button(onClick = {
+                    viewModel.dismissExitConfirmation()
+                    navController.navigate(Screen.Shipments.route)
+                }) {
+                    Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_accept_button_alert_dialog))
+                }
+            },
+            dismissButton = {
+                Button(onClick = {
+                    viewModel.dismissExitConfirmation()
+                }) {
+                    Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_cancel_button_alert_dialog))
+                }
+            }
+        )
+    }
 }
 
 @Composable
@@ -129,106 +169,135 @@ fun ShipmentDetailBodyContent(
         CircularProgressIndicator()
     } else {
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)
-    ) {
-        Box(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(16.dp))
-                .background(color = MaterialTheme.colorScheme.primaryContainer)
+                .fillMaxSize()
+                .padding(innerPadding)
         ) {
-            Column(
+            Box(
                 modifier = Modifier
-                    .padding(15.dp)
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(color = MaterialTheme.colorScheme.primaryContainer)
             ) {
-                Text(
-                    text = stringResource(
-                        R.string.shipment_detail_screen_shipment,
-                        selectedShipment.number
-                    ),
-                    style = MaterialTheme.typography.titleLarge,
-                    fontSize = 25.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = stringResource(
-                        R.string.shipment_detail_screen_customer,
-                        selectedShipment.customerName
-                    ),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Text(
-                    text = stringResource(
-                        R.string.shipment_detail_screen_total,
-                        selectedShipment.products.size
-                    ),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
-                )
+                Column(
+                    modifier = Modifier
+                        .padding(15.dp)
+                ) {
+                    Text(
+                        text = stringResource(
+                            R.string.shipment_detail_screen_shipment,
+                            selectedShipment.number
+                        ),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontSize = 25.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = stringResource(
+                            R.string.shipment_detail_screen_customer,
+                            selectedShipment.customerName
+                        ),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        text = stringResource(
+                            R.string.shipment_detail_screen_total,
+                            selectedShipment.products.size
+                        ),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
             }
-        }
-        LazyColumn(
-            modifier = Modifier
-                .padding(top = 15.dp)
-        ) {
-            items(selectedShipment.products) { product ->
-                ProductItem(
-                    viewModel, product,
-                    onProductClick = { clickedProduct ->
-                        navController.navigate(Screen.ProductDetail.route + "/${clickedProduct.id}")
-                    })
-                Spacer(modifier = Modifier.height(5.dp))
+            LazyColumn(
+                modifier = Modifier
+                    .padding(top = 15.dp)
+            ) {
+                items(selectedShipment.products) { product ->
+                    ProductItem(
+                        viewModel, product,
+                        onProductClick = { clickedProduct ->
+                            navController.navigate(Screen.ProductDetail.route + "/${clickedProduct.id}")
+                        })
+                    Spacer(modifier = Modifier.height(5.dp))
+                }
             }
+            Spacer(
+                modifier = Modifier
+                    .height(10.dp)
+            )
         }
-        Spacer(
-            modifier = Modifier
-                .height(10.dp)
-        )
     }
-}
 }
 
 @Composable
-fun ProductItem(viewModel:ShipmentDetailViewModel, product: ProductOperation,
-                onProductClick: (ProductOperation) -> Unit){
-    val  statusProd = viewModel.getProductStatus(product.id)
+fun ProductItem(
+    viewModel: ShipmentDetailViewModel, product: ProductOperation,
+    onProductClick: (ProductOperation) -> Unit
+) {
+    val statusProd = viewModel.getProductStatus(product.id)
 
-    ElevatedCard(colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh)
-        ,modifier = Modifier
+    ElevatedCard(
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
+        modifier = Modifier
             .fillMaxSize()
             .padding(2.dp)
-            .clickable { onProductClick(product) }){
-        Row(modifier = Modifier
-            .fillMaxSize()){
-            Column(modifier = Modifier
-                .weight(1f)
-                .padding(15.dp)){
-                Text(text = product.name, fontWeight = FontWeight.Bold, fontSize = 15.sp, style = MaterialTheme.typography.bodyMedium)
-                Spacer(modifier = Modifier
-                    .height(10.dp))
+            .clickable { onProductClick(product) }) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(15.dp)
+            ) {
+                Text(
+                    text = product.name,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(
+                    modifier = Modifier
+                        .height(10.dp)
+                )
                 Row {
-                    Text(text = stringResource(R.string.shipment_detail_screen_quantity_required, product.quantity), style = MaterialTheme.typography.bodySmall)
+                    Text(
+                        text = stringResource(
+                            R.string.shipment_detail_screen_quantity_required,
+                            product.quantity
+                        ), style = MaterialTheme.typography.bodySmall
+                    )
                     Spacer(modifier = Modifier.width(60.dp))
-                    Box(contentAlignment = Alignment.Center
-                            ){
-                        Text(text= stringResource(R.string.shipment_detail_screen_quantity_loaded, viewModel.getLoadedQuantityProduct(product.id)), style = MaterialTheme.typography.bodySmall)
+                    Box(
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = stringResource(
+                                R.string.shipment_detail_screen_quantity_loaded,
+                                viewModel.getLoadedQuantityProduct(product.id)
+                            ), style = MaterialTheme.typography.bodySmall
+                        )
                     }
                 }
             }
 
-            Box(modifier = Modifier
-                .padding(end = 12.dp)
-                .size(40.dp)
-                .align(alignment = Alignment.CenterVertically),
-                contentAlignment = Alignment.Center){
-                Image(painter = painterResource(id = statusProd.iconResourceId),
+            Box(
+                modifier = Modifier
+                    .padding(end = 12.dp)
+                    .size(40.dp)
+                    .align(alignment = Alignment.CenterVertically),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(id = statusProd.iconResourceId),
                     contentDescription = stringResource(R.string.product_state_icon),
                     modifier = Modifier.fillMaxSize(0.9f),
-                    contentScale = ContentScale.Fit)
+                    contentScale = ContentScale.Fit
+                )
 
             }
         }
@@ -238,6 +307,11 @@ fun ProductItem(viewModel:ShipmentDetailViewModel, product: ProductOperation,
 @Composable
 fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) {
     val coroutineScope = rememberCoroutineScope()
+
+    val showDialog by viewModel.showInsufficientStockDialog.collectAsState()
+    val dialogMessage by viewModel.insufficientStockMessage.collectAsState()
+
+    val showCompleteConfirmationDialog by viewModel.showCompleteShipmentConfirmationDialog.collectAsState()
 
     if (viewModel.showButtonBox()) {
         Column(
@@ -259,8 +333,9 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.surfaceTint),
                         enabled = viewModel.isStateCompleteShipment.value,
                         onClick = {
-                            viewModel.completedShipment(viewModel.selectedShipment.value.id)
-                            navController.navigate(Screen.Shipments.route)
+                            viewModel.showCompleteShipmentConfirmation()
+                            //viewModel.completedShipment(viewModel.selectedShipment.value.id)
+                            //navController.navigate(Screen.Shipments.route)
                         },
                         shape = RoundedCornerShape(50),
                         modifier = Modifier
@@ -303,7 +378,6 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
                                         "ShipmentDetailScreen",
                                         "No hay stock suficiente, se redirecciona a la pantalla de Shipments"
                                     )
-                                    navController.navigate(Screen.Shipments.route)
                                 }
                             }
 
@@ -325,16 +399,61 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
             Spacer(modifier = Modifier.height(20.dp))
         }
     }
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                viewModel.dismissInsufficientStockDialog()
+                navController.navigate(Screen.Shipments.route)
+            },
+            title = { Text(text = stringResource(R.string.shipment_detail_screen_insufficient_stock_title_alert_dialog)) },
+            text = { Text(text = dialogMessage.ifEmpty { stringResource(R.string.shipment_detail_screen_insufficient_stock_message_alert_dialog) }) },
+            confirmButton = {
+                Button(onClick = {
+                    viewModel.dismissInsufficientStockDialog()
+                    navController.navigate(Screen.Shipments.route)
+                }) {
+                    Text(text = stringResource(R.string.shipment_detail_screen_insufficient_stock_accept_button_alert_dialog))
+                }
+            }
+        )
+    }
+    if (showCompleteConfirmationDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                viewModel.dismissCompleteShipmentConfirmation()
+            },
+            title = { Text(text = stringResource(R.string.shipment_detail_screen_confirm_complete_title_alert_dialog)) },
+            text = { Text(text = stringResource(R.string.shipment_detail_screen_confirm_complete_message_alert_dialog)) },
+            confirmButton = {
+                Button(onClick = {
+                    viewModel.dismissCompleteShipmentConfirmation()
+                    viewModel.completedShipment(viewModel.selectedShipment.value.id)
+                    navController.navigate(Screen.Shipments.route)
+                }) {
+                    Text(text = stringResource(R.string.shipment_detail_screen_confirm_complete_confirm_button_alert_dialog))
+                }
+            },
+            dismissButton = {
+                Button(onClick = {
+                    viewModel.dismissCompleteShipmentConfirmation()
+                }) {
+                    Text(text = stringResource(R.string.shipment_detail_screen_confirm_complete_cancel_button_alert_dialog))
+                }
+            }
+        )
+    }
 }
 
 @Preview
 @Composable
-fun vistaFinal(){
+fun vistaFinal() {
     ShipmentDetailScreen(navController = rememberNavController(), id = "S01-3")
 }
+
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun vistaFinalDark(){
+fun vistaFinalDark() {
     ShipmentDetailScreen(navController = rememberNavController(), id = "S01-3")
 }
 

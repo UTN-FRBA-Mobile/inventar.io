@@ -22,17 +22,18 @@ abstract class Repository {
         }
     }
 
-    private suspend fun <T : Any?> doCall(apiCall: suspend () -> Response<T>): NetworkResult<T> = try {
-        val response = apiCall()
-        if (response.isSuccessful) {
-            @Suppress("UNCHECKED_CAST")
-            NetworkResult.Success(response.body() as T)
-        } else {
-            val errorBody = response.errorBody()?.string()
-            NetworkResult.Error(response.code(), errorBody ?: response.message())
+    private suspend fun <T : Any?> doCall(apiCall: suspend () -> Response<T>): NetworkResult<T> =
+        try {
+            val response = apiCall()
+            if (response.isSuccessful) {
+                @Suppress("UNCHECKED_CAST")
+                NetworkResult.Success(response.body() as T)
+            } else {
+                val errorBody = response.errorBody()?.string()
+                NetworkResult.Error(response.code(), errorBody ?: response.message())
+            }
+        } catch (e: Exception) {
+            NetworkResult.Exception(e)
         }
-    } catch (e: Exception) {
-        NetworkResult.Exception(e)
-    }
 }
 

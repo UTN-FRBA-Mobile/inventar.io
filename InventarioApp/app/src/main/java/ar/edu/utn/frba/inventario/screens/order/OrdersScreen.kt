@@ -1,6 +1,5 @@
 package ar.edu.utn.frba.inventario.screens.order
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -110,6 +109,7 @@ fun OrderBodyContent(
                         Spinner(true)
                     }
                 }
+
                 error != null -> {
                     Box(
                         modifier = Modifier
@@ -123,13 +123,15 @@ fun OrderBodyContent(
                         )
                     }
                 }
+
                 orders.isEmpty() -> {
                     EmptyResultsMessage(
                         message = stringResource(R.string.no_results_for_filters),
                         modifier = Modifier.weight(1f)
                     )
                 }
-else -> {
+
+                else -> {
                     LazyColumn(
                         modifier = Modifier.weight(1f)
                     ) {
