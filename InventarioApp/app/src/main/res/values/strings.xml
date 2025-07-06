@@ -118,6 +118,10 @@
     <string name="received_quantity">Cant. recibida: %1$s</string>
     <string name="expected_quantity">Cant. solicitada: %1$s</string>
     <string name="no_products_found_for_order">No se encontraron productos</string>
+    <string name="order_products_screen_confirm_complete_title_alert_dialog">Confirmar Pedido</string>
+    <string name="order_products_screen_confirm_complete_message_alert_dialog">¿Estás seguro que quieres confirmar este pedido y salir?</string>
+    <string name="order_products_screen_confirm_complete_confirm_button_alert_dialog">Confirmar</string>
+    <string name="order_products_screen_confirm_complete_cancel_button_alert_dialog">Cancelar</string>
 
     <!-- OrderResultScreen -->
     <string name="order_result_search_success">Pedido encontrado</string>

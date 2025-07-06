@@ -27,6 +27,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -263,6 +264,7 @@ fun ConfirmOrderButton(
     viewModel: OrderProductsViewModel,
     finishOrderError: String?
 ) {
+    val showCompleteConfirmationDialog by viewModel.showCompleteOrderConfirmationDialog.collectAsState()
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -272,7 +274,8 @@ fun ConfirmOrderButton(
         FloatingActionButton(
             onClick = {
                 if (allProductsConfirmed) {
-                    viewModel.finishOrder()
+                    viewModel.showCompleteOrderConfirmation()
+                    //viewModel.finishOrder()
                 } else {
                     screenCoroutineScope.launch {
                         snackbarHostState.showSnackbar("Confirmar todos los productos antes de finalizar el pedido.")
@@ -301,6 +304,31 @@ fun ConfirmOrderButton(
                     .padding(horizontal = 8.dp, vertical = 4.dp)
             )
         }
+    }
+
+    if (showCompleteConfirmationDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                viewModel.dismissCompleteOrderConfirmation()
+            },
+            title = { Text(text = stringResource(R.string.order_products_screen_confirm_complete_title_alert_dialog)) },
+            text = { Text(text = stringResource(R.string.order_products_screen_confirm_complete_message_alert_dialog)) },
+            confirmButton = {
+                Button(onClick = {
+                    viewModel.dismissCompleteOrderConfirmation()
+                    viewModel.finishOrder()
+                }) {
+                    Text(text = stringResource(R.string.order_products_screen_confirm_complete_confirm_button_alert_dialog))
+                }
+            },
+            dismissButton = {
+                Button(onClick = {
+                    viewModel.dismissCompleteOrderConfirmation()
+                }) {
+                    Text(text = stringResource(R.string.order_products_screen_confirm_complete_cancel_button_alert_dialog))
+                }
+            }
+        )
     }
 }
 
