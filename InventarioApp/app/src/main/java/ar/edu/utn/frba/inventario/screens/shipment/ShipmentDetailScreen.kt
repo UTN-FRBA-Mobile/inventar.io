@@ -95,7 +95,7 @@ fun ShipmentDetailScreen(
                 ) {
                     IconButton(
                         onClick = {
-                            if (viewModel.selectedShipment.value.status == ItemStatus.COMPLETED) {
+                            if(viewModel.selectedShipment.value.status == ItemStatus.COMPLETED || viewModel.selectedShipment.value.status == ItemStatus.BLOCKED || !viewModel.ExistProductWithLoadedQuantityUpdated()){
                                 navController.navigate(Screen.Shipments.route)
                             } else {
                                 viewModel.showExitConfirmation()
@@ -354,6 +354,7 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
 
                     Button(
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
+                        enabled = !viewModel.isStateCompleteShipment.value,
                         onClick = {
 
                             coroutineScope.launch {
