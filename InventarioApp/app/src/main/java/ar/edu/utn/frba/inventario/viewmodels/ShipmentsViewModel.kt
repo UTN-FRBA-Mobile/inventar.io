@@ -47,7 +47,7 @@ class ShipmentsViewModel @Inject constructor(
     val error: StateFlow<String?> = _error.asStateFlow()
 
     fun getShipments() {
-        viewModelScope.launch(Dispatchers.Default) {
+        viewModelScope.launch(Dispatchers.IO) {
             _loading.value = true
             _error.value = null
 

@@ -324,6 +324,7 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
 
                     Button(
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
+                        enabled = !viewModel.isStateCompleteShipment.value || viewModel.selectedShipment.value.status!=ItemStatus.COMPLETED,
                         onClick = {
 
                             coroutineScope.launch {
