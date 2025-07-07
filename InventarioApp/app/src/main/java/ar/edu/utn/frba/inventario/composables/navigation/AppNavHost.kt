@@ -48,7 +48,7 @@ fun AppNavHost(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route?.removeRouteParams()
 
-    val fullScreenRoutes = listOf(Screen.Scan.route)
+    val fullScreenRoutes = listOf(Screen.Scan.route, Screen.Login.route, Screen.Welcome.route)
     val isFullScreen = currentRoute in fullScreenRoutes
 
     val BODY_PADDING = 15.dp
