@@ -104,10 +104,8 @@ fun UserBodyContent(
             }
         } else {
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 10.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Row(
                     modifier = Modifier
@@ -142,10 +140,7 @@ fun UserBodyContent(
                     modifier = Modifier.padding(bottom = 15.dp)
                 )
                 LazyColumn(
-                    modifier =
-                        Modifier
-                            .padding(8.dp)
-                            .weight(1f),
+                    modifier = Modifier.weight(1f),
                     contentPadding = PaddingValues(bottom = 58.dp)
                 ) {
                     items(user!!.allowedLocations.size) { index ->

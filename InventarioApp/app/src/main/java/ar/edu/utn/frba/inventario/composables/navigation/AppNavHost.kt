@@ -57,7 +57,13 @@ fun AppNavHost(navController: NavHostController) {
         modifier = Modifier
             .fillMaxSize()
             .then(
-                if (!isFullScreen) Modifier.padding(BODY_PADDING)
+                if (!isFullScreen)
+                    Modifier.padding(
+                        start = BODY_PADDING,
+                        top = BODY_PADDING,
+                        end = BODY_PADDING,
+                        bottom = 0.dp
+            )
                 else Modifier
             )
     ) {

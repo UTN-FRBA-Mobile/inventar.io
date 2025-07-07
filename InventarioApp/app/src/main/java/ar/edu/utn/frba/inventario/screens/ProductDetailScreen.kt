@@ -63,16 +63,13 @@ fun ProductDetailScreen(
     val errorMessage by viewModel.errorMessage.collectAsState()
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.secondaryContainer,
         contentWindowInsets = WindowInsets.systemBars,
         topBar = {
             Column(modifier = Modifier.fillMaxWidth()) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.secondaryContainer)
-                        .height(56.dp)
-                        .padding(horizontal = 16.dp),
+                        .height(56.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
@@ -83,7 +80,7 @@ fun ProductDetailScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.go_back),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                     Text(
@@ -138,7 +135,7 @@ fun ProductDetailScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp),
+                            .padding(vertical = 16.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Box(
@@ -205,7 +202,7 @@ fun ProductDetailScreen(
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                            .padding(vertical = 8.dp)
                             .shadow(
                                 elevation = 4.dp,
                                 shape = RoundedCornerShape(12.dp),
@@ -213,7 +210,7 @@ fun ProductDetailScreen(
                             ),
                         shape = RoundedCornerShape(12.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
                         )
                     ) {
                         Column(

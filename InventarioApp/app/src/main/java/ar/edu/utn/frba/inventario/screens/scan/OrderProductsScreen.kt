@@ -133,7 +133,6 @@ fun OrderProductsScreen(
     }
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.secondaryContainer,
         topBar = { OrderTopBar(navController) },
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
@@ -199,9 +198,8 @@ fun OrderProductsScreen(
                 else -> {
                     OrderHeader(orderId)
                     LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                        modifier = Modifier.fillMaxSize().padding(top = 15.dp),
+                        verticalArrangement = Arrangement.spacedBy(7.5.dp)
                     ) {
                         items(orderProducts) { product ->
                             ProductListItem(
@@ -243,9 +241,7 @@ fun OrderTopBar(navController: NavController) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.secondaryContainer)
-                .height(56.dp)
-                .padding(horizontal = 16.dp),
+                .height(56.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -367,6 +363,7 @@ fun OrderHeader(orderId: String?) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
             .background(color = MaterialTheme.colorScheme.primaryContainer)
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
@@ -479,7 +476,7 @@ fun ProductListItem(
             },
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
         )
     ) {
         Row(
