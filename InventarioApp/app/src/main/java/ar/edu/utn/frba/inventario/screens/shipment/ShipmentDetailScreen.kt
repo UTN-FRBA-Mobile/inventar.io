@@ -430,15 +430,28 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
                 viewModel.dismissInsufficientStockDialog()
                 navController.navigate(Screen.Shipments.route)
             },
-            title = { Text(text = stringResource(R.string.shipment_detail_screen_insufficient_stock_title_alert_dialog)) },
-            text = { Text(text = dialogMessage.ifEmpty { stringResource(R.string.shipment_detail_screen_insufficient_stock_message_alert_dialog) }) },
+            title = { Text(text = stringResource(R.string.shipment_detail_screen_insufficient_stock_title_alert_dialog),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center) },
+            text = { Text(text = dialogMessage.ifEmpty { stringResource(R.string.shipment_detail_screen_insufficient_stock_message_alert_dialog) },
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center) },
             confirmButton = {
-                Button(onClick = {
-                    viewModel.dismissInsufficientStockDialog()
-                    navController.navigate(Screen.Shipments.route)
-                }) {
-                    Text(text = stringResource(R.string.shipment_detail_screen_insufficient_stock_accept_button_alert_dialog))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 18.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Button(onClick = {
+                        viewModel.dismissInsufficientStockDialog()
+                        navController.navigate(Screen.Shipments.route)
+                    }) {
+                        Text(text = stringResource(R.string.shipment_detail_screen_insufficient_stock_accept_button_alert_dialog))
+                    }
                 }
+
             }
         )
     }
