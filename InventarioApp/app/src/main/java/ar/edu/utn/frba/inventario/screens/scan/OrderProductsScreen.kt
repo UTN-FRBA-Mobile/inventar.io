@@ -114,22 +114,10 @@ fun OrderProductsScreen(
 
     val allProductsConfirmed = orderProducts.isNotEmpty() && productConfirmationStatus.values.all { it }
 
-//    LaunchedEffect(orderFinishedSuccessfully) {
-//        when (orderFinishedSuccessfully) {
-//            true -> {
-//                snackbarHostState.showSnackbar(
-//                    message = "¡Pedido finalizado con éxito!",
-//                    withDismissAction = true
-//                )
-//
-//                navController.popBackStack(Screen.Orders.route, false)
-//            }
-//
-//            //El error ya se muestra en el FloatingActionButton si existe finishOrderError
-//            false -> {}
-//            null -> {}
-//        }
-//    }
+    LaunchedEffect(orderFinishedSuccessfully) {
+        if (orderFinishedSuccessfully == true)
+            navController.popBackStack(Screen.Orders.route, false)
+    }
 
     Scaffold(
         topBar = { OrderTopBar(navController) },
@@ -343,8 +331,6 @@ fun ConfirmOrderButton(
                 Button(onClick = {
                     viewModel.dismissCompleteOrderConfirmation()
                     viewModel.finishOrder()
-
-                    navController.popBackStack(Screen.Orders.route, false)
                 }) {
                     Text(text = stringResource(R.string.order_products_screen_confirm_complete_confirm_button_alert_dialog))
                 }
