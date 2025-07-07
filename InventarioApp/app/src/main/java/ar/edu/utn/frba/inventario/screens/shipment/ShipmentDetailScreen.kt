@@ -76,7 +76,7 @@ fun ShipmentDetailScreen(
     val showExitDialog by viewModel.showExitConfirmationDialog.collectAsState()
 
     val currentShipment by viewModel.selectedShipment.collectAsState()
-    BackHandler(enabled = currentShipment.status != ItemStatus.COMPLETED) {
+    BackHandler(enabled = currentShipment.status != ItemStatus.COMPLETED && currentShipment.status != ItemStatus.BLOCKED && viewModel.ExistProductWithLoadedQuantityUpdated()) {
         viewModel.showExitConfirmation()
     }
     Scaffold(
@@ -129,22 +129,46 @@ fun ShipmentDetailScreen(
             onDismissRequest = {
                 viewModel.dismissExitConfirmation()
             },
-            title = { Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_title_alert_dialog)) },
-            text = { Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_message_alert_dialog)) },
+            title = { Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_title_alert_dialog),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center) },
+            text = { Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_message_alert_dialog),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center) },
             confirmButton = {
-                Button(onClick = {
-                    viewModel.dismissExitConfirmation()
-                    navController.navigate(Screen.Shipments.route)
-                }) {
-                    Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_accept_button_alert_dialog))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 18.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Button(onClick = {
+                        viewModel.dismissExitConfirmation()
+                    },
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 8.dp)) {
+                        Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_cancel_button_alert_dialog))
+                    }
+                    Button(onClick = {
+                        viewModel.dismissExitConfirmation()
+                        navController.navigate(Screen.Shipments.route)
+                    },
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(start = 8.dp)) {
+                        Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_accept_button_alert_dialog))
+                    }
                 }
+
             },
             dismissButton = {
-                Button(onClick = {
-                    viewModel.dismissExitConfirmation()
-                }) {
-                    Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_cancel_button_alert_dialog))
-                }
+//                Button(onClick = {
+//                    viewModel.dismissExitConfirmation()
+//                }) {
+//                    Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_cancel_button_alert_dialog))
+//                }
             }
         )
     }
