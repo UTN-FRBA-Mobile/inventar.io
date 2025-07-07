@@ -180,7 +180,7 @@ fun LoginScreen(
                             painter = painterResource(id = logoResourceId),
                             contentDescription = stringResource(R.string.logo),
                             modifier = Modifier
-                                .size(screenWidth * 0.6f),
+                                .size(screenWidth * 0.8f),
                             contentScale = ContentScale.Fit
                         )
                     }
@@ -228,22 +228,18 @@ fun LoginScreen(
                             singleLine = true
                         )
                         Spacer(modifier = Modifier.height(32.dp))
-                        if(isLoading){
-                            Spinner(isLoading)
-                        }else{
-                            Button(onClick = {
-                                executeLogin(
-                                    loginScreenViewModel,
-                                    keyboardController,
-                                    focusManager
-                                )
-                            }) {
-                                Text("Login")
-                            }
-
+                        Button(onClick = {
+                            executeLogin(
+                                loginScreenViewModel,
+                                keyboardController,
+                                focusManager
+                            )
+                        }) {
+                            Text("Login")
                         }
                     }
                 }
+                Spinner(isLoading)
             }
         }
 
