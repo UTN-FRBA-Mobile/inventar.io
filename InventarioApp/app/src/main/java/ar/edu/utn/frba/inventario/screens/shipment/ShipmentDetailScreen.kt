@@ -74,11 +74,15 @@ fun ShipmentDetailScreen(
     id: String
 ) {
     val showExitDialog by viewModel.showExitConfirmationDialog.collectAsState()
-
     val currentShipment by viewModel.selectedShipment.collectAsState()
-    BackHandler(enabled = currentShipment.status != ItemStatus.COMPLETED) {
+
+    val hasCorrectStatus = (currentShipment.status == ItemStatus.IN_PROGRESS || currentShipment.status == ItemStatus.PENDING)
+    val shouldShowConfirmationModal = viewModel.ExistProductWithLoadedQuantityUpdated() && hasCorrectStatus
+
+    BackHandler(enabled = shouldShowConfirmationModal) {
         viewModel.showExitConfirmation()
     }
+
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
         bottomBar = { ButtonBox(viewModel, navController) },
@@ -93,10 +97,10 @@ fun ShipmentDetailScreen(
                 ) {
                     IconButton(
                         onClick = {
-                            if (viewModel.selectedShipment.value.status == ItemStatus.COMPLETED || viewModel.selectedShipment.value.status == ItemStatus.BLOCKED || !viewModel.ExistProductWithLoadedQuantityUpdated()) {
-                                navController.navigate(Screen.Shipments.route)
-                            } else {
+                            if (shouldShowConfirmationModal) {
                                 viewModel.showExitConfirmation()
+                            } else {
+                                navController.popBackStack()
                             }
                         },
                         modifier = Modifier.size(48.dp)
@@ -134,7 +138,7 @@ fun ShipmentDetailScreen(
             confirmButton = {
                 Button(onClick = {
                     viewModel.dismissExitConfirmation()
-                    navController.navigate(Screen.Shipments.route)
+                    navController.popBackStack()
                 }) {
                     Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_accept_button_alert_dialog))
                 }
@@ -333,8 +337,6 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
                         enabled = viewModel.isStateCompleteShipment.value,
                         onClick = {
                             viewModel.showCompleteShipmentConfirmation()
-                            //viewModel.completedShipment(viewModel.selectedShipment.value.id)
-                            //navController.navigate(Screen.Shipments.route)
                         },
                         shape = RoundedCornerShape(50),
                         modifier = Modifier
@@ -404,21 +406,21 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
         AlertDialog(
             onDismissRequest = {
                 viewModel.dismissInsufficientStockDialog()
-                navController.navigate(Screen.Shipments.route)
+                navController.popBackStack()
             },
             title = { Text(text = stringResource(R.string.shipment_detail_screen_insufficient_stock_title_alert_dialog)) },
             text = { Text(text = dialogMessage.ifEmpty { stringResource(R.string.shipment_detail_screen_insufficient_stock_message_alert_dialog) }) },
             confirmButton = {
                 Button(onClick = {
                     viewModel.dismissInsufficientStockDialog()
-                    navController.navigate(Screen.Shipments.route)
+                    navController.popBackStack()
                 }) {
                     Text(text = stringResource(R.string.shipment_detail_screen_insufficient_stock_accept_button_alert_dialog))
                 }
             }
         )
     }
-    if (showCompleteConfirmationDialog) {
+    else if (showCompleteConfirmationDialog) {
         AlertDialog(
             onDismissRequest = {
                 viewModel.dismissCompleteShipmentConfirmation()
@@ -429,7 +431,8 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
                 Button(onClick = {
                     viewModel.dismissCompleteShipmentConfirmation()
                     viewModel.completedShipment(viewModel.selectedShipment.value.id)
-                    navController.navigate(Screen.Shipments.route)
+
+                    navController.popBackStack()
                 }) {
                     Text(text = stringResource(R.string.shipment_detail_screen_confirm_complete_confirm_button_alert_dialog))
                 }

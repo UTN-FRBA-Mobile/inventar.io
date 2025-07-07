@@ -132,9 +132,10 @@ fun ProductAmountScreen(
                     loadedQuantity = requiredAmount
                 )
 
-                navController.navigate(Screen.ShipmentDetail.route + "/${selectedShipment.id}") {
-                    popUpTo(Screen.ShipmentDetail.route) { inclusive = true }
-                }
+                navController.popBackStack(
+                    Screen.ShipmentDetail.route + "/${selectedShipment.id}",
+                    false
+                )
             },
                 modifier = Modifier
                     .width(190.dp)
@@ -149,6 +150,7 @@ fun ProductAmountScreen(
 
             OutlinedButton(onClick = {
                 ShipmentScanFlowState.clear()
+
                 navController.popBackStack(
                     Screen.ShipmentDetail.route + "/${selectedShipment.id}",
                     false
@@ -160,7 +162,7 @@ fun ProductAmountScreen(
                 Text(
                     stringResource(R.string.cancel),
                     style = MaterialTheme.typography.titleMedium
-                    )
+                )
             }
         } else {
             Button(onClick = {

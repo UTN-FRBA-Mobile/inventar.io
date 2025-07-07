@@ -46,10 +46,10 @@ class ProductDetailViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val detailsResult = productRepository.getProductListById(listOf(id))
-                Log.e("ProductDetailViewModel", "getProductListById: $detailsResult")
+                Log.d("ProductDetailViewModel", "getProductListById: $detailsResult")
 
                 val stockLocationResult = productRepository.getStockByProductId(id)
-                Log.e("ProductDetailViewModel", "getStockByProductId: $stockLocationResult")
+                Log.d("ProductDetailViewModel", "getStockByProductId: $stockLocationResult")
 
                 var loadedProduct: Product? = null
 

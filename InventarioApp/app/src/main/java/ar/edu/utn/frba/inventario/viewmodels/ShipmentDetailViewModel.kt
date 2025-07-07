@@ -208,8 +208,7 @@ class ShipmentDetailViewModel @Inject constructor(
     }
 
     fun isCompletedShipment() {
-        isStateCompleteShipment.value =
-            productToScanList.all { ps -> ps.requiredQuantity == ps.loadedQuantity.value }
+        isStateCompleteShipment.value = productToScanList.all { ps -> ps.requiredQuantity == ps.loadedQuantity.value }
     }
 
     fun ExistProductWithLoadedQuantityUpdated(): Boolean {
@@ -256,7 +255,7 @@ class ShipmentDetailViewModel @Inject constructor(
     }
 
     fun completedShipment(id: String) {
-        if ((_shipment.value.status == ItemStatus.IN_PROGRESS) && (isStateCompleteShipment.value)) {
+        if (isStateCompleteShipment.value) {
 
             viewModelScope.launch(Dispatchers.IO) {
 

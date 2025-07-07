@@ -112,8 +112,7 @@ fun OrderProductsScreen(
         }
     }
 
-    val allProductsConfirmed =
-        orderProducts.isNotEmpty() && productConfirmationStatus.values.all { it }
+    val allProductsConfirmed = orderProducts.isNotEmpty() && productConfirmationStatus.values.all { it }
 
     LaunchedEffect(orderFinishedSuccessfully) {
         when (orderFinishedSuccessfully) {
@@ -127,7 +126,8 @@ fun OrderProductsScreen(
                 }
             }
 
-            false -> {} //El error ya se muestra en el FloatingActionButton si existe finishOrderError
+            //El error ya se muestra en el FloatingActionButton si existe finishOrderError
+            false -> {}
             null -> {}
         }
     }
