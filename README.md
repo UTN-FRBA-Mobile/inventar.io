@@ -20,17 +20,25 @@
 
 ## 📸 Capturas de Pantalla
 
-### 🏠 Pantalla de inicio
-![Pantalla de Inicio](./docs/home.png)
+### 🔑 Login
+<img src="docs/screenshots/03-login.png" alt="Alt text" width="200">
+
+### 🏠 Bienvenida
+<img src="docs/screenshots/04-welcome.png" alt="Alt text" width="200">
+
+### 📦 Envios
+<img src="docs/screenshots/05-envios.png" alt="Alt text" width="200">
 
 ### 📦 Pedidos
-![Pedidos](./docs/pedidos.png)
+<img src="docs/screenshots/15-pedidos.png" alt="Alt text" width="200">
 
-### 📦 Órdenes
-![Ordenes](./docs/ordenes.png)
+### 👨‍💼 Usuario
+<img src="docs/screenshots/20-user.png" alt="Alt text" width="200">
 
 ### 📷 Escaneo con Cámara
-![Escáner](./docs/scanner.png)
+<img src="docs/screenshots/10-scan.png" alt="Alt text" width="200">
+
+**Para ver todos los screenshots ingresar a `/docs/screenshots`**
 
 ---
 
@@ -64,9 +72,10 @@ Para que la app móvil se conecte correctamente al backend local, seguí estos p
 1. Abrí el archivo local.properties ubicado en la raíz del proyecto Android.
 
 2. Añadí (o modificá) la siguiente línea, reemplazando la IP según tu entorno:
-```
-API_BASE_URL=http://192.168.1.106:8080
-```
+    ```
+    API_BASE_URL=http://192.168.1.106:8080
+    ```
+
 3. Recompilá la aplicación para aplicar los cambios.
 
 ℹ️ Importante: Asegurate de que el dispositivo Android (físico o emulador) tenga acceso a la IP indicada y que no haya firewalls bloqueando el puerto.
@@ -79,4 +88,4 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](./LICENSE) pa
 
 ---
 
-> Made with ❤️ by UTN FRBA
+> Made with ❤️ by UTN FRBA <3
