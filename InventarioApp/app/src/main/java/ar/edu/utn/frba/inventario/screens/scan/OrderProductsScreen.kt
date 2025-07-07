@@ -337,22 +337,47 @@ fun ConfirmOrderButton(
             onDismissRequest = {
                 viewModel.dismissCompleteOrderConfirmation()
             },
-            title = { Text(text = stringResource(R.string.order_products_screen_confirm_complete_title_alert_dialog)) },
-            text = { Text(text = stringResource(R.string.order_products_screen_confirm_complete_message_alert_dialog)) },
+            title = { Text(text = stringResource(R.string.order_products_screen_confirm_complete_title_alert_dialog),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center) },
+            text = { Text(text = stringResource(R.string.order_products_screen_confirm_complete_message_alert_dialog),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center) },
             confirmButton = {
-                Button(onClick = {
-                    viewModel.dismissCompleteOrderConfirmation()
-                    viewModel.finishOrder()
-                }) {
-                    Text(text = stringResource(R.string.order_products_screen_confirm_complete_confirm_button_alert_dialog))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Button(onClick = {
+                        viewModel.dismissCompleteOrderConfirmation()
+                    },
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 8.dp)) {
+                        Text(text = stringResource(R.string.order_products_screen_confirm_complete_cancel_button_alert_dialog))
+                    }
+
+                    Button(onClick = {
+                        viewModel.dismissCompleteOrderConfirmation()
+                        viewModel.finishOrder()
+                    },
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 8.dp)) {
+                        Text(text = stringResource(R.string.order_products_screen_confirm_complete_confirm_button_alert_dialog))
+                    }
                 }
+
             },
             dismissButton = {
-                Button(onClick = {
-                    viewModel.dismissCompleteOrderConfirmation()
-                }) {
-                    Text(text = stringResource(R.string.order_products_screen_confirm_complete_cancel_button_alert_dialog))
-                }
+//                Button(onClick = {
+//                    viewModel.dismissCompleteOrderConfirmation()
+//                }) {
+//                    Text(text = stringResource(R.string.order_products_screen_confirm_complete_cancel_button_alert_dialog))
+//                }
             }
         )
     }
