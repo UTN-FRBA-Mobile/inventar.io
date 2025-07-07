@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -134,7 +135,10 @@ fun ProductAmountScreen(
                 navController.navigate(Screen.ShipmentDetail.route + "/${selectedShipment.id}") {
                     popUpTo(Screen.ShipmentDetail.route) { inclusive = true }
                 }
-            }) {
+            },
+                modifier = Modifier
+                    .width(190.dp)
+            ) {
                 Text(
                     stringResource(R.string.product_amount_confirm_button),
                     style = MaterialTheme.typography.titleMedium
@@ -149,7 +153,10 @@ fun ProductAmountScreen(
                     Screen.ShipmentDetail.route + "/${selectedShipment.id}",
                     false
                 )
-            }) {
+            },
+                modifier = Modifier
+                    .width(190.dp)
+            ) {
                 Text(
                     stringResource(R.string.cancel),
                     style = MaterialTheme.typography.titleMedium
