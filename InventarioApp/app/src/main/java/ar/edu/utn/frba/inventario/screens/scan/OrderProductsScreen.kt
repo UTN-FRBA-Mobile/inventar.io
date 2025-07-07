@@ -344,18 +344,35 @@ fun ConfirmOrderButton(
             title = { Text(text = stringResource(R.string.order_products_screen_confirm_complete_title_alert_dialog)) },
             text = { Text(text = stringResource(R.string.order_products_screen_confirm_complete_message_alert_dialog)) },
             confirmButton = {
-                Button(onClick = {
-                    viewModel.dismissCompleteOrderConfirmation()
-                    viewModel.finishOrder()
-                }) {
-                    Text(text = stringResource(R.string.order_products_screen_confirm_complete_confirm_button_alert_dialog))
-                }
-            },
-            dismissButton = {
-                Button(onClick = {
-                    viewModel.dismissCompleteOrderConfirmation()
-                }) {
-                    Text(text = stringResource(R.string.order_products_screen_confirm_complete_cancel_button_alert_dialog))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth() // Asegura que la fila ocupe todo el ancho disponible
+                        .padding(horizontal = 8.dp, vertical = 8.dp), // Padding alrededor de la fila de botones
+                    horizontalArrangement = Arrangement.SpaceBetween // O Arrangement.SpaceEvenly si quieres más espacio entre ellos
+                ) {
+                    // Botón de Cancelar/Descartar
+                    Button(
+                        onClick = {
+                            viewModel.dismissCompleteOrderConfirmation()
+                        },
+                        modifier = Modifier
+                            .weight(1f), // Ocupa espacio proporcional
+                    ) {
+                        Text(text = stringResource(R.string.order_products_screen_confirm_complete_cancel_button_alert_dialog))
+                    }
+
+                    // Botón de Confirmar
+                    Button(
+                        onClick = {
+                            viewModel.dismissCompleteOrderConfirmation()
+                            viewModel.finishOrder()
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(start = 8.dp) // Ocupa espacio proporcional con espacio entre los botones
+                    ) {
+                        Text(text = stringResource(R.string.order_products_screen_confirm_complete_confirm_button_alert_dialog))
+                    }
                 }
             }
         )

@@ -133,18 +133,28 @@ fun ShipmentDetailScreen(
             title = { Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_title_alert_dialog)) },
             text = { Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_message_alert_dialog)) },
             confirmButton = {
-                Button(onClick = {
-                    viewModel.dismissExitConfirmation()
-                    navController.navigate(Screen.Shipments.route)
-                }) {
-                    Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_accept_button_alert_dialog))
-                }
-            },
-            dismissButton = {
-                Button(onClick = {
-                    viewModel.dismissExitConfirmation()
-                }) {
-                    Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_cancel_button_alert_dialog))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ){
+                    Button(
+                        onClick = {
+                        viewModel.dismissExitConfirmation()
+                    },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_cancel_button_alert_dialog))
+                    }
+                    Button(
+                        modifier = Modifier.weight(1f).padding(start = 8.dp),
+                        onClick = {
+                        viewModel.dismissExitConfirmation()
+                        navController.navigate(Screen.Shipments.route)
+                    }) {
+                        Text(text = stringResource(R.string.shipment_detail_screen_confirm_exit_accept_button_alert_dialog))
+                    }
                 }
             }
         )
@@ -426,19 +436,30 @@ fun ButtonBox(viewModel: ShipmentDetailViewModel, navController: NavController) 
             title = { Text(text = stringResource(R.string.shipment_detail_screen_confirm_complete_title_alert_dialog)) },
             text = { Text(text = stringResource(R.string.shipment_detail_screen_confirm_complete_message_alert_dialog)) },
             confirmButton = {
-                Button(onClick = {
-                    viewModel.dismissCompleteShipmentConfirmation()
-                    viewModel.completedShipment(viewModel.selectedShipment.value.id)
-                    navController.navigate(Screen.Shipments.route)
-                }) {
-                    Text(text = stringResource(R.string.shipment_detail_screen_confirm_complete_confirm_button_alert_dialog))
-                }
-            },
-            dismissButton = {
-                Button(onClick = {
-                    viewModel.dismissCompleteShipmentConfirmation()
-                }) {
-                    Text(text = stringResource(R.string.shipment_detail_screen_confirm_complete_cancel_button_alert_dialog))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ){
+                    Button(
+                        modifier = Modifier.weight(1f),
+                        onClick = {
+                            viewModel.dismissCompleteShipmentConfirmation()
+                        }) {
+                        Text(text = stringResource(R.string.shipment_detail_screen_confirm_complete_cancel_button_alert_dialog))
+                    }
+                    Button(
+                        onClick = {
+                            viewModel.dismissCompleteShipmentConfirmation()
+                            viewModel.completedShipment(viewModel.selectedShipment.value.id)
+                            navController.navigate(Screen.Shipments.route)
+                        },
+                        modifier = Modifier.weight(1f).padding(start = 8.dp)
+                    ) {
+                        Text(text = stringResource(R.string.shipment_detail_screen_confirm_complete_confirm_button_alert_dialog))
+                    }
+
                 }
             }
         )
