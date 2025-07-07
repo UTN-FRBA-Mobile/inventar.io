@@ -112,25 +112,24 @@ fun OrderProductsScreen(
         }
     }
 
-    val allProductsConfirmed =
-        orderProducts.isNotEmpty() && productConfirmationStatus.values.all { it }
+    val allProductsConfirmed = orderProducts.isNotEmpty() && productConfirmationStatus.values.all { it }
 
-    LaunchedEffect(orderFinishedSuccessfully) {
-        when (orderFinishedSuccessfully) {
-            true -> {
-                snackbarHostState.showSnackbar(
-                    message = "¡Pedido finalizado con éxito!",
-                    withDismissAction = true
-                )
-                navController.navigate(Screen.Orders.route) {
-                    popUpTo(Screen.Orders.route) { inclusive = true }
-                }
-            }
-
-            false -> {} //El error ya se muestra en el FloatingActionButton si existe finishOrderError
-            null -> {}
-        }
-    }
+//    LaunchedEffect(orderFinishedSuccessfully) {
+//        when (orderFinishedSuccessfully) {
+//            true -> {
+//                snackbarHostState.showSnackbar(
+//                    message = "¡Pedido finalizado con éxito!",
+//                    withDismissAction = true
+//                )
+//
+//                navController.popBackStack(Screen.Orders.route, false)
+//            }
+//
+//            //El error ya se muestra en el FloatingActionButton si existe finishOrderError
+//            false -> {}
+//            null -> {}
+//        }
+//    }
 
     Scaffold(
         topBar = { OrderTopBar(navController) },
@@ -138,11 +137,12 @@ fun OrderProductsScreen(
         floatingActionButton = {
             if (!isLoading && errorMessage == null && orderProducts.isNotEmpty() && !isFinishingOrder) {
                 ConfirmOrderButton(
+                    navController = navController,
                     allProductsConfirmed = allProductsConfirmed,
                     screenCoroutineScope = screenCoroutineScope,
                     snackbarHostState = snackbarHostState,
                     viewModel = viewModel,
-                    finishOrderError = finishOrderError
+                    finishOrderError = finishOrderError,
                 )
             }
             if (isFinishingOrder) {
@@ -246,7 +246,7 @@ fun OrderTopBar(navController: NavController) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconButton(
-                onClick = { navController.navigate(Screen.Orders.route) },
+                onClick = { navController.popBackStack(route = Screen.Scan.route, false)},
                 modifier = Modifier.size(48.dp)
             ) {
                 Icon(
@@ -270,6 +270,7 @@ fun OrderTopBar(navController: NavController) {
 
 @Composable
 fun ConfirmOrderButton(
+    navController: NavController,
     allProductsConfirmed: Boolean,
     screenCoroutineScope: CoroutineScope,
     snackbarHostState: SnackbarHostState,
@@ -288,7 +289,6 @@ fun ConfirmOrderButton(
             onClick = {
                 if (allProductsConfirmed) {
                     viewModel.showCompleteOrderConfirmation()
-                    //viewModel.finishOrder()
                 } else {
                     screenCoroutineScope.launch {
                         snackbarHostState.showSnackbar("Confirmar todos los productos antes de finalizar el pedido.")
@@ -363,6 +363,7 @@ fun ConfirmOrderButton(
                     Button(onClick = {
                         viewModel.dismissCompleteOrderConfirmation()
                         viewModel.finishOrder()
+                        navController.popBackStack(Screen.Orders.route, false)
                     },
                         modifier = Modifier
                             .weight(1f)

@@ -148,6 +148,7 @@ fun NavHostBody(navController: NavHostController) {
         ) { backStackEntry ->
             val productId = backStackEntry.arguments?.getString("productId") ?: ""
             val viewModel: ShipmentDetailViewModel = hiltViewModel()
+
             ProductDetailScreen(
                 navController = navController,
                 productId = productId,
