@@ -73,7 +73,7 @@ fun OrderDetailScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(
-                        onClick = { navController.navigate(Screen.Orders.route) },
+                        onClick = { navController.popBackStack() },
                         modifier = Modifier.size(48.dp)
                     ) {
                         Icon(
