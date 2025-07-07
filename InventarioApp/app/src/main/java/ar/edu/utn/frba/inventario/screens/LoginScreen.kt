@@ -135,8 +135,6 @@ fun LoginScreen(
                 .fillMaxSize()
                 .padding(WindowInsets.ime.asPaddingValues())
         ) {
-            // si llega a cancelar permisos y quiere loguearse de vuelta, no muestra el login
-            // y muestra un botón para solicitar permisos
             if (!locationPermissionGranted) {
                 Column(
                     modifier = Modifier
@@ -145,7 +143,7 @@ fun LoginScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "Activar permisos de ubicacion",
+                        text = stringResource(R.string.activate_location),
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.primary,
                     )
@@ -157,7 +155,7 @@ fun LoginScreen(
                         }
                     ) {
                         Text(
-                            text = "Activar ubicacion",
+                            text = stringResource(R.string.activate_location),
                             style = MaterialTheme.typography.titleLarge,
                             color = MaterialTheme.colorScheme.secondaryContainer,
                         )

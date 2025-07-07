@@ -126,7 +126,6 @@ fun ProductAmountScreen(
 
         if (enoughStock) {
             Button(onClick = {
-                // ToDo - Pegarle al endpoint necesario, para confirmar el ingreso del producto
                 ShipmentProductToScanList.updateLoadedQuantity(
                     productId = scannedProduct.id,
                     loadedQuantity = requiredAmount

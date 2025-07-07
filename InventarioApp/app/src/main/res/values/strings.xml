@@ -25,6 +25,10 @@
     <string name="welcome_screen_title">Bienvenido</string>
     <string name="welcome_screen_location_indicator">Usted se encuentra en la sucursal: </string>
 
+    <!-- Login Screen -->
+    <string name="activate_location">Activar ubicación</string>
+    <string name="activate_location_permissions">Activar permisos de ubicación</string>
+
     <!-- ProductDetailScreen -->
     <string name="product_detail_screen_title">Detalle del producto</string>
     <string name="inner_location">Ubicación en depósito</string>
@@ -120,7 +124,7 @@
     <string name="received_quantity">Cant. recibida: %1$s</string>
     <string name="expected_quantity">Cant. solicitada: %1$s</string>
     <string name="no_products_found_for_order">No se encontraron productos</string>
-    <string name="order_products_screen_confirm_complete_title_alert_dialog">Confirmar Pedido</string>
+    <string name="order_products_screen_confirm_complete_title_alert_dialog">Confirmar pedido</string>
     <string name="order_products_screen_confirm_complete_message_alert_dialog">¿Estás seguro que quieres confirmar este pedido y salir?</string>
     <string name="order_products_screen_confirm_complete_confirm_button_alert_dialog">Confirmar</string>
     <string name="order_products_screen_confirm_complete_cancel_button_alert_dialog">Cancelar</string>

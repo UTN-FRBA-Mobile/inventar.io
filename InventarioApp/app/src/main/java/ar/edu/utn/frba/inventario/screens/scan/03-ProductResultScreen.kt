@@ -88,8 +88,6 @@ fun ProductResultBodyContent(
     origin: String,
     foundProduct: Product?
 ) {
-    // TODO - Revisar si "origin" es necesario, entiendo que ya no
-
     Column(
         modifier = Modifier
             .fillMaxSize()
